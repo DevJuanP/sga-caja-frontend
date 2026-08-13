@@ -1,0 +1,252 @@
+# Historias de Usuario — Sistema de Gestión de Caja (SGA Caja)
+
+> Documento guía para construir el frontend flujo a flujo, cubriendo la totalidad de
+> endpoints expuestos por `sga-caja-backend`. Marca cada historia con `[x]` cuando su vista esté completada.
+
+---
+
+## Convenciones
+
+- **Contrato de cada epic:** el JSON exacto que envía/recibe cada endpoint (body, headers y parámetros) está documentado en [`docs/epics/`](epics/) — un `.md` por epic.
+- **Formato de respuestas:** respuestas de error con envoltorio común `{ timestamp, status, error, message, path }` (status 400/401/403/404/409/500). Los listados paginados usan `PagedModel` de Spring → `{ "content": [...], "page": { "size", "number", "totalElements", "totalPages" } }`.
+- **Autenticación:** todos los endpoints (excepto `/api/auth/login`, `/api/auth/refresh`, `/api/auth/logout` y swagger) requieren header `Authorization: Bearer <accessToken>`.
+- **Catálogos de solo lectura** devuelven `List<...>` simple (sin paginación) → ideales para *selects* en formularios.
+- **Roles:** `Administrator` (configura maestros) y `CashierOperator` (opera caja). Los menús/vistas deben mostrarse según `roleName` de `/api/auth/me`.
+
+### Endpoints base para cada vista de CRUD (patrón de maestros)
+| Verbo | Ruta | Descripción |
+|---|---|---|
+| GET | `/api/{recurso}?search=&active=&page=&size=` | Listado paginado con búsqueda y filtro activo |
+| GET | `/api/{recurso}/{uuid}` | Detalle |
+| POST | `/api/{recurso}` | Crear |
+| PUT | `/api/{recurso}/{uuid}` | Editar |
+| PATCH | `/api/{recurso}/{uuid}/deactivate` | Desactivar (soft delete) |
+
+---
+
+## EPIC 1 — Autenticación y sesión
+
+### US-01 · Iniciar sesión, cerrar sesión y ver perfil
+**Rol:** Ambos | **Prioridad:** Alta
+
+- [ ] Vista de **Login** con usuario y contraseña.
+- [ ] Guard de rutas: redirige a login si no hay token; oculta menús según rol.
+- [ ] Manejo de expiración: `POST /api/auth/refresh` renueva usando la cookie `refreshToken` (httpOnly). En dev sobre `http://localhost` la cookie `Secure` no se guarda → contemplar fallback.
+- [ ] Cerrar sesión: `POST /api/auth/logout`.
+- [ ] Mostrar perfil del usuario autenticado (nombre, usuario, rol) desde `/me`.
+
+**Endpoints:** `POST /api/auth/login` · `POST /api/auth/refresh` · `POST /api/auth/logout` · `GET /api/auth/me` — [contrato detallado](epics/epic-01-autenticacion-sesion.md)
+
+---
+
+## EPIC 2 — Catálogos de solo lectura (compartidos)
+
+### US-02 · Seleccionar moneda en formularios
+### US-03 · Seleccionar etapa de socio
+### US-04 · Seleccionar tipo de recurrencia
+### US-05 · Seleccionar tipo de comprobante
+### US-06 · Seleccionar categoría de ingreso
+### US-07 · Seleccionar motivo de egreso
+### US-08 · Seleccionar destino de cobro (cargo a)
+### US-09 · Consultar estados (CxC y egresos)
+
+**Rol:** Ambos | **Prioridad:** Alta (prerequisito de selects en formularios)
+
+- [ ] Hook/servicio Angular compartido que cargue y cachee cada catálogo.
+- [ ] Componentes de *select* reutilizables alimentados por estos catálogos.
+
+**Endpoints (todos con `GET /{uuid}` opcional):**
+`GET /api/currencies` · `GET /api/stages` · `GET /api/recurrence-types` · `GET /api/receipt-types` · `GET /api/income-categories` · `GET /api/expense-reasons` · `GET /api/charge-target-types` · `GET /api/account-receivable-statuses` · `GET /api/expense-statuses` — [contrato detallado](epics/epic-02-catalogos.md)
+
+---
+
+## EPIC 3 — Configuración de maestros (Administrator)
+
+### US-10 · Gestionar giros comerciales
+- [ ] Listado, crear, editar y **eliminar** (único maestro con `DELETE`).
+- [ ] Formulario: campo `name` (obligatorio).
+
+**Endpoints:** `GET /api/business-types` · `GET /{uuid}` · `POST` · `PUT /{uuid}` · `DELETE /{uuid}` — [contrato detallado](epics/epic-03-maestros.md)
+
+### US-11 · Gestionar socios
+- [ ] Listado paginado con búsqueda (código/nombre/apellido) y filtro por activo.
+- [ ] Crear/editar socio: `code`, `firstName`, `lastName`, `shareNumber`, `stageUuid`, `birthDate` (fecha pasada).
+- [ ] Desactivar socio (soft delete).
+- [ ] Detalle por uuid.
+
+**Endpoints:** `GET /api/members?search&active` · `GET /{uuid}` · `POST` · `PUT /{uuid}` · `PATCH /{uuid}/deactivate` — [contrato detallado](epics/epic-03-maestros.md)
+
+### US-12 · Gestionar puestos
+- [ ] Listado con búsqueda (número/inquilino) y filtro por activo.
+- [ ] Crear/editar puesto: `number`, `businessTypeUuid`, `memberUuid`, `tenantName`, `tenantDocument`, `validityStartDate`, `validityEndDate`.
+- [ ] Desactivar puesto.
+
+**Endpoints:** `GET /api/stalls?search&active` · `GET /{uuid}` · `POST` · `PUT /{uuid}` · `PATCH /{uuid}/deactivate` — [contrato detallado](epics/epic-03-maestros.md)
+
+### US-13 · Gestionar bancos
+- [ ] Listado con búsqueda (nombre/número de cuenta) y filtro por activo.
+- [ ] Crear/editar banco: `name`, `accountNumber`, `cci`, `currencyUuid`.
+- [ ] Desactivar banco.
+
+**Endpoints:** `GET /api/banks?search&active` · `GET /{uuid}` · `POST` · `PUT /{uuid}` · `PATCH /{uuid}/deactivate` — [contrato detallado](epics/epic-03-maestros.md)
+
+### US-14 · Gestionar proveedores
+- [ ] Listado con búsqueda (nombre/documento) y filtro por activo.
+- [ ] Crear/editar proveedor: `name`, `document`.
+- [ ] Desactivar proveedor.
+
+**Endpoints:** `GET /api/providers?search&active` · `GET /{uuid}` · `POST` · `PUT /{uuid}` · `PATCH /{uuid}/deactivate` — [contrato detallado](epics/epic-03-maestros.md)
+
+### US-15 · Gestionar servicios cobrables
+- [ ] Listado con búsqueda (nombre) y filtro por activo.
+- [ ] Crear/editar servicio: `name`, `recurrenceTypeUuid`, `chargeTargetTypeUuid`, `currencyUuid`, `consumptionBased`, `cost`, `unitCost`.
+- [ ] Desactivar servicio.
+- [ ] Selects alimentados por los catálogos de US-04, US-08 y US-02.
+
+**Endpoints:** `GET /api/services?search&active` · `GET /{uuid}` · `POST` · `PUT /{uuid}` · `PATCH /{uuid}/deactivate` — [contrato detallado](epics/epic-03-maestros.md)
+
+---
+
+## EPIC 4 — Cuentas por cobrar (CxC)
+
+### US-16 · Consultar cuentas por cobrar y su detalle
+**Rol:** Ambos | **Prioridad:** Alta
+
+- [ ] Listado paginado con filtros por `serviceUuid`, `memberUuid`, `stallUuid`.
+- [ ] Detalle por uuid (incluye estado: Pending/Paid/Exempt).
+- [ ] Selects de servicio/socio/puesto para los filtros.
+
+**Endpoints:** `GET /api/account-receivables?serviceUuid&memberUuid&stallUuid` · `GET /{uuid}` — [contrato detallado](epics/epic-04-cxc.md)
+
+### US-17 · Generar CxC por puestos y por socios
+**Rol:** Ambos | **Prioridad:** Alta
+
+- [ ] Formulario **por puestos** (RF-16): `serviceUuid`, `periodStartDate`, `periodEndDate`, `amount` (obligatorio en servicio de costo fijo; **omitido** si es por consumo).
+- [ ] Formulario **por socios** (RF-18): `serviceUuid`, `periodStartDate`, `periodEndDate`, `amount`, `stageCodes` (lista de códigos de etapa), `uniqueMembers` (limita repetidos por nombre y apellido).
+- [ ] Mostrar resultado: lista de CxC generadas (respuesta de creación).
+- [ ] Vista de **resumen de movimientos** de un socio o puesto (RF-26): `GET /summary?memberUuid` o `?stallUuid`.
+
+**Endpoints:** `POST /api/account-receivables/generate-by-stall` · `POST /api/account-receivables/generate-by-member` · `GET /api/account-receivables/summary` — [contrato detallado](epics/epic-04-cxc.md)
+
+### US-18 · Exonerar una CxC pendiente
+**Rol:** CashierOperator | **Prioridad:** Media
+
+- [ ] Acción "Exonerar" en una CxC pendiente (RF-21), con confirmación.
+
+**Endpoints:** `PATCH /api/account-receivables/{uuid}/exempt` — [contrato detallado](epics/epic-04-cxc.md)
+
+---
+
+## EPIC 5 — Lecturas de consumo
+
+### US-19 · Registrar y consultar lecturas de consumo
+**Rol:** Ambos | **Prioridad:** Alta
+
+- [ ] Registro de lectura inicial/final de una CxC de servicio por consumo: `accountReceivableUuid`, `initialReading`, `finalReading`.
+- [ ] Consulta de lectura de una CxC: `GET /by-account-receivable/{accountReceivableUuid}`.
+- [ ] Visualizar lectura por uuid.
+
+**Endpoints:** `POST /api/consumption-readings` · `GET /{uuid}` · `GET /by-account-receivable/{accountReceivableUuid}` — [contrato detallado](epics/epic-05-lecturas-consumo.md)
+
+---
+
+## EPIC 6 — Cobranza (Pagos)
+
+### US-20 · Cobrar cuentas por cobrar y emitir recibo
+**Rol:** CashierOperator | **Prioridad:** Alta
+
+- [ ] Selección de CxC pendientes (checkboxes).
+- [ ] Botón "Calcular total" → `POST /api/payments/compute-total` con `{ accountReceivableUuids: [...] }` (RF-22).
+- [ ] Confirmar pago → `POST /api/payments` (RF-23) → muestra el recibo emitido.
+- [ ] Consulta de un pago por uuid (para reimprimir/ver detalle).
+
+**Endpoints:** `POST /api/payments/compute-total` · `POST /api/payments` · `GET /api/payments/{uuid}` — [contrato detallado](epics/epic-06-cobranza-pagos.md)
+
+---
+
+## EPIC 7 — Canjes bancarios
+
+### US-21 · Canjear CxC de socio por operación bancaria
+**Rol:** CashierOperator | **Prioridad:** Media
+
+- [ ] Formulario de canje: `accountReceivableUuid`, `bankUuid`, `depositDate`.
+- [ ] Listado de canjes con filtro por `bankUuid` y fecha de depósito.
+- [ ] Detalle por uuid.
+
+**Endpoints:** `GET /api/bank-exchanges?bankUuid&date` · `GET /{uuid}` · `POST /api/bank-exchanges` — [contrato detallado](epics/epic-07-canjes-bancarios.md)
+
+---
+
+## EPIC 8 — Ingresos externos
+
+### US-22 · Registrar y consultar ingresos externos a caja
+**Rol:** CashierOperator | **Prioridad:** Media
+
+- [ ] Formulario: `depositorName`, `incomeCategoryUuid`, `concept`, `amount`.
+- [ ] Listado paginado con filtro por `incomeCategoryUuid` y `date`.
+
+**Endpoints:** `GET /api/incomes?incomeCategoryUuid&date` · `GET /{uuid}` · `POST /api/incomes` — [contrato detallado](epics/epic-08-ingresos-externos.md)
+
+---
+
+## EPIC 9 — Egresos
+
+### US-23 · Registrar y consultar egresos
+**Rol:** CashierOperator | **Prioridad:** Alta
+
+- [ ] Formulario individual: `documentNumber`, `providerUuid`, `expenseDate`, `amount`, `associatedDocument`, `expenseReasonUuid` (RF-27).
+- [ ] Listado paginado con filtro por `year` y `month` (RF-30).
+
+**Endpoints:** `GET /api/expenses?year&month` · `GET /{uuid}` · `POST /api/expenses` — [contrato detallado](epics/epic-09-egresos.md)
+
+### US-24 · Cargar egresos masivos desde XLSX
+**Rol:** CashierOperator | **Prioridad:** Media
+
+- [ ] Subida de archivo XLSX (multipart, campo `file`) (RF-28).
+- [ ] Mostrar resultado: egresos creados y/o errores por fila.
+- [ ] Estado de carga consultable (catálogo US-09 + migración `ExpenseBulkUpload`).
+
+**Endpoints:** `POST /api/expenses/bulk-upload` (Content-Type: `multipart/form-data`) — [contrato detallado](epics/epic-09-egresos.md)
+
+### US-25 · Anular y procesar egresos
+**Rol:** CashierOperator | **Prioridad:** Media
+
+- [ ] Acción "Anular" sobre egreso pendiente (RF-30).
+- [ ] Acción "Procesar" sobre egreso pendiente → emite su comprobante (RF-30).
+
+**Endpoints:** `PATCH /api/expenses/{uuid}/void` · `PATCH /api/expenses/{uuid}/process` — [contrato detallado](epics/epic-09-egresos.md)
+
+---
+
+## EPIC 10 — Reportes
+
+### US-26 · Descargar reportes XLSX
+**Rol:** Ambos | **Prioridad:** Baja
+
+- [ ] Pantalla de reportes con selector de periodo (día, mes/año).
+- [ ] Descarga de archivo XLSX (respuesta binaria con `Content-Disposition: attachment`).
+- [ ] Reporte de movimientos diarios y mensuales (RF-32).
+- [ ] Reporte de totales de movimientos, por día o por mes (RN-07).
+- [ ] Reportes de socios, no socios, egresos y bancos (RF-33).
+
+**Endpoints:**
+`GET /api/reports/movements/daily?date` · `GET /api/reports/movements/monthly?year&month` · `GET /api/reports/movements/totals?date|year&month` · `GET /api/reports/members?year&month` · `GET /api/reports/non-members?year&month` · `GET /api/reports/expenses?year&month` · `GET /api/reports/banks?year&month` — [contrato detallado](epics/epic-10-reportes.md)
+
+---
+
+## Resumen de cobertura
+
+| Epic | Historias | Estado |
+|---|---|---|
+| 1. Sesión | US-01 | [ ] |
+| 2. Catálogos | US-02 … US-09 | [ ] |
+| 3. Maestros | US-10 … US-15 | [ ] |
+| 4. CxC | US-16, US-17, US-18 | [ ] |
+| 5. Lecturas | US-19 | [ ] |
+| 6. Pagos | US-20 | [ ] |
+| 7. Canjes | US-21 | [ ] |
+| 8. Ingresos | US-22 | [ ] |
+| 9. Egresos | US-23, US-24, US-25 | [ ] |
+| 10. Reportes | US-26 | [ ] |
+
+**Orden sugerido:** US-01 → US-02…09 → US-10…15 → US-16/17/18 → US-19 → US-20 → US-21/22 → US-23/24/25 → US-26.
