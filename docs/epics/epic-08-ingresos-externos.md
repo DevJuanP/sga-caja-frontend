@@ -25,7 +25,7 @@
 ```
 
 > Registrar un ingreso externo **emite automáticamente un recibo** (`receipt`), que es lo que se
-> muestra/imprime como comprobante (RF-25).
+> muestra/imprime como comprobante (RF-25) y alimenta el **voucher** del listado (RF-29).
 
 ---
 

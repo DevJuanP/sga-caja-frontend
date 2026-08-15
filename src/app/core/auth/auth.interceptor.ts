@@ -1,14 +1,12 @@
 import { HttpErrorResponse, HttpEvent, HttpHandlerFn, HttpInterceptorFn, HttpRequest } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError, finalize, Observable, switchMap, throwError } from 'rxjs';
+import { catchError, Observable, switchMap, throwError } from 'rxjs';
 import { AuthService } from './auth.service';
 import { TokenStorageService } from './token-storage.service';
 
 const PUBLIC_PATHS = ['/auth/login', '/auth/refresh', '/auth/logout'];
 const RETRY_MARKER = 'X-Retry-Refresh';
-
-let refreshInProgress: Observable<unknown> | null = null;
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const tokenStorage = inject(TokenStorageService);
@@ -44,15 +42,7 @@ function refreshAndRetry(
   auth: AuthService,
   router: Router,
 ): Observable<HttpEvent<unknown>> {
-  if (!refreshInProgress) {
-    refreshInProgress = auth.refresh().pipe(
-      finalize(() => {
-        refreshInProgress = null;
-      }),
-    );
-  }
-
-  return refreshInProgress.pipe(
+  return auth.ensureRefresh().pipe(
     switchMap(() => {
       const accessToken = tokenStorage.accessToken;
       const retried = req.clone({

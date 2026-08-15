@@ -83,7 +83,8 @@ src/
 │   │   │   ├── filter-bar/            # búsqueda + filtros + paginación (dense)
 │   │   │   ├── crud-table/            # tabla densa reutilizable (hover, checkbox, columnas numéricas)
 │   │   │   ├── confirm-dialog/        # confirmación destructiva (anular/exonerar)
-│   │   │   └── empty-state/
+│   │   │   ├── empty-state/
+│   │   │   └── receipt-viewer/        # modal que renderiza el `receipt` embebido (pagos/ingresos/egresos/canjes, RF-29/30/31)
 │   │   ├── pipes/                     # currency.pipe, date.pipe
 │   │   └── directives/
 │   │
@@ -155,7 +156,7 @@ interface (DTO) → service (HTTP) → page (list/form/detail) → spec → veri
 | 3 | EPIC 3 | US-10 … US-15 | Maestros: giros → socios → puestos → bancos → proveedores → servicios |
 | 4 | EPIC 4 | US-16, US-17, US-18 | Cuentas por cobrar: listado, generar, exonerar, summary |
 | 5 | EPIC 5 | US-19 | Lecturas de consumo |
-| 6 | EPIC 6 | US-20 | Cobranza: selección, compute-total, recibo imprimible |
+| 6 | EPIC 6 | US-20 | Cobranza (pestañas por puesto/socio): consulta RF-19, selección de CxC, exonerar, compute-total, recibo/voucher |
 | 7 | EPIC 7, 8 | US-21, US-22 | Canjes bancarios e ingresos externos |
 | 8 | EPIC 9 | US-23, US-24, US-25 | Egresos: registro, bulk-upload XLSX, anular/procesar |
 | 9 | EPIC 10 | US-26 | Reportes XLSX (descarga blob) |

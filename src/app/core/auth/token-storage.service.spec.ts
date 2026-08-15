@@ -13,6 +13,7 @@ describe('TokenStorageService', () => {
 
   it('inicia sin token', () => {
     expect(service.accessToken).toBeNull();
+    expect(service.accessTokenExpiresAt).toBeNull();
   });
 
   it('guarda y lee el access token', () => {
@@ -20,9 +21,17 @@ describe('TokenStorageService', () => {
     expect(service.accessToken).toBe('abc-123');
   });
 
-  it('clear elimina el token', () => {
+  it('guarda y lee la expiración del token', () => {
+    const expiresAt = Date.now() + 900_000;
+    service.accessTokenExpiresAt = expiresAt;
+    expect(service.accessTokenExpiresAt).toBe(expiresAt);
+  });
+
+  it('clear elimina token y expiración', () => {
     service.accessToken = 'abc-123';
+    service.accessTokenExpiresAt = Date.now() + 900_000;
     service.clear();
     expect(service.accessToken).toBeNull();
+    expect(service.accessTokenExpiresAt).toBeNull();
   });
 });

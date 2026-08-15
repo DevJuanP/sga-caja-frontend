@@ -9,8 +9,10 @@
 - **Estos 3 endpoints son públicos** (no requieren `Authorization`): `login`, `refresh`, `logout`.
 - El `refreshToken` se entrega/renueva vía **cookie httpOnly** (nunca viaja en el body):
   - Nombre: `refreshToken` · Path: `/api/auth` · `HttpOnly` · `Secure` · `SameSite=Lax`.
-  - En dev sobre `http://localhost` la cookie **no se guarda** por el flag `Secure` → el front debe
-    contemplar fallback (p. ej. token de refresco en memoria/localStorage en modo dev).
+  - En dev sobre `http://localhost` la cookie **no se guarda** por el flag `Secure`. Implementado:
+    el front hace refresh **proactivo** (margen 30 s antes de `expiresIn`) y **reactivo** (401 → refresh → reintento);
+    si el refresh falla y `devRefreshFallback` está activo (dev), cierra sesión y redirige a `/login`;
+    en prod el fallo proactivo se ignora y el flujo reactivo resuelve la sesión.
 - TTL: access token **15 min** (`expiresIn: 900`) · refresh token **60 min** (cookie `Max-Age=3600`).
 - Respuesta de error estándar (siempre con el status HTTP correspondiente):
 

@@ -117,6 +117,9 @@ Resumen de CxC + movimientos que las liquidaron (RF-26).
 
 > `settlementMethod`: `"PAYMENT"` (pago en caja) o `"BANK_EXCHANGE"` (canje bancario);
 > `null` si la CxC sigue pendiente. `receiptCorrelative` es el correlativo del comprobante que la liquidó.
+>
+> **UI (RF-26):** el resumen se abre en **otra ventana/pestaña** (p. ej. `window.open` con ruta propia)
+> a partir de un socio o puesto seleccionado.
 
 **Errores:** 400 (falta `memberUuid` y `stallUuid`) · 404 (no hay movimientos / recurso no existe).
 

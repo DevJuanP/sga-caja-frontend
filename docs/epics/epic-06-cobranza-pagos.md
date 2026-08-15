@@ -9,11 +9,17 @@
 - **Todos requieren** `Authorization: Bearer <accessToken>` y rol **`CashierOperator`** (si no → 403).
 - **Requests** con `Content-Type: application/json`.
 - Error estándar: `{ "timestamp", "status", "error", "message", "path" }`.
-- Flujo esperado en pantalla de cobro (RF-22/RF-23):
-  1. Seleccionar CxC pendientes (checkboxes).
-  2. `POST /api/payments/compute-total` con las CxC seleccionadas → muestra el total a cobrar.
-  3. Confirmar → `POST /api/payments` (mismo body) → el back emite el recibo y responde el detalle.
-  4. Para reimprimir/ver detalle → `GET /api/payments/{uuid}`.
+- Flujo esperado en la **pantalla de cobro** (RF-19 … RF-23):
+  1. Consultar CxC pendientes **por socio o por puesto** (RF-19) mediante
+     `GET /api/account-receivables?memberUuid=` o `?stallUuid=`, en pestañas
+     "Por puesto" / "Por socio" que **separan las cuentas** (RF-20).
+  2. Marcar cuentas como **abonadas** (selección con checkboxes) y, en la misma
+     pantalla, **exonerar** cuentas pendientes con confirmación (RF-21,
+     `PATCH /api/account-receivables/{uuid}/exempt`).
+  3. `POST /api/payments/compute-total` con las CxC seleccionadas → muestra el total a cobrar (RF-22).
+  4. Confirmar → `POST /api/payments` (mismo body) → el back emite el recibo y responde el detalle (RF-23).
+  5. Mostrar el **voucher** con los datos de `receipt` de la respuesta (compartido con ingresos/egresos/canjes).
+  6. Para reimprimir/ver voucher → `GET /api/payments/{uuid}`.
 
 ---
 
@@ -75,7 +81,7 @@ Procesa el pago de las CxC seleccionadas y emite el recibo (RF-23).
 }
 ```
 
-> El `receipt` es lo que se muestra/imprime como comprobante (RF-23). Las CxC pagadas pasan a `status.name: "Paid"`.
+> El `receipt` es lo que se muestra/imprime como comprobante (RF-23) → render con el componente compartido `receipt-viewer`. Las CxC pagadas pasan a `status.name: "Paid"`.
 
 **Errores:** 400 · 404 (CxC no existe) · 409 (alguna CxC no pendiente o ya pagada).
 

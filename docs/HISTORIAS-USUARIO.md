@@ -39,8 +39,8 @@
 
 - [x] Vista de **Login** con usuario y contraseña (UI split screen: `VistasPropuestas/sga_caja_login_propuesta1.html`).
 - [x] Guard de rutas: redirige a login si no hay token; oculta menús según rol.
-- [ ] Manejo de expiración: `POST /api/auth/refresh` renueva usando la cookie `refreshToken` (httpOnly). En dev sobre `http://localhost` la cookie `Secure` no se guarda → contemplar fallback (pendiente: `devRefreshFallback` aún sin uso).
-- [ ] TTL: access token **15 min** (`expiresIn: 900`) · refresh token **60 min** (cookie `Max-Age=3600`).
+- [x] Manejo de expiración: refresh **proactivo** (timer con margen de 30 s usando `expiresIn`) + **reactivo** (401 → `POST /api/auth/refresh` → reintento con un único refresh en vuelo). En dev (`http://localhost`) la cookie `Secure` no se guarda → el fallo del refresh cierra sesión y redirige a `/login` (`devRefreshFallback`).
+- [x] TTL: access token **15 min** (`expiresIn: 900`, refresh programado antes de vencer) · refresh token **60 min** (cookie `Max-Age=3600`, lo renueva el backend).
 - [x] Cerrar sesión: `POST /api/auth/logout`.
 - [x] Mostrar perfil del usuario autenticado (nombre, usuario, rol) desde `/me` (topbar).
 
@@ -133,7 +133,7 @@
 - [ ] Formulario **por puestos** (RF-16): `serviceUuid`, `periodStartDate`, `periodEndDate`, `amount` (obligatorio en servicio de costo fijo; **omitido** si es por consumo).
 - [ ] Formulario **por socios** (RF-18): `serviceUuid`, `periodStartDate`, `periodEndDate`, `amount`, `stageCodes` (lista de códigos de etapa), `uniqueMembers` (limita repetidos por nombre y apellido).
 - [ ] Mostrar resultado: lista de CxC generadas (respuesta de creación).
-- [ ] Vista de **resumen de movimientos** de un socio o puesto (RF-26): `GET /summary?memberUuid` o `?stallUuid`.
+- [ ] Vista de **resumen de movimientos** de un socio o puesto (RF-26): `GET /summary?memberUuid` o `?stallUuid`; el resumen **abre en otra ventana/pestaña**.
 
 **Endpoints:** `POST /api/account-receivables/generate-by-stall` · `POST /api/account-receivables/generate-by-member` · `GET /api/account-receivables/summary` — [contrato detallado](epics/epic-04-cxc.md)
 
@@ -164,10 +164,11 @@
 ### US-20 · Cobrar cuentas por cobrar y emitir recibo
 **Rol:** CashierOperator | **Prioridad:** Alta
 
-- [ ] Selección de CxC pendientes (checkboxes).
+- [ ] Consulta de CxC **por socio o por puesto** (RF-19), con pestañas "Por puesto" / "Por socio" que **separan las cuentas** (RF-20).
+- [ ] Selección de CxC pendientes (checkboxes) = cuentas **abonadas**; acción **Exonerar** desde la misma pantalla (RF-21, con confirmación).
 - [ ] Botón "Calcular total" → `POST /api/payments/compute-total` con `{ accountReceivableUuids: [...] }` (RF-22).
-- [ ] Confirmar pago → `POST /api/payments` (RF-23) → muestra el recibo emitido.
-- [ ] Consulta de un pago por uuid (para reimprimir/ver detalle).
+- [ ] Confirmar pago → `POST /api/payments` (RF-23) → muestra el **voucher** del recibo emitido.
+- [ ] Consulta de un pago por uuid (para reimprimir/ver voucher).
 
 **Endpoints:** `POST /api/payments/compute-total` · `POST /api/payments` · `GET /api/payments/{uuid}` — [contrato detallado](epics/epic-06-cobranza-pagos.md)
 
@@ -180,6 +181,7 @@
 
 - [ ] Formulario de canje: `accountReceivableUuid`, `bankUuid`, `depositDate`.
 - [ ] Listado de canjes con filtro por `bankUuid` y fecha de depósito.
+- [ ] **Visualizar el voucher** del canje desde el listado (RF-31, `receipt` embebido).
 - [ ] Detalle por uuid.
 
 **Endpoints:** `GET /api/bank-exchanges?bankUuid&date` · `GET /{uuid}` · `POST /api/bank-exchanges` — [contrato detallado](epics/epic-07-canjes-bancarios.md)
@@ -193,6 +195,7 @@
 
 - [ ] Formulario: `depositorName`, `incomeCategoryUuid`, `concept`, `amount`.
 - [ ] Listado paginado con filtro por `incomeCategoryUuid` y `date`.
+- [ ] **Visualizar el voucher** de un ingreso desde el listado (RF-29, `receipt` embebido).
 
 **Endpoints:** `GET /api/incomes?incomeCategoryUuid&date` · `GET /{uuid}` · `POST /api/incomes` — [contrato detallado](epics/epic-08-ingresos-externos.md)
 
@@ -205,6 +208,7 @@
 
 - [ ] Formulario individual: `documentNumber`, `providerUuid`, `expenseDate`, `amount`, `associatedDocument`, `expenseReasonUuid` (RF-27).
 - [ ] Listado paginado con filtro por `year` y `month` (RF-30).
+- [ ] **Visualizar el comprobante** de un egreso procesado desde el listado (RF-30, `receipt` embebido).
 
 **Endpoints:** `GET /api/expenses?year&month` · `GET /{uuid}` · `POST /api/expenses` — [contrato detallado](epics/epic-09-egresos.md)
 
@@ -222,6 +226,7 @@
 
 - [ ] Acción "Anular" sobre egreso pendiente (RF-30).
 - [ ] Acción "Procesar" sobre egreso pendiente → emite su comprobante (RF-30).
+- [ ] **Visualizar el comprobante** emitido tras procesar (RF-30).
 
 **Endpoints:** `PATCH /api/expenses/{uuid}/void` · `PATCH /api/expenses/{uuid}/process` — [contrato detallado](epics/epic-09-egresos.md)
 

@@ -34,6 +34,7 @@
 ```
 
 > El canje equivale a liquidar la CxC (pasa a `status.name: "Paid"`) y emite su comprobante.
+> El `receipt` embebido alimenta el **voucher** que se visualiza desde el listado (RF-31).
 
 ---
 

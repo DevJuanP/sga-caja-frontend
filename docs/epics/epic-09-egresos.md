@@ -30,7 +30,8 @@
 ```
 
 > - `status.name` ∈ `Pending` · `Processed` · `Voided`.
-> - `receipt` solo existe tras **procesar** el egreso (null mientras esté pendiente).
+> - `receipt` solo existe tras **procesar** el egreso (null mientras esté pendiente) y alimenta
+>   el **voucher**/comprobante que se visualiza desde el listado (RF-30).
 > - `bulkUpload` solo existe para egresos creados por **carga masiva** (null en registro individual).
 
 ---
