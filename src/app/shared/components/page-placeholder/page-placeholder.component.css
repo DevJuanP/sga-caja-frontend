@@ -1,0 +1,28 @@
+.placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  min-height: 60vh;
+  text-align: center;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.placeholder__icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  color: var(--mat-sys-primary);
+}
+
+.placeholder__title {
+  margin: 0;
+  font: var(--mat-sys-headline-small);
+  color: var(--mat-sys-on-background);
+}
+
+.placeholder__text {
+  margin: 0;
+  font: var(--mat-sys-body-medium);
+}

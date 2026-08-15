@@ -2,6 +2,7 @@
 
 > Contrato de comunicación **Front ↔ Back** para descarga de reportes en Excel.
 > Base URL: `http://localhost:8080` · Swagger: `http://localhost:8080/swagger-ui/index.html`
+> Especificación definitiva del backend: [`API.md`](../API.md).
 
 ## Convenciones
 
@@ -21,24 +22,31 @@
 
 ## GET /api/reports/movements/daily?date=2026-08-13
 Reporte de movimientos diarios (RF-32). `date` opcional.
+Archivo: `movimientos-diarios-<fecha>.xlsx`.
 
 ## GET /api/reports/movements/monthly?year=2026&month=8
 Reporte de movimientos mensuales (RF-32). `year` y `month` opcionales.
+Archivo: `movimientos-mensuales-<año>-<mes>.xlsx`.
 
 ## GET /api/reports/movements/totals?date=2026-08-13
 Reporte de **totales** de movimientos por día (RN-07). También acepta `?year=&month=` para totales mensuales.
+Archivo: `totales-movimientos-<periodo>.xlsx`.
 
 ## GET /api/reports/members?year=2026&month=8
 Reporte de CxC de **socios** (RF-33).
+Archivo: `reporte-socios-<año>-<mes>.xlsx`.
 
 ## GET /api/reports/non-members?year=2026&month=8
 Reporte de CxC de **no socios** (RF-33).
+Archivo: `reporte-no-socios-<año>-<mes>.xlsx`.
 
 ## GET /api/reports/expenses?year=2026&month=8
 Reporte de **egresos** (RF-33).
+Archivo: `reporte-egresos-<año>-<mes>.xlsx`.
 
 ## GET /api/reports/banks?year=2026&month=8
 Reporte de **canjes bancarios** (RF-33).
+Archivo: `reporte-bancos-<año>-<mes>.xlsx`.
 
 ---
 

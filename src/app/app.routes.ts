@@ -1,3 +1,74 @@
-import { Routes } from '@angular/router';
+import { Route, Routes } from '@angular/router';
 
-export const routes: Routes = [];
+import { authGuard } from './core/auth/auth.guard';
+import { roleGuard } from './core/auth/role.guard';
+import { UserRole } from './interfaces/auth.interface';
+import { MainShellComponent } from './layout/main-shell/main-shell.component';
+
+const placeholder = () =>
+  import('./shared/components/page-placeholder/page-placeholder.component').then(
+    (m) => m.PagePlaceholderComponent,
+  );
+
+/**
+ * Ruta que carga el placeholder compartido con su título e ícono,
+ * y opcionalmente restringe el acceso a un conjunto de roles.
+ */
+function placeholderRoute(path: string, title: string, icon: string, roles?: UserRole[]): Route {
+  const route: Route = {
+    path,
+    loadComponent: placeholder,
+    data: { title, icon },
+  };
+  if (roles && roles.length > 0) {
+    route.canActivate = roles.map((role) => roleGuard(role));
+  }
+  return route;
+}
+
+export const routes: Routes = [
+  {
+    path: 'login',
+    loadComponent: () =>
+      import('./features/auth/pages/login/login.component').then((m) => m.LoginComponent),
+  },
+  {
+    path: '',
+    component: MainShellComponent,
+    canActivate: [authGuard],
+    children: [
+      { path: '', pathMatch: 'full', redirectTo: 'home' },
+      placeholderRoute('home', 'Inicio', 'home'),
+
+      // EPIC 3 · Maestros (Administrator)
+      placeholderRoute('masters/business-types', 'Giros comerciales', 'storefront', ['Administrator']),
+      placeholderRoute('masters/members', 'Socios', 'group', ['Administrator']),
+      placeholderRoute('masters/stalls', 'Puestos', 'store', ['Administrator']),
+      placeholderRoute('masters/services', 'Servicios cobrables', 'receipt', ['Administrator']),
+      placeholderRoute('masters/banks', 'Bancos', 'account_balance', ['Administrator']),
+      placeholderRoute('masters/providers', 'Proveedores', 'local_shipping', ['Administrator']),
+
+      // EPIC 4 · Cuentas por cobrar (ambos roles)
+      placeholderRoute('account-receivables', 'Cuentas por cobrar', 'receipt_long'),
+
+      // EPIC 5 · Lecturas de consumo (ambos roles)
+      placeholderRoute('consumption-readings', 'Lecturas de consumo', 'speed'),
+
+      // EPIC 6 · Cobranza / Pagos (CashierOperator)
+      placeholderRoute('payments', 'Cobranza', 'point_of_sale', ['CashierOperator']),
+
+      // EPIC 7 · Canjes bancarios (CashierOperator)
+      placeholderRoute('bank-exchanges', 'Canjes bancarios', 'account_balance', ['CashierOperator']),
+
+      // EPIC 8 · Ingresos externos (CashierOperator)
+      placeholderRoute('incomes', 'Ingresos', 'south_west', ['CashierOperator']),
+
+      // EPIC 9 · Egresos (CashierOperator)
+      placeholderRoute('expenses', 'Egresos', 'north_east', ['CashierOperator']),
+
+      // EPIC 10 · Reportes (ambos roles)
+      placeholderRoute('reports', 'Reportes', 'assessment'),
+    ],
+  },
+  { path: '**', redirectTo: '' },
+];

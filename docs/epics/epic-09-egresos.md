@@ -2,6 +2,7 @@
 
 > Contrato de comunicación **Front ↔ Back** para registrar, consultar, cargar en masa, anular y procesar egresos.
 > Base URL: `http://localhost:8080` · Swagger: `http://localhost:8080/swagger-ui/index.html`
+> Especificación definitiva del backend: [`API.md`](../API.md).
 
 ## Convenciones
 
@@ -23,7 +24,8 @@
   "expenseReason": { "uuid": "f47ac10b-...", "name": "Mantenimiento" },
   "status": { "uuid": "f47ac10b-...", "name": "Pending" },
   "receipt": { "uuid": "f47ac10b-...", "receiptTypeName": "Comprobante de egreso", "correlativeNumber": 5001, "issueDate": "2026-08-13" },
-  "bulkUpload": { "uuid": "f47ac10b-...", "fileName": "egresos-2026-08.xlsx" }
+  "bulkUpload": { "uuid": "f47ac10b-...", "fileName": "egresos-2026-08.xlsx" },
+  "createdBy": { "uuid": "f47ac10b-...", "username": "cajero1" }
 }
 ```
 
@@ -83,7 +85,8 @@ Sube un archivo XLSX con egresos (RF-28).
     "expenseDate": "2026-08-13", "amount": 120.50, "associatedDocument": null,
     "expenseReason": { "uuid": "f47ac10b-...", "name": "Mantenimiento" },
     "status": { "uuid": "f47ac10b-...", "name": "Pending" }, "receipt": null,
-    "bulkUpload": { "uuid": "f47ac10b-...", "fileName": "egresos-2026-08.xlsx" } } ]
+    "bulkUpload": { "uuid": "f47ac10b-...", "fileName": "egresos-2026-08.xlsx" },
+    "createdBy": { "uuid": "f47ac10b-...", "username": "cajero1" } } ]
 ```
 
 **Errores:** 400 (`EXPENSE_FILE_READ_ERROR` si no se puede leer el archivo) · errores por fila se reportan en `message`.

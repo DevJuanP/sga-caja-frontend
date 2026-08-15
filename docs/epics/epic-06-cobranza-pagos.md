@@ -2,6 +2,7 @@
 
 > Contrato de comunicación **Front ↔ Back** para calcular totales, procesar pagos y emitir recibos.
 > Base URL: `http://localhost:8080` · Swagger: `http://localhost:8080/swagger-ui/index.html`
+> Especificación definitiva del backend: [`API.md`](../API.md).
 
 ## Convenciones
 
@@ -38,7 +39,7 @@ Calcula el total de las CxC seleccionadas, **sin** crear nada (RF-22).
 }
 ```
 
-**Errores:** 400 (lista vacía o UUID inválido) · 409 (alguna CxC no está pendiente).
+**Errores:** 400 (lista vacía o UUID inválido) · 404 (alguna CxC no existe) · 409 (alguna CxC no está pendiente).
 
 ---
 
@@ -69,13 +70,14 @@ Procesa el pago de las CxC seleccionadas y emite el recibo (RF-23).
   "details": [
     { "accountReceivableUuid": "f47ac10b-...", "amount": 150.00 },
     { "accountReceivableUuid": "f47ac10b-...", "amount": 80.00 }
-  ]
+  ],
+  "createdBy": { "uuid": "f47ac10b-...", "username": "cajero1" }
 }
 ```
 
 > El `receipt` es lo que se muestra/imprime como comprobante (RF-23). Las CxC pagadas pasan a `status.name: "Paid"`.
 
-**Errores:** 400 · 409 (alguna CxC no pendiente o ya pagada) · 422/conflictos de correlativo.
+**Errores:** 400 · 404 (CxC no existe) · 409 (alguna CxC no pendiente o ya pagada).
 
 ---
 

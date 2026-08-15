@@ -2,6 +2,7 @@
 
 > Contrato de comunicación **Front ↔ Back** para consulta, generación, exoneración y resumen de CxC.
 > Base URL: `http://localhost:8080` · Swagger: `http://localhost:8080/swagger-ui/index.html`
+> Especificación definitiva del backend: [`API.md`](../API.md).
 
 ## Convenciones
 
@@ -116,6 +117,8 @@ Resumen de CxC + movimientos que las liquidaron (RF-26).
 
 > `settlementMethod`: `"PAYMENT"` (pago en caja) o `"BANK_EXCHANGE"` (canje bancario);
 > `null` si la CxC sigue pendiente. `receiptCorrelative` es el correlativo del comprobante que la liquidó.
+
+**Errores:** 400 (falta `memberUuid` y `stallUuid`) · 404 (no hay movimientos / recurso no existe).
 
 ---
 

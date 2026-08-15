@@ -2,6 +2,14 @@
 
 > Documento guía para construir el frontend flujo a flujo, cubriendo la totalidad de
 > endpoints expuestos por `sga-caja-backend`. Marca cada historia con `[x]` cuando su vista esté completada.
+>
+> **Backend completo:** la especificación definitiva (request/response, roles, errores) es
+> [`API.md`](API.md); los archivos de [`docs/epics/`](epics/) resumen por epic los contratos exactos.
+>
+> **Desarrollo:** la estructura de carpetas, convención de componentes (4 archivos) y el orden
+> de implementación están definidos en [`PLAN-IMPLEMENTACION.md`](PLAN-IMPLEMENTACION.md).
+> Cada US se desarrolla de extremo a extremo (interface → service → page → spec) antes de
+> marcarla con `[x]`.
 
 ---
 
@@ -16,7 +24,7 @@
 ### Endpoints base para cada vista de CRUD (patrón de maestros)
 | Verbo | Ruta | Descripción |
 |---|---|---|
-| GET | `/api/{recurso}?search=&active=&page=&size=` | Listado paginado con búsqueda y filtro activo |
+| GET | `/api/{recurso}?search=&active=&page=&size=&sort=` | Listado paginado con búsqueda y filtro activo |
 | GET | `/api/{recurso}/{uuid}` | Detalle |
 | POST | `/api/{recurso}` | Crear |
 | PUT | `/api/{recurso}/{uuid}` | Editar |
@@ -29,11 +37,12 @@
 ### US-01 · Iniciar sesión, cerrar sesión y ver perfil
 **Rol:** Ambos | **Prioridad:** Alta
 
-- [ ] Vista de **Login** con usuario y contraseña.
-- [ ] Guard de rutas: redirige a login si no hay token; oculta menús según rol.
-- [ ] Manejo de expiración: `POST /api/auth/refresh` renueva usando la cookie `refreshToken` (httpOnly). En dev sobre `http://localhost` la cookie `Secure` no se guarda → contemplar fallback.
-- [ ] Cerrar sesión: `POST /api/auth/logout`.
-- [ ] Mostrar perfil del usuario autenticado (nombre, usuario, rol) desde `/me`.
+- [x] Vista de **Login** con usuario y contraseña (UI split screen: `VistasPropuestas/sga_caja_login_propuesta1.html`).
+- [x] Guard de rutas: redirige a login si no hay token; oculta menús según rol.
+- [ ] Manejo de expiración: `POST /api/auth/refresh` renueva usando la cookie `refreshToken` (httpOnly). En dev sobre `http://localhost` la cookie `Secure` no se guarda → contemplar fallback (pendiente: `devRefreshFallback` aún sin uso).
+- [ ] TTL: access token **15 min** (`expiresIn: 900`) · refresh token **60 min** (cookie `Max-Age=3600`).
+- [x] Cerrar sesión: `POST /api/auth/logout`.
+- [x] Mostrar perfil del usuario autenticado (nombre, usuario, rol) desde `/me` (topbar).
 
 **Endpoints:** `POST /api/auth/login` · `POST /api/auth/refresh` · `POST /api/auth/logout` · `GET /api/auth/me` — [contrato detallado](epics/epic-01-autenticacion-sesion.md)
 

@@ -1,0 +1,89 @@
+<main class="p1-container">
+  <section class="p1-hero">
+    <div class="p1-brand">
+      <mat-icon class="p1-brand-icon" aria-hidden="true">storefront</mat-icon>
+      <span class="p1-brand-name">SGA CAJA</span>
+    </div>
+
+    <div class="p1-hero-content">
+      <h1 class="p1-hero-title">Gestión Financiera &amp; Cobranza Eficiente</h1>
+      <p class="p1-hero-desc">
+        Sistema institucional para la administración de mercado, socios, puestos,
+        cuentas por cobrar y gestión diaria de caja.
+      </p>
+
+      <div class="p1-features">
+        <div class="p1-feature-item">
+          <mat-icon aria-hidden="true">payments</mat-icon>
+          <div>
+            <strong>Módulo de Caja Veloz</strong>
+            <span>Cobranza optimizada con atajos de teclado y emisión A4/A5.</span>
+          </div>
+        </div>
+        <div class="p1-feature-item">
+          <mat-icon aria-hidden="true">shield</mat-icon>
+          <div>
+            <strong>Seguridad por Perfil</strong>
+            <span>Accesos delimitados para Administrador y Operador de Caja.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="p1-hero-footer">2026 Sistema de Gestión de Caja</footer>
+  </section>
+
+  <section class="p1-form-side">
+    <button
+      mat-icon-button
+      class="p1-theme-toggle"
+      type="button"
+      (click)="toggleTheme()"
+      [attr.aria-label]="theme() === 'light' ? 'Cambiar a modo oscuro' : 'Cambiar a modo claro'"
+    >
+      <mat-icon aria-hidden="true">{{ theme() === 'light' ? 'dark_mode' : 'light_mode' }}</mat-icon>
+    </button>
+
+    <div class="p1-card">
+      <header class="p1-card-header">
+        <h2 class="p1-card-title">Iniciar Sesión</h2>
+        <p class="p1-card-subtitle">Ingrese sus credenciales de acceso al sistema</p>
+      </header>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline" class="p1-field">
+          <mat-label>Usuario</mat-label>
+          <mat-icon matPrefix aria-hidden="true">person</mat-icon>
+          <input matInput type="text" formControlName="username" placeholder="Ej: admin_mercado" autocomplete="username" />
+          @if (form.controls.username.hasError('required') && form.controls.username.touched) {
+            <mat-error>El usuario es obligatorio</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="p1-field">
+          <mat-label>Contraseña</mat-label>
+          <mat-icon matPrefix aria-hidden="true">lock</mat-icon>
+          <input matInput type="password" formControlName="password" placeholder="••••••••" autocomplete="current-password" />
+          @if (form.controls.password.hasError('required') && form.controls.password.touched) {
+            <mat-error>La contraseña es obligatoria</mat-error>
+          }
+        </mat-form-field>
+
+        @if (errorMessage(); as message) {
+          <div class="p1-error" role="alert">
+            <mat-icon aria-hidden="true">error_outline</mat-icon>
+            <span>{{ message }}</span>
+          </div>
+        }
+
+        <button mat-flat-button type="submit" class="p1-submit" [disabled]="loading()">
+          @if (loading()) {
+            <mat-progress-spinner class="p1-spinner" diameter="18" mode="indeterminate" />
+          }
+          <span>{{ loading() ? 'Ingresando...' : 'Ingresar al Sistema' }}</span>
+          <mat-icon class="p1-submit-icon" aria-hidden="true">arrow_forward</mat-icon>
+        </button>
+      </form>
+    </div>
+  </section>
+</main>

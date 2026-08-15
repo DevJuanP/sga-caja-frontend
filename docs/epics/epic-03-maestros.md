@@ -2,6 +2,7 @@
 
 > Contrato de comunicación **Front ↔ Back** para los CRUD de maestros.
 > Base URL: `http://localhost:8080` · Swagger: `http://localhost:8080/swagger-ui/index.html`
+> Especificación definitiva del backend: [`API.md`](../API.md).
 
 ## Convenciones
 
@@ -19,7 +20,7 @@
 ```
 
 Query params del listado: `search` (texto opcional), `active` (`true`/`false` opcional),
-`page` (0-based, opcional), `size` (opcional, default 20).
+`page` (0-based, opcional), `size` (opcional, default 20), `sort` (p. ej. `sort=name,asc`).
 
 - **Error estándar:** `{ "timestamp", "status", "error", "message", "path" }`
   (400 validación · 404 no existe · 409 conflicto · 403 sin rol).

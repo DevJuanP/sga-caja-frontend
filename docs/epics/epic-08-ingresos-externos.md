@@ -2,6 +2,7 @@
 
 > Contrato de comunicación **Front ↔ Back** para registrar/consultar ingresos externos a caja.
 > Base URL: `http://localhost:8080` · Swagger: `http://localhost:8080/swagger-ui/index.html`
+> Especificación definitiva del backend: [`API.md`](../API.md).
 
 ## Convenciones
 

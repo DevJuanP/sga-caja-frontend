@@ -2,68 +2,69 @@
 
 $caja-secondary-palette: (
   0: #000000,
-  10: #141f2e,
-  20: #2a3b4e,
-  25: #35465a,
-  30: #405266,
-  35: #4c5e72,
-  40: #586a7f,
-  50: #718396,
-  60: #8b9db1,
-  70: #a6b8cc,
-  80: #c1d3e9,
-  90: #e0ebf9,
-  95: #eff4fb,
-  98: #f9fbfe,
-  99: #fcfeff,
+  10: #0d2b1c,
+  20: #123a26,
+  25: #1e4630,
+  30: #29523a,
+  35: #345e46,
+  40: #406a52,
+  50: #58846a,
+  60: #719e83,
+  70: #8bb99d,
+  80: #a6d4b6,
+  90: #c3eed2,
+  95: #d5f8e0,
+  98: #ebfcee,
+  99: #f4fef4,
   100: #ffffff,
 );
 
 $caja-neutral-palette: (
   0: #000000,
-  4: #0d1219,
-  6: #0f1722,
-  10: #1c2838,
-  12: #202c3d,
-  17: #273342,
-  20: #323e4e,
-  22: #374456,
-  24: #3c4859,
-  25: #3d4959,
-  30: #495566,
-  35: #556172,
-  40: #616d7e,
-  50: #7a8698,
-  60: #94a0b2,
-  70: #afbbcd,
-  80: #cad6e8,
-  87: #dce3ed,
-  90: #e6ebf2,
-  92: #ecf0f5,
-  94: #f0f4f8,
-  95: #f1f5fa,
-  96: #f3f6fa,
-  98: #f5f7fa,
-  99: #fafcfe,
+  4: #0e1511,
+  6: #111813,
+  10: #1b241e,
+  12: #1f2822,
+  17: #252e28,
+  20: #2b342e,
+  22: #2f3833,
+  24: #333d37,
+  25: #353f39,
+  30: #414a44,
+  35: #4d5650,
+  40: #58625c,
+  50: #717b75,
+  60: #8b958e,
+  70: #a5b0a8,
+  80: #c1cbc3,
+  87: #d5dfd6,
+  90: #e6ece8,
+  92: #ecf1ed,
+  94: #f0f4f1,
+  95: #f7f7f5,
+  96: #f5f7f4,
+  98: #f9fbfa,
+  99: #fcfefc,
   100: #ffffff,
 );
 
 $caja-neutral-variant-palette: (
   0: #000000,
-  10: #1b2533,
-  20: #2f3a48,
-  25: #3a4553,
-  30: #46556b,
-  35: #54637a,
-  40: #626f85,
-  50: #75849a,
-  60: #8f9cb1,
-  70: #a9b6cb,
-  80: #c4d0e4,
-  90: #eceff4,
-  95: #f5f7fb,
-  98: #fcfdff,
-  99: #fefeff,
+  10: #1a211b,
+  20: #2c352f,
+  25: #37403a,
+  30: #424c45,
+  35: #4e5851,
+  40: #46564c,
+  50: #727c74,
+  60: #8c968d,
+  70: #a6b0a8,
+  80: #c1cbc3,
+  90: #dfe6e0,
+  92: #ebefea,
+  95: #f4f6f2,
+  98: #fcfefa,
+  99: #fefefb,
   100: #ffffff,
 );
 
@@ -88,20 +89,20 @@ $caja-error-palette: (
 
 $caja-primary-palette: (
   0: #000000,
-  10: #0a1c31,
-  20: #0f1722,
-  25: #1b2f44,
-  30: #1f3a5f,
-  35: #27466c,
-  40: #14304f,
-  50: #34557c,
-  60: #4e6f96,
-  70: #6989b0,
-  80: #7aa7d9,
-  90: #d8e5f5,
-  95: #f5f9ff,
-  98: #fbfdff,
-  99: #fcfeff,
+  10: #072e19,
+  20: #0f2a1a,
+  25: #153825,
+  30: #1f4a33,
+  35: #245640,
+  40: #1e5a3a,
+  50: #2f6b4a,
+  60: #3b7f58,
+  70: #559973,
+  80: #7fd6a5,
+  90: #cfe8d5,
+  95: #dff3e3,
+  98: #effbf2,
+  99: #f5fdf6,
   100: #ffffff,
   secondary: $caja-secondary-palette,
   neutral: $caja-neutral-palette,
@@ -111,17 +112,17 @@ $caja-primary-palette: (
 
 $caja-tertiary-palette: (
   0: #000000,
-  10: #33260a,
+  10: #3a2a08,
   20: #4a3a10,
-  25: #5a4717,
-  30: #3a2a08,
+  25: #574408,
+  30: #4a3a10,
   35: #7c621f,
-  40: #d9a441,
+  40: #e0a526,
   50: #e8b454,
   60: #f2c05f,
   70: #ffd673,
   80: #ffdf95,
-  90: #fbebd0,
+  90: #f9e8c8,
   95: #fff5e3,
   98: #fff9f0,
   99: #fffbf5,
@@ -140,8 +141,8 @@ html {
       theme-type: color-scheme,
     ),
     typography: (
-      plain-family: 'Public Sans',
-      brand-family: 'Public Sans',
+      plain-family: 'Inter',
+      brand-family: 'Inter',
       bold-weight: 700,
       medium-weight: 500,
       regular-weight: 400,
@@ -153,122 +154,123 @@ html {
 :root {
   color-scheme: light dark;
 
-  --mat-sys-primary: light-dark(#14304f, #7aa7d9);
-  --mat-sys-on-primary: light-dark(#ffffff, #0f1722);
-  --mat-sys-primary-container: light-dark(#d8e5f5, #1f3a5f);
-  --mat-sys-on-primary-container: light-dark(#0a1c31, #d8e5f5);
-  --mat-sys-tertiary: light-dark(#d9a441, #d9a441);
-  --mat-sys-on-tertiary: light-dark(#ffffff, #0f1722);
-  --mat-sys-tertiary-container: light-dark(#fbebd0, #3a2a08);
-  --mat-sys-on-tertiary-container: light-dark(#3a2a08, #fbebd0);
-  --mat-sys-background: light-dark(#f5f7fa, #0f1722);
-  --mat-sys-on-background: light-dark(#1c2838, #e6ebf2);
-  --mat-sys-surface: light-dark(#ffffff, #1a2433);
-  --mat-sys-on-surface: light-dark(#1c2838, #e6ebf2);
-  --mat-sys-surface-variant: light-dark(#eceff4, #242f41);
-  --mat-sys-on-surface-variant: light-dark(#46556b, #a9b7c9);
-  --mat-sys-outline: light-dark(#c6d0dc, #3c4b60);
-  --mat-sys-outline-variant: light-dark(#dfe5ec, #2c3a4e);
+  --mat-sys-primary: light-dark(#1e5a3a, #7fd6a5);
+  --mat-sys-on-primary: light-dark(#ffffff, #0f2a1a);
+  --mat-sys-primary-container: light-dark(#cfe8d5, #1f4a33);
+  --mat-sys-on-primary-container: light-dark(#072e19, #cfe8d5);
+  --mat-sys-tertiary: light-dark(#e0a526, #e0a526);
+  --mat-sys-on-tertiary: light-dark(#2a2203, #161a17);
+  --mat-sys-tertiary-container: light-dark(#f9e8c8, #3a2a08);
+  --mat-sys-on-tertiary-container: light-dark(#3a2a08, #f9e8c8);
+  --mat-sys-background: light-dark(#f7f7f5, #161a17);
+  --mat-sys-on-background: light-dark(#1b241e, #e6ece8);
+  --mat-sys-surface: light-dark(#ffffff, #1f2521);
+  --mat-sys-on-surface: light-dark(#1b241e, #e6ece8);
+  --mat-sys-surface-variant: light-dark(#ebefea, #262e29);
+  --mat-sys-on-surface-variant: light-dark(#46564c, #a8b6ad);
+  --mat-sys-outline: light-dark(#c4cdc6, #3e4a42);
+  --mat-sys-outline-variant: light-dark(#dfe6e0, #2c352f);
   --mat-sys-error: light-dark(#c62828, #ef5350);
-  --mat-sys-on-error: light-dark(#ffffff, #0f1722);
+  --mat-sys-on-error: light-dark(#ffffff, #161a17);
   --mat-sys-error-container: light-dark(#f9dedc, #5f0a0a);
   --mat-sys-on-error-container: light-dark(#5f0a0a, #f9dedc);
 
-  --mat-sys-secondary: light-dark(#46556b, #a9b7c9);
-  --mat-sys-on-secondary: light-dark(#ffffff, #0f1722);
-  --mat-sys-secondary-container: light-dark(#eceff4, #242f41);
-  --mat-sys-on-secondary-container: light-dark(#0a1c31, #e6ebf2);
+  --mat-sys-secondary: light-dark(#406a52, #a6d4b6);
+  --mat-sys-on-secondary: light-dark(#ffffff, #0d2b1c);
+  --mat-sys-secondary-container: light-dark(#c3eed2, #29523a);
+  --mat-sys-on-secondary-container: light-dark(#0d2b1c, #c3eed2);
 
-  --mat-sys-surface-container-lowest: light-dark(#ffffff, #121b28);
-  --mat-sys-surface-container-low: light-dark(#f7f9fb, #182232);
-  --mat-sys-surface-container: light-dark(#f0f3f8, #1a2433);
-  --mat-sys-surface-container-high: light-dark(#eaeef4, #243044);
-  --mat-sys-surface-container-highest: light-dark(#e3e9f0, #2a364b);
-  --mat-sys-surface-bright: light-dark(#f7f9fb, #2a364b);
-  --mat-sys-surface-dim: light-dark(#e3e9f0, #0f1722);
-  --mat-sys-surface-tint: light-dark(#14304f, #7aa7d9);
-  --mat-sys-inverse-surface: light-dark(#323e4e, #e6ebf2);
-  --mat-sys-inverse-on-surface: light-dark(#f1f5fa, #1c2838);
+  --mat-sys-surface-container-lowest: light-dark(#ffffff, #121814);
+  --mat-sys-surface-container-low: light-dark(#f2f5f1, #1b231e);
+  --mat-sys-surface-container: light-dark(#edf1ec, #202722);
+  --mat-sys-surface-container-high: light-dark(#e7ece7, #2a322c);
+  --mat-sys-surface-container-highest: light-dark(#e1e7e2, #353d37);
+  --mat-sys-surface-bright: light-dark(#f7f9f6, #353d37);
+  --mat-sys-surface-dim: light-dark(#e1e7e2, #141a16);
+  --mat-sys-surface-tint: light-dark(#1e5a3a, #7fd6a5);
+  --mat-sys-inverse-surface: light-dark(#2b342e, #e6ece8);
+  --mat-sys-inverse-on-surface: light-dark(#eff5f0, #1b241e);
+  --mat-sys-inverse-primary: light-dark(#7fd6a5, #1e5a3a);
   --mat-sys-scrim: #000000;
   --mat-sys-shadow: #000000;
 
-  --mat-sys-display-small-font: 'Public Sans';
+  --mat-sys-display-small-font: 'Inter';
   --mat-sys-display-small-size: 36px;
   --mat-sys-display-small-weight: 700;
   --mat-sys-display-small-line-height: 44px;
-  --mat-sys-display-small: 700 36px/44px 'Public Sans';
+  --mat-sys-display-small: 700 36px/44px 'Inter';
 
-  --mat-sys-headline-medium-font: 'Public Sans';
+  --mat-sys-headline-medium-font: 'Inter';
   --mat-sys-headline-medium-size: 28px;
   --mat-sys-headline-medium-weight: 700;
   --mat-sys-headline-medium-line-height: 36px;
-  --mat-sys-headline-medium: 700 28px/36px 'Public Sans';
+  --mat-sys-headline-medium: 700 28px/36px 'Inter';
 
-  --mat-sys-headline-small-font: 'Public Sans';
+  --mat-sys-headline-small-font: 'Inter';
   --mat-sys-headline-small-size: 24px;
   --mat-sys-headline-small-weight: 600;
   --mat-sys-headline-small-line-height: 32px;
-  --mat-sys-headline-small: 600 24px/32px 'Public Sans';
+  --mat-sys-headline-small: 600 24px/32px 'Inter';
 
-  --mat-sys-title-large-font: 'Public Sans';
+  --mat-sys-title-large-font: 'Inter';
   --mat-sys-title-large-size: 20px;
   --mat-sys-title-large-weight: 600;
   --mat-sys-title-large-line-height: 28px;
-  --mat-sys-title-large: 600 20px/28px 'Public Sans';
+  --mat-sys-title-large: 600 20px/28px 'Inter';
 
-  --mat-sys-title-medium-font: 'Public Sans';
+  --mat-sys-title-medium-font: 'Inter';
   --mat-sys-title-medium-size: 16px;
   --mat-sys-title-medium-weight: 600;
   --mat-sys-title-medium-line-height: 24px;
-  --mat-sys-title-medium: 600 16px/24px 'Public Sans';
+  --mat-sys-title-medium: 600 16px/24px 'Inter';
 
-  --mat-sys-title-small-font: 'Public Sans';
+  --mat-sys-title-small-font: 'Inter';
   --mat-sys-title-small-size: 14px;
   --mat-sys-title-small-weight: 600;
   --mat-sys-title-small-line-height: 20px;
-  --mat-sys-title-small: 600 14px/20px 'Public Sans';
+  --mat-sys-title-small: 600 14px/20px 'Inter';
 
-  --mat-sys-body-large-font: 'Public Sans';
+  --mat-sys-body-large-font: 'Inter';
   --mat-sys-body-large-size: 16px;
   --mat-sys-body-large-weight: 400;
   --mat-sys-body-large-line-height: 24px;
-  --mat-sys-body-large: 400 16px/24px 'Public Sans';
+  --mat-sys-body-large: 400 16px/24px 'Inter';
 
-  --mat-sys-body-medium-font: 'Public Sans';
+  --mat-sys-body-medium-font: 'Inter';
   --mat-sys-body-medium-size: 14px;
   --mat-sys-body-medium-weight: 400;
   --mat-sys-body-medium-line-height: 20px;
-  --mat-sys-body-medium: 400 14px/20px 'Public Sans';
+  --mat-sys-body-medium: 400 14px/20px 'Inter';
 
-  --mat-sys-body-small-font: 'Public Sans';
+  --mat-sys-body-small-font: 'Inter';
   --mat-sys-body-small-size: 12px;
   --mat-sys-body-small-weight: 400;
   --mat-sys-body-small-line-height: 16px;
-  --mat-sys-body-small: 400 12px/16px 'Public Sans';
+  --mat-sys-body-small: 400 12px/16px 'Inter';
 
-  --mat-sys-label-large-font: 'Public Sans';
+  --mat-sys-label-large-font: 'Inter';
   --mat-sys-label-large-size: 14px;
   --mat-sys-label-large-weight: 500;
   --mat-sys-label-large-line-height: 20px;
-  --mat-sys-label-large: 500 14px/20px 'Public Sans';
+  --mat-sys-label-large: 500 14px/20px 'Inter';
 
-  --mat-sys-label-medium-font: 'Public Sans';
+  --mat-sys-label-medium-font: 'Inter';
   --mat-sys-label-medium-size: 12px;
   --mat-sys-label-medium-weight: 500;
   --mat-sys-label-medium-line-height: 16px;
-  --mat-sys-label-medium: 500 12px/16px 'Public Sans';
+  --mat-sys-label-medium: 500 12px/16px 'Inter';
 
-  --mat-sys-label-small-font: 'Public Sans';
+  --mat-sys-label-small-font: 'Inter';
   --mat-sys-label-small-size: 11px;
   --mat-sys-label-small-weight: 500;
   --mat-sys-label-small-line-height: 16px;
-  --mat-sys-label-small: 500 11px/16px 'Public Sans';
+  --mat-sys-label-small: 500 11px/16px 'Inter';
 
-  --mat-sys-amount-font: 'Public Sans';
+  --mat-sys-amount-font: 'Inter';
   --mat-sys-amount-size: 16px;
   --mat-sys-amount-weight: 600;
   --mat-sys-amount-line-height: 24px;
-  --mat-sys-amount: 600 16px/24px 'Public Sans';
+  --mat-sys-amount: 600 16px/24px 'Inter';
 
   --space-1: 4px;
   --space-2: 8px;
@@ -282,21 +284,21 @@ html {
   --radius-md: 10px;
   --radius-lg: 16px;
 
-  --elevation-1: 0 1px 2px rgba(12, 20, 35, 0.08);
-  --elevation-2: 0 2px 6px rgba(12, 20, 35, 0.12);
-  --elevation-3: 0 4px 12px rgba(12, 20, 35, 0.16);
-  --elevation-4: 0 8px 24px rgba(12, 20, 35, 0.24);
+  --elevation-1: 0 1px 2px rgba(12, 32, 20, 0.08);
+  --elevation-2: 0 2px 6px rgba(12, 32, 20, 0.12);
+  --elevation-3: 0 4px 12px rgba(12, 32, 20, 0.16);
+  --elevation-4: 0 8px 24px rgba(12, 32, 20, 0.24);
 
-  --status-pending-bg: light-dark(#fbebd0, #3a2a08);
+  --status-pending-bg: light-dark(#f9e8c8, #3a2a08);
   --status-pending-fg: light-dark(#b8860b, #e0a526);
-  --status-paid-bg: light-dark(#d7e8d3, #1e3b22);
-  --status-paid-fg: light-dark(#2e7d32, #66bb6a);
-  --status-exempt-bg: light-dark(#eceff4, #242f41);
-  --status-exempt-fg: light-dark(#616e7c, #a9b7c9);
+  --status-paid-bg: light-dark(#cfe8d5, #1f4a33);
+  --status-paid-fg: light-dark(#1e5a3a, #7fd6a5);
+  --status-exempt-bg: light-dark(#ebefea, #262e29);
+  --status-exempt-fg: light-dark(#616e7c, #a8b6ad);
   --status-voided-bg: light-dark(#f9dedc, #5f0a0a);
   --status-voided-fg: light-dark(#c62828, #ef5350);
-  --status-processed-bg: light-dark(#d8e5f5, #1f3a5f);
-  --status-processed-fg: light-dark(#14304f, #7aa7d9);
+  --status-processed-bg: light-dark(#cfe8d5, #1f4a33);
+  --status-processed-fg: light-dark(#1e5a3a, #7fd6a5);
 }
 
 html[data-theme='dark'] {
@@ -320,8 +322,8 @@ body {
 
 body {
   margin: 0;
-  font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
-    Arial, sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
+    sans-serif;
   font-size: 16px;
   line-height: 24px;
   background-color: var(--mat-sys-background);

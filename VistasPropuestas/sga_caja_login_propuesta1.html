@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SGA Caja - Login | Propuesta 1 (Split Screen)</title>
+    <!-- Google Fonts & Material Symbols -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+    <!-- Aplicar tema antes del render (evita flash) y sincronizar con prefers-color-scheme -->
+    <script>
+        (function () {
+            try {
+                var saved = localStorage.getItem('sga-theme');
+                var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                if (saved === 'dark' || (saved === null && prefersDark)) {
+                    document.documentElement.classList.add('dark-theme');
+                }
+            } catch (e) {}
+        })();
+    </script>
+
+    <style>
+        :root {
+            /* Tema Claro - Paleta Mercado */
+            --primary: #1E5A3A;
+            --on-primary: #FFFFFF;
+            --primary-container: #CFE8D5;
+            --on-primary-container: #072E19;
+            --tertiary: #E0A526;
+            --on-tertiary: #2A2203;
+            --tertiary-container: #F9E8C8;
+            --on-tertiary-container: #3A2A08;
+            --background: #F7F7F5;
+            --on-background: #1B241E;
+            --surface: #FFFFFF;
+            --on-surface: #1B241E;
+            --surface-variant: #EBEFEA;
+            --on-surface-variant: #46564C;
+            --outline: #C4CDC6;
+            --outline-variant: #DFE6E0;
+            --error: #C62828;
+            --on-error: #FFFFFF;
+            --error-container: #F9DEDC;
+            --on-error-container: #5F0A0A;
+
+            /* Panel hero (constante en ambos temas) */
+            --hero-start: #133D27;
+            --hero-end: #1E5A3A;
+            --on-hero: #FFFFFF;
+
+            /* Elevaciones */
+            --elevation-1: 0 1px 2px rgba(12,32,20,0.08);
+            --elevation-2: 0 2px 6px rgba(12,32,20,0.12);
+            --elevation-3: 0 4px 12px rgba(12,32,20,0.16);
+
+            /* Radios */
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 16px;
+        }
+
+        /* Variables Tema Oscuro */
+        .dark-theme {
+            --primary: #7FD6A5;
+            --on-primary: #0F2A1A;
+            --primary-container: #1F4A33;
+            --on-primary-container: #CFE8D5;
+            --tertiary: #E0A526;
+            --on-tertiary: #161A17;
+            --tertiary-container: #3A2A08;
+            --on-tertiary-container: #F9E8C8;
+            --background: #161A17;
+            --on-background: #E6ECE8;
+            --surface: #1F2521;
+            --on-surface: #E6ECE8;
+            --surface-variant: #262E29;
+            --on-surface-variant: #A8B6AD;
+            --outline: #3E4A42;
+            --outline-variant: #2C352F;
+            --error: #EF5350;
+            --on-error: #161A17;
+            --error-container: #5F0A0A;
+            --on-error-container: #F9DEDC;
+
+            --elevation-1: 0 1px 2px rgba(0,0,0,0.3);
+            --elevation-2: 0 2px 6px rgba(0,0,0,0.4);
+            --elevation-3: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--on-background);
+            transition: background-color 0.3s, color 0.3s;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Botón toggle de tema */
+        .theme-toggle-btn {
+            background: var(--surface-variant);
+            border: 1px solid var(--outline);
+            color: var(--on-surface-variant);
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .theme-toggle-btn:hover {
+            background: var(--outline-variant);
+            color: var(--on-surface);
+        }
+
+        /* --- ESTILOS COMUNES DE FORMULARIO --- */
+        .form-group {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--on-surface);
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper .material-symbols-outlined {
+            position: absolute;
+            left: 14px;
+            color: var(--on-surface-variant);
+            font-size: 20px;
+            pointer-events: none;
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 12px 14px 12px 42px;
+            background: var(--surface);
+            border: 1px solid var(--outline);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            color: var(--on-surface);
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .form-select {
+            padding-left: 42px;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2346564C'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 20px;
+        }
+
+        .form-input:focus, .form-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px var(--primary);
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 12px 20px;
+            background: var(--primary);
+            color: var(--on-primary);
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            box-shadow: var(--elevation-1);
+        }
+
+        .btn-primary:hover {
+            opacity: 0.92;
+            box-shadow: var(--elevation-2);
+        }
+
+        .btn-primary:focus-visible, .theme-toggle-btn:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        /* -------------------------------------------------------------
+           PROPUESTA 1: Split Screen Moderno (Corporativo & Institucional)
+        ------------------------------------------------------------- */
+        .p1-container {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        .p1-hero {
+            flex: 1.2;
+            background: linear-gradient(135deg, var(--hero-start) 0%, var(--hero-end) 100%);
+            color: var(--on-hero);
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .p1-hero::before {
+            content: "";
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: color-mix(in srgb, var(--tertiary) 10%, transparent);
+            pointer-events: none;
+        }
+
+        .p1-hero-content {
+            max-width: 500px;
+            z-index: 2;
+        }
+
+        .p1-hero-title {
+            font-size: 36px;
+            font-weight: 700;
+            line-height: 44px;
+            margin-bottom: 16px;
+            color: var(--on-hero);
+        }
+
+        .p1-hero-desc {
+            font-size: 16px;
+            opacity: 0.85;
+            line-height: 1.5;
+            margin-bottom: 32px;
+        }
+
+        .p1-features {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .p1-feature-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: color-mix(in srgb, var(--on-hero) 8%, transparent);
+            padding: 12px 16px;
+            border-radius: var(--radius-md);
+            backdrop-filter: blur(10px);
+        }
+
+        .p1-feature-item .material-symbols-outlined {
+            color: var(--tertiary);
+        }
+
+        .p1-hero-footer {
+            font-size: 12px;
+            opacity: 0.6;
+            z-index: 2;
+        }
+
+        .p1-form-side {
+            flex: 1;
+            background: var(--background);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            position: relative;
+        }
+
+        .p1-form-side .theme-toggle-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .p1-card {
+            width: 100%;
+            max-width: 420px;
+            background: var(--surface);
+            padding: 40px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--elevation-2);
+            border: 1px solid var(--outline);
+        }
+
+        .p1-card-header {
+            margin-bottom: 28px;
+        }
+
+        .p1-card-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--on-surface);
+            margin-bottom: 6px;
+        }
+
+        .p1-card-subtitle {
+            font-size: 13px;
+            color: var(--on-surface-variant);
+        }
+
+        /* Responsive: colapso en pantallas pequeñas */
+        @media (max-width: 900px) {
+            .p1-container {
+                flex-direction: column;
+            }
+            .p1-hero {
+                padding: 40px 24px;
+                min-height: auto;
+            }
+            .p1-form-side {
+                padding: 24px 16px;
+            }
+        }
+
+        /* Notificaciones / Feedback Toast */
+        .demo-toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--on-surface);
+            color: var(--surface);
+            padding: 12px 20px;
+            border-radius: var(--radius-md);
+            font-size: 13px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: var(--elevation-3);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 2000;
+        }
+
+        .demo-toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PROPUESTA 1: Split Screen Moderno (Corporativo & Institucional) -->
+    <main class="p1-container">
+        <section class="p1-hero">
+            <div style="display:flex; align-items:center; gap:10px;">
+                <span class="material-symbols-outlined" style="font-size: 32px; color: var(--tertiary);">storefront</span>
+                <span style="font-weight:700; font-size:18px; letter-spacing:1px;">SGA CAJA</span>
+            </div>
+
+            <div class="p1-hero-content">
+                <h1 class="p1-hero-title">Gestión Financiera & Cobranza Eficiente</h1>
+                <p class="p1-hero-desc">Sistema institucional para la administración de mercado, socios, puestos, cuentas por cobrar y gestión diaria de caja.</p>
+
+                <div class="p1-features">
+                    <div class="p1-feature-item">
+                        <span class="material-symbols-outlined">payments</span>
+                        <div>
+                            <strong style="display:block; font-size:14px;">Módulo de Caja Veloz</strong>
+                            <span style="font-size:12px; opacity:0.8;">Cobranza optimizada con atajos de teclado y emisión A4/A5.</span>
+                        </div>
+                    </div>
+                    <div class="p1-feature-item">
+                        <span class="material-symbols-outlined">shield</span>
+                        <div>
+                            <strong style="display:block; font-size:14px;">Seguridad por Perfil</strong>
+                            <span style="font-size:12px; opacity:0.8;">Accesos delimitados para Administrador y Operador de Caja.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p1-hero-footer">
+                2026 Sistema de Gestión de Caja
+            </div>
+        </section>
+
+        <section class="p1-form-side">
+            <button class="theme-toggle-btn" onclick="toggleTheme()" title="Cambiar Tema (Claro/Oscuro)">
+                <span class="material-symbols-outlined" id="theme-icon">dark_mode</span>
+            </button>
+
+            <div class="p1-card">
+                <div class="p1-card-header">
+                    <h2 class="p1-card-title">Iniciar Sesión</h2>
+                    <p class="p1-card-subtitle">Ingrese sus credenciales de acceso al sistema</p>
+                </div>
+
+                <form onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label class="form-label">Usuario</label>
+                        <div class="input-wrapper">
+                            <span class="material-symbols-outlined">person</span>
+                            <input type="text" class="form-input" placeholder="Ej: admin_mercado" required value="cajero_operador">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Contraseña</label>
+                        <div class="input-wrapper">
+                            <span class="material-symbols-outlined">lock</span>
+                            <input type="password" class="form-input" placeholder="••••••••" required value="12345678">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-primary" style="margin-top: 10px;">
+                        Ingresar al Sistema
+                        <span class="material-symbols-outlined" style="font-size: 18px;">arrow_forward</span>
+                    </button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- Toast de Notificación / Feedback para Pruebas -->
+    <div id="toast" class="demo-toast">
+        <span class="material-symbols-outlined" style="color:var(--tertiary);">check_circle</span>
+        <span id="toast-message">Inicio de sesión simulado exitoso</span>
+    </div>
+
+    <script>
+        // Cambio de tema Claro / Oscuro (persistido en localStorage)
+        function toggleTheme() {
+            const root = document.documentElement;
+            const icon = document.getElementById('theme-icon');
+            root.classList.toggle('dark-theme');
+
+            if (root.classList.contains('dark-theme')) {
+                localStorage.setItem('sga-theme', 'dark');
+                icon.textContent = 'light_mode';
+                showToast('Modo Oscuro activado (Tokens Material 3)');
+            } else {
+                localStorage.setItem('sga-theme', 'light');
+                icon.textContent = 'dark_mode';
+                showToast('Modo Claro activado (Tokens Material 3)');
+            }
+        }
+
+        // Sincronizar icono con el tema aplicado antes del render
+        document.addEventListener('DOMContentLoaded', function () {
+            const icon = document.getElementById('theme-icon');
+            if (document.documentElement.classList.contains('dark-theme')) {
+                icon.textContent = 'light_mode';
+            }
+        });
+
+        // Manejador del submit de login
+        function handleLogin(e) {
+            e.preventDefault();
+            showToast('Simulación de inicio de sesión exitoso [Split Screen]');
+        }
+
+        // Función auxiliar para Toast
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-message');
+            toastMsg.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

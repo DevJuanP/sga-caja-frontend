@@ -4,7 +4,7 @@
 > servicios cobrables, cuentas por cobrar, cobranza, egresos, ingresos y reportes).
 >
 > Este documento define los lineamientos generales de diseño. Implementación visual: **Angular
-> Material** con theming **Material 3 (design tokens)**. Tema base: **"Caja Segura"**.
+> Material** con theming **Material 3 (design tokens)**. Tema base: **"Mercado"**.
 
 ---
 
@@ -23,30 +23,32 @@
 
 ---
 
-## 2. Paleta "Caja Segura"
+## 2. Paleta "Mercado"
 
-Inspirada en entidades financieras: máxima sobriedad y seriedad, con ámbar reservado al dinero.
+Inspirada en el mercado de abastos (verdura/crecimiento) y la confianza de una administración
+seria: fresco y cercano al comerciante, pero formal. El verde comunica "todo en orden/pagado"
+de forma natural en la pantalla de cobro; el ámbar queda reservado al dinero.
 
 ### 2.1 Tokens base — tema claro
 
 | Token | Hex | Uso |
 |---|---|---|
-| `primary` | `#14304F` | Acciones principales, navegación activa, encabezados |
+| `primary` | `#1E5A3A` | Acciones principales, navegación activa, encabezados |
 | `on-primary` | `#FFFFFF` | Texto/iconos sobre primary |
-| `primary-container` | `#D8E5F5` | Superficies con énfasis primario (fondo de chip/footer) |
-| `on-primary-container` | `#0A1C31` | Texto sobre primary-container |
-| `tertiary` | `#D9A441` | Montos, dinero, elementos de énfasis (señalización de caja) |
-| `on-tertiary` | `#FFFFFF` | Texto/iconos sobre tertiary |
-| `tertiary-container` | `#FBEBD0` | Fondo de badges de dinero |
+| `primary-container` | `#CFE8D5` | Superficies con énfasis primario (fondo de chip/footer) |
+| `on-primary-container` | `#072E19` | Texto sobre primary-container |
+| `tertiary` | `#E0A526` | Montos, dinero, elementos de énfasis (señalización de caja) |
+| `on-tertiary` | `#2A2203` | Texto/iconos sobre tertiary |
+| `tertiary-container` | `#F9E8C8` | Fondo de badges de dinero |
 | `on-tertiary-container` | `#3A2A08` | Texto sobre tertiary-container |
-| `background` | `#F5F7FA` | Fondo general de la app |
-| `on-background` | `#1C2838` | Texto principal sobre background |
+| `background` | `#F7F7F5` | Fondo general de la app |
+| `on-background` | `#1B241E` | Texto principal sobre background |
 | `surface` | `#FFFFFF` | Tarjetas, tablas, formularios, sidebar |
-| `on-surface` | `#1C2838` | Texto principal sobre surface |
-| `surface-variant` | `#ECEFF4` | Superficies secundarias (headers de tabla, inputs) |
-| `on-surface-variant` | `#46556B` | Texto secundario (labels, placeholders) |
-| `outline` | `#C6D0DC` | Bordes, dividers, inputs |
-| `outline-variant` | `#DFE5EC` | Bordes suaves, hover rows |
+| `on-surface` | `#1B241E` | Texto principal sobre surface |
+| `surface-variant` | `#EBEFEA` | Superficies secundarias (headers de tabla, inputs) |
+| `on-surface-variant` | `#46564C` | Texto secundario (labels, placeholders) |
+| `outline` | `#C4CDC6` | Bordes, dividers, inputs |
+| `outline-variant` | `#DFE6E0` | Bordes suaves, hover rows |
 | `error` | `#C62828` | Errores, anulaciones, acciones destructivas |
 | `on-error` | `#FFFFFF` | Texto/iconos sobre error |
 | `error-container` | `#F9DEDC` | Fondo de chips/badges de error |
@@ -56,24 +58,24 @@ Inspirada en entidades financieras: máxima sobriedad y seriedad, con ámbar res
 
 | Token | Hex | Uso |
 |---|---|---|
-| `primary` | `#7AA7D9` | Acciones principales, navegación activa, encabezados |
-| `on-primary` | `#0F1722` | Texto/iconos sobre primary |
-| `primary-container` | `#1F3A5F` | Superficies con énfasis primario |
-| `on-primary-container` | `#D8E5F5` | Texto sobre primary-container |
-| `tertiary` | `#D9A441` | Montos, dinero, elementos de énfasis |
-| `on-tertiary` | `#0F1722` | Texto/iconos sobre tertiary |
+| `primary` | `#7FD6A5` | Acciones principales, navegación activa, encabezados |
+| `on-primary` | `#0F2A1A` | Texto/iconos sobre primary |
+| `primary-container` | `#1F4A33` | Superficies con énfasis primario |
+| `on-primary-container` | `#CFE8D5` | Texto sobre primary-container |
+| `tertiary` | `#E0A526` | Montos, dinero, elementos de énfasis |
+| `on-tertiary` | `#161A17` | Texto/iconos sobre tertiary |
 | `tertiary-container` | `#3A2A08` | Fondo de badges de dinero |
-| `on-tertiary-container` | `#FBEBD0` | Texto sobre tertiary-container |
-| `background` | `#0F1722` | Fondo general de la app |
-| `on-background` | `#E6EBF2` | Texto principal sobre background |
-| `surface` | `#1A2433` | Tarjetas, tablas, formularios, sidebar |
-| `on-surface` | `#E6EBF2` | Texto principal sobre surface |
-| `surface-variant` | `#242F41` | Superficies secundarias (headers de tabla, inputs) |
-| `on-surface-variant` | `#A9B7C9` | Texto secundario (labels, placeholders) |
-| `outline` | `#3C4B60` | Bordes, dividers, inputs |
-| `outline-variant` | `#2C3A4E` | Bordes suaves, hover rows |
+| `on-tertiary-container` | `#F9E8C8` | Texto sobre tertiary-container |
+| `background` | `#161A17` | Fondo general de la app |
+| `on-background` | `#E6ECE8` | Texto principal sobre background |
+| `surface` | `#1F2521` | Tarjetas, tablas, formularios, sidebar |
+| `on-surface` | `#E6ECE8` | Texto principal sobre surface |
+| `surface-variant` | `#262E29` | Superficies secundarias (headers de tabla, inputs) |
+| `on-surface-variant` | `#A8B6AD` | Texto secundario (labels, placeholders) |
+| `outline` | `#3E4A42` | Bordes, dividers, inputs |
+| `outline-variant` | `#2C352F` | Bordes suaves, hover rows |
 | `error` | `#EF5350` | Errores, anulaciones, acciones destructivas |
-| `on-error` | `#0F1722` | Texto/iconos sobre error |
+| `on-error` | `#161A17` | Texto/iconos sobre error |
 | `error-container` | `#5F0A0A` | Fondo de chips/badges de error |
 | `on-error-container` | `#F9DEDC` | Texto sobre error-container |
 
@@ -83,11 +85,11 @@ Usados en **chips de estado** de CxC, egresos y pagos.
 
 | Estado | Claro | Oscuro | Significado |
 |---|---|---|---|
-| Pendiente (`Pending`) | `#B8860B` sobre `#FBEBD0` | `#E0A526` sobre `#3A2A08` | Falta cobrar/procesar |
-| Pagado (`Paid`) | `#2E7D32` sobre `#D7E8D3` | `#66BB6A` sobre `#1E3B22` | Completado |
-| Exonerado (`Exempt`) | `#616E7C` sobre `#ECEFF4` | `#A9B7C9` sobre `#242F41` | Exento de cobro |
+| Pendiente (`Pending`) | `#B8860B` sobre `#F9E8C8` | `#E0A526` sobre `#3A2A08` | Falta cobrar/procesar |
+| Pagado (`Paid`) | `#1E5A3A` sobre `#CFE8D5` | `#7FD6A5` sobre `#1F4A33` | Completado |
+| Exonerado (`Exempt`) | `#616E7C` sobre `#EBEFEA` | `#A8B6AD` sobre `#262E29` | Exento de cobro |
 | Anulado (`Voided`/`Cancelled`) | `#C62828` sobre `#F9DEDC` | `#EF5350` sobre `#5F0A0A` | Invalidado |
-| Procesado (`Processed`) | `#14304F` sobre `#D8E5F5` | `#7AA7D9` sobre `#1F3A5F` | Comprobante emitido |
+| Procesado (`Processed`) | `#1E5A3A` sobre `#CFE8D5` | `#7FD6A5` sobre `#1F4A33` | Comprobante emitido |
 
 ---
 
@@ -95,7 +97,7 @@ Usados en **chips de estado** de CxC, egresos y pagos.
 
 ### 3.1 Familia
 
-- **Public Sans** para toda la UI (cuerpo, headings, labels, botones).
+- **Inter** para toda la UI (cuerpo, headings, labels, botones).
 - **`font-variant-numeric: tabular-nums` obligatorio en todo monto** (y en correlativos) para
   alineación decimal perfecta en tablas y columnas numéricas.
 
@@ -120,19 +122,19 @@ Mapeo de los roles de Material 3 a la escala definida:
 
 | Token Material | Fuente | Tamaño | Peso | Line-height | Observación |
 |---|---|---|---|---|---|
-| `display-small` | Public Sans | 36px | 700 | 44px | Totales grandes |
-| `headline-medium` | Public Sans | 28px | 700 | 36px | Encabezados de módulo |
-| `headline-small` | Public Sans | 24px | 600 | 32px | Encabezados de página |
-| `title-large` | Public Sans | 20px | 600 | 28px | Títulos de tarjeta |
-| `title-medium` | Public Sans | 16px | 600 | 24px | Títulos de sección/tabla |
-| `title-small` | Public Sans | 14px | 600 | 20px | Encabezados de columna |
-| `body-large` | Public Sans | 16px | 400 | 24px | Texto general |
-| `body-medium` | Public Sans | 14px | 400 | 20px | Contenido de tablas |
-| `body-small` | Public Sans | 12px | 400 | 16px | Notas, metadatos |
-| `label-large` | Public Sans | 14px | 500 | 20px | Botones, tabs |
-| `label-medium` | Public Sans | 12px | 500 | 16px | Chips, etiquetas |
-| `label-small` | Public Sans | 11px | 500 | 16px | Badges, tooltips |
-| `amount` (custom) | Public Sans | 14–20px | 500–600 | — | **Siempre `tabular-nums`**, alineado derecha |
+| `display-small` | Inter | 36px | 700 | 44px | Totales grandes |
+| `headline-medium` | Inter | 28px | 700 | 36px | Encabezados de módulo |
+| `headline-small` | Inter | 24px | 600 | 32px | Encabezados de página |
+| `title-large` | Inter | 20px | 600 | 28px | Títulos de tarjeta |
+| `title-medium` | Inter | 16px | 600 | 24px | Títulos de sección/tabla |
+| `title-small` | Inter | 14px | 600 | 20px | Encabezados de columna |
+| `body-large` | Inter | 16px | 400 | 24px | Texto general |
+| `body-medium` | Inter | 14px | 400 | 20px | Contenido de tablas |
+| `body-small` | Inter | 12px | 400 | 16px | Notas, metadatos |
+| `label-large` | Inter | 14px | 500 | 20px | Botones, tabs |
+| `label-medium` | Inter | 12px | 500 | 16px | Chips, etiquetas |
+| `label-small` | Inter | 11px | 500 | 16px | Badges, tooltips |
+| `amount` (custom) | Inter | 14–20px | 500–600 | — | **Siempre `tabular-nums`**, alineado derecha |
 
 ---
 
@@ -162,10 +164,10 @@ Mapeo de los roles de Material 3 a la escala definida:
 
 | Nivel | Sombra | Uso |
 |---|---|---|
-| `elevation-1` | `0 1px 2px rgba(12,20,35,0.08)` | Cards, filas destacadas |
-| `elevation-2` | `0 2px 6px rgba(12,20,35,0.12)` | Topbar, tablas fijas |
-| `elevation-3` | `0 4px 12px rgba(12,20,35,0.16)` | Sidebar, menús |
-| `elevation-4` | `0 8px 24px rgba(12,20,35,0.24)` | Modales, diálogos |
+| `elevation-1` | `0 1px 2px rgba(12,32,20,0.08)` | Cards, filas destacadas |
+| `elevation-2` | `0 2px 6px rgba(12,32,20,0.12)` | Topbar, tablas fijas |
+| `elevation-3` | `0 4px 12px rgba(12,32,20,0.16)` | Sidebar, menús |
+| `elevation-4` | `0 8px 24px rgba(12,32,20,0.24)` | Modales, diálogos |
 
 ---
 
@@ -236,7 +238,7 @@ Mapeo de los roles de Material 3 a la escala definida:
 - Confirmar acciones destructivas o de anulación.
 
 ### Don't
-- No mezclar azul marino con tonos de acento aleatorios: el ámbar es **solo** para dinero/énfasis.
+- No mezclar verde bosque con tonos de acento aleatorios: el ámbar es **solo** para dinero/énfasis.
 - No usar rojo para algo que no sea error/anulación.
 - No alinear montos a la izquierda.
 - No duplicar navegación que confunda al operador de caja (flujo corto primero).

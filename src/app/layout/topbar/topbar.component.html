@@ -1,0 +1,29 @@
+<mat-toolbar class="topbar">
+  <div class="topbar__brand">
+    <mat-icon class="topbar__brand-icon" aria-hidden="true">storefront</mat-icon>
+    <span class="topbar__brand-title">SGA Caja</span>
+  </div>
+
+  <span class="topbar__spacer"></span>
+
+  <div class="topbar__actions">
+    <button
+      mat-icon-button
+      (click)="toggleTheme()"
+      attr.aria-label="{{ theme() === 'light' ? 'Cambiar a modo oscuro' : 'Cambiar a modo claro' }}"
+    >
+      <mat-icon aria-hidden="true">{{ theme() === 'light' ? 'dark_mode' : 'light_mode' }}</mat-icon>
+    </button>
+
+    @if (user(); as user) {
+      <span class="topbar__user">
+        <span class="topbar__user-name">{{ fullName }}</span>
+        <span class="topbar__user-role">{{ user.roleName }}</span>
+      </span>
+    }
+
+    <button mat-icon-button (click)="logout()" aria-label="Cerrar sesión">
+      <mat-icon aria-hidden="true">logout</mat-icon>
+    </button>
+  </div>
+</mat-toolbar>

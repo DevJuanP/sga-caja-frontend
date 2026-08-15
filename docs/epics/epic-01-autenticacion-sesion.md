@@ -2,15 +2,16 @@
 
 > Contrato de comunicación **Front ↔ Back** para Login, refresco de sesión, logout y perfil.
 > Base URL: `http://localhost:8080` · Swagger: `http://localhost:8080/swagger-ui/index.html`
+> Especificación definitiva del backend: [`API.md`](../API.md).
 
 ## Convenciones
 
-- **Estos 4 endpoints son públicos** (no requieren `Authorization`): `login`, `refresh`, `logout`.
+- **Estos 3 endpoints son públicos** (no requieren `Authorization`): `login`, `refresh`, `logout`.
 - El `refreshToken` se entrega/renueva vía **cookie httpOnly** (nunca viaja en el body):
   - Nombre: `refreshToken` · Path: `/api/auth` · `HttpOnly` · `Secure` · `SameSite=Lax`.
   - En dev sobre `http://localhost` la cookie **no se guarda** por el flag `Secure` → el front debe
     contemplar fallback (p. ej. token de refresco en memoria/localStorage en modo dev).
-- TTL: access token **30 min** · refresh token **60 min**.
+- TTL: access token **15 min** (`expiresIn: 900`) · refresh token **60 min** (cookie `Max-Age=3600`).
 - Respuesta de error estándar (siempre con el status HTTP correspondiente):
 
 ```json
@@ -41,7 +42,7 @@ Inicia sesión con usuario y contraseña.
 {
   "accessToken": "<jwt>",
   "tokenType": "Bearer",
-  "expiresIn": 1800,
+  "expiresIn": 900,
   "user": {
     "uuid": "3f2c0a1b-...",
     "username": "cajero1",
@@ -73,7 +74,7 @@ Renueva el access token usando el refresh token de la cookie.
 {
   "accessToken": "<nuevo-jwt>",
   "tokenType": "Bearer",
-  "expiresIn": 1800,
+  "expiresIn": 900,
   "user": { "uuid": "3f2c0a1b-...", "username": "cajero1", "firstName": "Luis", "lastName": "Torres", "roleName": "CashierOperator" }
 }
 ```
@@ -96,6 +97,8 @@ Cierra sesión y revoca el refresh token.
 
 **Headers response:** `Set-Cookie: refreshToken=; Path=/api/auth; Max-Age=0; HttpOnly; Secure; SameSite=Lax` (elimina la cookie).
 
+**Errores:** 401 (refresh token inválido).
+
 ---
 
 ## GET /api/auth/me
@@ -116,7 +119,7 @@ Obtiene la identidad del usuario autenticado.
 }
 ```
 
-**Errores:** 401 (sin token / token inválido).
+**Errores:** 401 (sin token / token inválido) · 404 (usuario no encontrado).
 
 > `roleName` permite: `Administrator` (configuración y maestros) y `CashierOperator` (caja).
 > Se usa para ocultar/mostrar menús y redirigir según rol.
