@@ -84,6 +84,7 @@ src/
 │   │   │   ├── crud-table/            # tabla densa reutilizable (hover, checkbox, columnas numéricas)
 │   │   │   ├── confirm-dialog/        # confirmación destructiva (anular/exonerar)
 │   │   │   ├── empty-state/
+│   │   │   ├── catalog-select/        # select alimentado por un catálogo cacheado (EPIC 2)
 │   │   │   └── receipt-viewer/        # modal que renderiza el `receipt` embebido (pagos/ingresos/egresos/canjes, RF-29/30/31)
 │   │   ├── pipes/                     # currency.pipe, date.pipe
 │   │   └── directives/
@@ -152,7 +153,7 @@ interface (DTO) → service (HTTP) → page (list/form/detail) → spec → veri
 |------|------|-----------|-------------|
 | 0 | — | — | Bootstrap: environments, api.service, interceptors/guards, theme, layout shell, rutas + menú por rol con placeholders |
 | 1 | EPIC 1 | US-01 | Login, sesión, refresh, logout, perfil (UI: `VistasPropuestas/sga_caja_login_propuesta1.html`) |
-| 2 | EPIC 2 | US-02 … US-09 | Catálogos de solo lectura (selects) |
+| 2 | EPIC 2 | US-02 … US-09 | Catálogos de solo lectura (selects): `CatalogService` cacheado + `catalog-select` (demo `/dev/catalogs` solo dev) |
 | 3 | EPIC 3 | US-10 … US-15 | Maestros: giros → socios → puestos → bancos → proveedores → servicios |
 | 4 | EPIC 4 | US-16, US-17, US-18 | Cuentas por cobrar: listado, generar, exonerar, summary |
 | 5 | EPIC 5 | US-19 | Lecturas de consumo |

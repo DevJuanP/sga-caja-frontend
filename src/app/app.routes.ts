@@ -1,5 +1,6 @@
 import { Route, Routes } from '@angular/router';
 
+import { environment } from '../environments/environment';
 import { authGuard } from './core/auth/auth.guard';
 import { roleGuard } from './core/auth/role.guard';
 import { UserRole } from './interfaces/auth.interface';
@@ -39,6 +40,19 @@ export const routes: Routes = [
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'home' },
       placeholderRoute('home', 'Inicio', 'home'),
+
+      // EPIC 2 · Catálogos (solo dev): demostración de catalog-select por catálogo.
+      ...(environment.production
+        ? []
+        : [
+            {
+              path: 'dev/catalogs',
+              loadComponent: () =>
+                import('./features/catalogs/pages/catalog-demo/catalog-demo.component').then(
+                  (m) => m.CatalogDemoComponent,
+                ),
+            },
+          ]),
 
       // EPIC 3 · Maestros (Administrator)
       placeholderRoute('masters/business-types', 'Giros comerciales', 'storefront', ['Administrator']),

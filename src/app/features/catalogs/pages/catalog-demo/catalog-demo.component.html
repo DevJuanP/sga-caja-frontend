@@ -1,0 +1,18 @@
+<header class="cd-header">
+  <h1>Catálogos de solo lectura</h1>
+  <p>
+    Demostración (solo dev): cada <em>select</em> consume un catálogo cacheado por
+    <code>CatalogService</code>.
+  </p>
+</header>
+
+<div class="cd-grid">
+  @for (catalog of catalogs; track catalog.key) {
+    <app-catalog-select
+      [catalogKey]="catalog.key"
+      [control]="controls[catalog.key]"
+      [label]="catalog.label"
+      [allowEmpty]="true"
+    />
+  }
+</div>

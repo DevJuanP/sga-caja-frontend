@@ -61,8 +61,9 @@
 
 **Rol:** Ambos | **Prioridad:** Alta (prerequisito de selects en formularios)
 
-- [ ] Hook/servicio Angular compartido que cargue y cachee cada catálogo.
-- [ ] Componentes de *select* reutilizables alimentados por estos catálogos.
+- [x] `CatalogService` (`features/catalogs/`) que carga y **cachea** cada catálogo (una sola petición por catálogo); `getDetail(uuid)` no cacheado.
+- [x] `CatalogSelectComponent` (`shared/components/catalog-select/`) reutilizable: consume el catálogo por `catalogKey`, escribe el `uuid` en un `FormControl` del padre y soporta opción "Sin asignar".
+- [x] Verificación en dev: página `/dev/catalogs` (solo `environment.development`) con un select por catálogo.
 
 **Endpoints (todos con `GET /{uuid}` opcional):**
 `GET /api/currencies` · `GET /api/stages` · `GET /api/recurrence-types` · `GET /api/receipt-types` · `GET /api/income-categories` · `GET /api/expense-reasons` · `GET /api/charge-target-types` · `GET /api/account-receivable-statuses` · `GET /api/expense-statuses` — [contrato detallado](epics/epic-02-catalogos.md)
@@ -252,8 +253,8 @@
 
 | Epic | Historias | Estado |
 |---|---|---|
-| 1. Sesión | US-01 | [ ] |
-| 2. Catálogos | US-02 … US-09 | [ ] |
+| 1. Sesión | US-01 | [x] |
+| 2. Catálogos | US-02 … US-09 | [x] |
 | 3. Maestros | US-10 … US-15 | [ ] |
 | 4. CxC | US-16, US-17, US-18 | [ ] |
 | 5. Lecturas | US-19 | [ ] |

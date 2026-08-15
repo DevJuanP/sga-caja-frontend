@@ -1,0 +1,25 @@
+:host {
+  display: block;
+  padding: var(--space-5);
+}
+
+.cd-header {
+  margin-bottom: var(--space-5);
+}
+
+.cd-header h1 {
+  margin: 0 0 var(--space-2);
+  font: var(--mat-sys-headline-small);
+}
+
+.cd-header p {
+  margin: 0;
+  color: var(--mat-sys-on-surface-variant);
+  font: var(--mat-sys-body-medium);
+}
+
+.cd-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-4);
+}
