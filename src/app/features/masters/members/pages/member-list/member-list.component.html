@@ -1,0 +1,22 @@
+<app-page-header title="Socios" subtitle="Gestión de socios del mercado">
+  <button mat-flat-button type="button" (click)="openCreate()">
+    <mat-icon aria-hidden="true">add</mat-icon>
+    Nuevo socio
+  </button>
+</app-page-header>
+
+<app-filter-bar placeholder="Código, nombre o apellido" (filterChange)="onFilterChange($event)" />
+
+<app-crud-table
+  [columns]="columns"
+  [rows]="rows()"
+  [totalElements]="totalElements()"
+  [pageIndex]="pageIndex()"
+  [pageSize]="pageSize()"
+  [loading]="loading()"
+  [actions]="rowActions"
+  emptyMessage="No hay socios"
+  (pageChange)="onPageChange($event)"
+  (sortChange)="onSortChange($event)"
+  (actionClick)="onAction($event)"
+/>

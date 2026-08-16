@@ -1,0 +1,29 @@
+<div class="fb">
+  <mat-form-field appearance="outline" class="fb-search" subscriptSizing="dynamic">
+    <mat-label>Buscar</mat-label>
+    <mat-icon matPrefix aria-hidden="true">search</mat-icon>
+    <input
+      matInput
+      type="search"
+      [formControl]="searchControl"
+      [placeholder]="placeholder()"
+      autocomplete="off"
+    />
+  </mat-form-field>
+
+  @if (showActiveFilter()) {
+    <mat-form-field appearance="outline" class="fb-active" subscriptSizing="dynamic">
+      <mat-label>Estado</mat-label>
+      <mat-select [formControl]="activeControl">
+        <mat-option value="all">Todos</mat-option>
+        <mat-option value="true">Activos</mat-option>
+        <mat-option value="false">Inactivos</mat-option>
+      </mat-select>
+    </mat-form-field>
+  }
+
+  <button mat-stroked-button type="button" (click)="clear()">
+    <mat-icon aria-hidden="true">close</mat-icon>
+    Limpiar
+  </button>
+</div>

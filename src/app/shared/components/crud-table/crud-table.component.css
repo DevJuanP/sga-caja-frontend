@@ -1,0 +1,67 @@
+:host {
+  display: block;
+}
+
+.ct-progress {
+  margin-bottom: var(--space-2);
+}
+
+.ct-wrap {
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+}
+
+.ct-table {
+  width: 100%;
+  background: var(--mat-sys-surface);
+}
+
+.ct-table th.mat-mdc-header-cell {
+  background: var(--mat-sys-surface-variant);
+  color: var(--mat-sys-on-surface-variant);
+  font: var(--mat-sys-title-small);
+}
+
+.ct-table td.mat-mdc-cell {
+  font: var(--mat-sys-body-medium);
+}
+
+.ct-end {
+  text-align: end;
+}
+
+.ct-num {
+  font-variant-numeric: tabular-nums;
+}
+
+.ct-actions {
+  width: 1%;
+  white-space: nowrap;
+  text-align: end;
+}
+
+.ct-actions-header {
+  width: 1%;
+  text-align: end;
+}
+
+.ct-action-danger {
+  color: var(--mat-sys-error);
+}
+
+.ct-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+mat-paginator {
+  background: var(--mat-sys-surface);
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-top: none;
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+}

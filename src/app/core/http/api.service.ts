@@ -2,9 +2,7 @@ import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { PagedModel } from '../../interfaces/common.interface';
-
-export type HttpParamsInput = Record<string, string | number | boolean | null | undefined>;
+import { HttpParamsInput, PagedModel } from '../../interfaces/common.interface';
 
 /**
  * Wrapper sobre HttpClient que centraliza la URL base (`environment.apiUrl` + `/api`)

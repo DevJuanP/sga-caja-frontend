@@ -1,0 +1,19 @@
+:host {
+  display: block;
+}
+
+.fb {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.fb-search {
+  flex: 1;
+  max-width: 360px;
+}
+
+.fb-active {
+  width: 180px;
+}

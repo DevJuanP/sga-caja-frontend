@@ -100,7 +100,7 @@ p.ej. `?page=0&size=20&sort=name,asc`. Responden con `PagedModel<T>` (contenido,
 {
   "accessToken": "<jwt>",
   "tokenType": "Bearer",
-  "expiresIn": 900,
+  "expiresIn": 1800,
   "user": {
     "uuid": "uuid-uuid-uuid",
     "username": "admin",
@@ -299,6 +299,8 @@ p.ej. `?page=0&size=20&sort=name,asc`. Responden con `PagedModel<T>` (contenido,
 - **Respuesta exitosa — `200 OK`**: `PagedModel<ServiceResponse>`. Cada ítem:
   `uuid, name, recurrenceType {uuid,name}, chargeTargetType {uuid,name}, currency {uuid,code,name},
   consumptionBased, cost, unitCost, active`.
+  - `cost` y `unitCost` son **nullables**: solo uno tiene valor según `consumptionBased`
+    (costo fijo → `cost`; por consumo → `unitCost`; el otro es `null`).
 - **Errores:** `401`, `403`.
 
 ---
@@ -326,9 +328,14 @@ p.ej. `?page=0&size=20&sort=name,asc`. Responden con `PagedModel<T>` (contenido,
   "currencyUuid": "uuid-moneda",
   "consumptionBased": false,
   "cost": 50.00,
-  "unitCost": 0
+  "unitCost": null
 }
 ```
+
+> **Regla de `cost`/`unitCost`:** el campo no usado debe ir como `null` (**no `0`**).
+> Lo exige el `CHECK ck_service_cost_by_type` en BD: servicio fijo requiere
+> `unitCost = NULL`; servicio por consumo requiere `cost = NULL`. Si se envía `0`
+> en el campo no usado, el backend responde `400`.
 
 - **Respuesta exitosa — `201 Created`**: `ServiceResponse`.
 - **Errores:** `400`, `404` (catálogos referenciados), `409`, `401`, `403`.

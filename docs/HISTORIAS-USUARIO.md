@@ -73,45 +73,46 @@
 ## EPIC 3 — Configuración de maestros (Administrator)
 
 ### US-10 · Gestionar giros comerciales
-- [ ] Listado, crear, editar y **eliminar** (único maestro con `DELETE`).
-- [ ] Formulario: campo `name` (obligatorio).
+- [x] Listado, crear, editar y **eliminar** (único maestro con `DELETE`).
+- [x] Formulario: campo `name` (obligatorio).
 
 **Endpoints:** `GET /api/business-types` · `GET /{uuid}` · `POST` · `PUT /{uuid}` · `DELETE /{uuid}` — [contrato detallado](epics/epic-03-maestros.md)
 
 ### US-11 · Gestionar socios
-- [ ] Listado paginado con búsqueda (código/nombre/apellido) y filtro por activo.
-- [ ] Crear/editar socio: `code`, `firstName`, `lastName`, `shareNumber`, `stageUuid`, `birthDate` (fecha pasada).
-- [ ] Desactivar socio (soft delete).
-- [ ] Detalle por uuid.
+- [x] Listado paginado con búsqueda (código/nombre/apellido) y filtro por activo.
+- [x] Crear/editar socio: `code`, `firstName`, `lastName`, `shareNumber`, `stageUuid`, `birthDate` (fecha pasada).
+- [x] Desactivar socio (soft delete).
+- [x] Detalle por uuid.
 
 **Endpoints:** `GET /api/members?search&active` · `GET /{uuid}` · `POST` · `PUT /{uuid}` · `PATCH /{uuid}/deactivate` — [contrato detallado](epics/epic-03-maestros.md)
 
 ### US-12 · Gestionar puestos
-- [ ] Listado con búsqueda (número/inquilino) y filtro por activo.
-- [ ] Crear/editar puesto: `number`, `businessTypeUuid`, `memberUuid`, `tenantName`, `tenantDocument`, `validityStartDate`, `validityEndDate`.
-- [ ] Desactivar puesto.
+- [x] Listado con búsqueda (número/inquilino) y filtro por activo.
+- [x] Crear/editar puesto: `number`, `businessTypeUuid`, `memberUuid`, `tenantName`, `tenantDocument`, `validityStartDate`, `validityEndDate`.
+- [x] Desactivar puesto.
 
 **Endpoints:** `GET /api/stalls?search&active` · `GET /{uuid}` · `POST` · `PUT /{uuid}` · `PATCH /{uuid}/deactivate` — [contrato detallado](epics/epic-03-maestros.md)
 
 ### US-13 · Gestionar bancos
-- [ ] Listado con búsqueda (nombre/número de cuenta) y filtro por activo.
-- [ ] Crear/editar banco: `name`, `accountNumber`, `cci`, `currencyUuid`.
-- [ ] Desactivar banco.
+- [x] Listado con búsqueda (nombre/número de cuenta) y filtro por activo.
+- [x] Crear/editar banco: `name`, `accountNumber`, `cci`, `currencyUuid`.
+- [x] Desactivar banco.
 
 **Endpoints:** `GET /api/banks?search&active` · `GET /{uuid}` · `POST` · `PUT /{uuid}` · `PATCH /{uuid}/deactivate` — [contrato detallado](epics/epic-03-maestros.md)
 
 ### US-14 · Gestionar proveedores
-- [ ] Listado con búsqueda (nombre/documento) y filtro por activo.
-- [ ] Crear/editar proveedor: `name`, `document`.
-- [ ] Desactivar proveedor.
+- [x] Listado con búsqueda (nombre/documento) y filtro por activo.
+- [x] Crear/editar proveedor: `name`, `document`.
+- [x] Desactivar proveedor.
 
 **Endpoints:** `GET /api/providers?search&active` · `GET /{uuid}` · `POST` · `PUT /{uuid}` · `PATCH /{uuid}/deactivate` — [contrato detallado](epics/epic-03-maestros.md)
 
 ### US-15 · Gestionar servicios cobrables
-- [ ] Listado con búsqueda (nombre) y filtro por activo.
-- [ ] Crear/editar servicio: `name`, `recurrenceTypeUuid`, `chargeTargetTypeUuid`, `currencyUuid`, `consumptionBased`, `cost`, `unitCost`.
-- [ ] Desactivar servicio.
-- [ ] Selects alimentados por los catálogos de US-04, US-08 y US-02.
+- [x] Listado con búsqueda (nombre) y filtro por activo.
+- [x] Crear/editar servicio: `name`, `recurrenceTypeUuid`, `chargeTargetTypeUuid`, `currencyUuid`, `consumptionBased`, `cost`, `unitCost`.
+  - `cost`/`unitCost`: solo uno va con valor; el campo no usado se envía como `null` (no `0`), según el `CHECK ck_service_cost_by_type` de BD.
+- [x] Desactivar servicio.
+- [x] Selects alimentados por los catálogos de US-04, US-08 y US-02.
 
 **Endpoints:** `GET /api/services?search&active` · `GET /{uuid}` · `POST` · `PUT /{uuid}` · `PATCH /{uuid}/deactivate` — [contrato detallado](epics/epic-03-maestros.md)
 
@@ -255,7 +256,7 @@
 |---|---|---|
 | 1. Sesión | US-01 | [x] |
 | 2. Catálogos | US-02 … US-09 | [x] |
-| 3. Maestros | US-10 … US-15 | [ ] |
+| 3. Maestros | US-10 … US-15 | [x] |
 | 4. CxC | US-16, US-17, US-18 | [ ] |
 | 5. Lecturas | US-19 | [ ] |
 | 6. Pagos | US-20 | [ ] |

@@ -1,0 +1,23 @@
+:host {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-5);
+}
+
+.ph-title {
+  margin: 0;
+  font: var(--mat-sys-headline-small);
+}
+
+.ph-subtitle {
+  margin: var(--space-1) 0 0;
+  color: var(--mat-sys-on-surface-variant);
+  font: var(--mat-sys-body-medium);
+}
+
+.ph-actions {
+  display: flex;
+  gap: var(--space-3);
+}

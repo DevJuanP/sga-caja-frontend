@@ -1,0 +1,52 @@
+<h2 mat-dialog-title>{{ editing ? 'Editar servicio' : 'Nuevo servicio' }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="outline" class="vf-full" subscriptSizing="dynamic">
+      <mat-label>Nombre</mat-label>
+      <input matInput type="text" formControlName="name" placeholder="Ej: Servicio de luz" autocomplete="off" />
+      @if (form.controls.name.hasError('required') && form.controls.name.touched) {
+        <mat-error>El nombre es obligatorio</mat-error>
+      }
+    </mat-form-field>
+
+    <div class="vf-grid">
+      <app-catalog-select [catalogKey]="recurrenceTypesKey" [control]="form.controls.recurrenceTypeUuid" [label]="'Recurrencia'" />
+
+      <app-catalog-select [catalogKey]="chargeTargetTypesKey" [control]="form.controls.chargeTargetTypeUuid" [label]="'Tipo de cobro'" />
+    </div>
+
+    <div class="vf-grid">
+      <app-catalog-select [catalogKey]="currenciesKey" [control]="form.controls.currencyUuid" [label]="'Moneda'" />
+
+      <mat-checkbox [formControl]="form.controls.consumptionBased" class="vf-toggle">
+        Cobro por consumo (medido)
+      </mat-checkbox>
+    </div>
+
+    @if (form.controls.consumptionBased.value) {
+      <mat-form-field appearance="outline" class="vf-full" subscriptSizing="dynamic">
+        <mat-label>Costo por unidad</mat-label>
+        <input matInput type="number" min="0" formControlName="unitCost" autocomplete="off" />
+        @if (form.hasError('amountRequired') && form.controls.unitCost.touched) {
+          <mat-error>Ingresa un costo unitario mayor a 0</mat-error>
+        }
+      </mat-form-field>
+    } @else {
+      <mat-form-field appearance="outline" class="vf-full" subscriptSizing="dynamic">
+        <mat-label>Costo fijo</mat-label>
+        <input matInput type="number" min="0" formControlName="cost" autocomplete="off" />
+        @if (form.hasError('amountRequired') && form.controls.cost.touched) {
+          <mat-error>Ingresa un costo mayor a 0</mat-error>
+        }
+      </mat-form-field>
+    }
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button type="button" mat-dialog-close>Cancelar</button>
+  <button mat-flat-button type="button" [disabled]="loading() || form.invalid" (click)="onSubmit()">
+    <span>{{ loading() ? 'Guardando...' : 'Guardar' }}</span>
+  </button>
+</mat-dialog-actions>

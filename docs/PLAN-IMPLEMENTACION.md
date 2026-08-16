@@ -154,7 +154,7 @@ interface (DTO) → service (HTTP) → page (list/form/detail) → spec → veri
 | 0 | — | — | Bootstrap: environments, api.service, interceptors/guards, theme, layout shell, rutas + menú por rol con placeholders |
 | 1 | EPIC 1 | US-01 | Login, sesión, refresh, logout, perfil (UI: `VistasPropuestas/sga_caja_login_propuesta1.html`) |
 | 2 | EPIC 2 | US-02 … US-09 | Catálogos de solo lectura (selects): `CatalogService` cacheado + `catalog-select` (demo `/dev/catalogs` solo dev) |
-| 3 | EPIC 3 | US-10 … US-15 | Maestros: giros → socios → puestos → bancos → proveedores → servicios |
+| 3 | EPIC 3 | US-10 … US-15 | Maestros: giros → socios → puestos → bancos → proveedores → servicios. Shared nuevos: `filter-bar`, `crud-table`, `confirm-dialog` (+`confirm-dialog.service`), `page-header`, `empty-state`, `status-chip`, `currency.pipe` |
 | 4 | EPIC 4 | US-16, US-17, US-18 | Cuentas por cobrar: listado, generar, exonerar, summary |
 | 5 | EPIC 5 | US-19 | Lecturas de consumo |
 | 6 | EPIC 6 | US-20 | Cobranza (pestañas por puesto/socio): consulta RF-19, selección de CxC, exonerar, compute-total, recibo/voucher |

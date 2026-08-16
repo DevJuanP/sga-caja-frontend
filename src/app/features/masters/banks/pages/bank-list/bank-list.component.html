@@ -1,0 +1,22 @@
+<app-page-header title="Bancos" subtitle="Gestión de bancos del mercado">
+  <button mat-flat-button type="button" (click)="openCreate()">
+    <mat-icon aria-hidden="true">add</mat-icon>
+    Nuevo banco
+  </button>
+</app-page-header>
+
+<app-filter-bar placeholder="Nombre, cuenta o CCI" (filterChange)="onFilterChange($event)" />
+
+<app-crud-table
+  [columns]="columns"
+  [rows]="rows()"
+  [totalElements]="totalElements()"
+  [pageIndex]="pageIndex()"
+  [pageSize]="pageSize()"
+  [loading]="loading()"
+  [actions]="rowActions"
+  emptyMessage="No hay bancos"
+  (pageChange)="onPageChange($event)"
+  (sortChange)="onSortChange($event)"
+  (actionClick)="onAction($event)"
+/>

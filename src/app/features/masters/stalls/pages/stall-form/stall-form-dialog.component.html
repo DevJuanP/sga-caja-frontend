@@ -1,0 +1,80 @@
+<h2 mat-dialog-title>{{ editing ? 'Editar puesto' : 'Nuevo puesto' }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="sf-grid">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Número</mat-label>
+        <input matInput type="text" formControlName="number" placeholder="Ej: A-01" autocomplete="off" />
+        @if (form.controls.number.hasError('required') && form.controls.number.touched) {
+          <mat-error>El número es obligatorio</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Giro comercial</mat-label>
+        <mat-select [formControl]="form.controls.businessTypeUuid">
+          @for (bt of businessTypes(); track bt.uuid) {
+            <mat-option [value]="bt.uuid">{{ bt.name }}</mat-option>
+          }
+        </mat-select>
+        @if (form.controls.businessTypeUuid.hasError('required') && form.controls.businessTypeUuid.touched) {
+          <mat-error>El giro comercial es obligatorio</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <mat-form-field appearance="outline" class="sf-full" subscriptSizing="dynamic">
+      <mat-label>Socio</mat-label>
+      <mat-select [formControl]="form.controls.memberUuid">
+        <mat-option [value]="null">Sin socio</mat-option>
+        @for (member of members(); track member.uuid) {
+          <mat-option [value]="member.uuid">
+            {{ member.code }} — {{ member.firstName }} {{ member.lastName }}
+          </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <div class="sf-grid">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Nombre de inquilino</mat-label>
+        <input matInput type="text" formControlName="tenantName" placeholder="Opcional" autocomplete="off" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Documento de inquilino</mat-label>
+        <input matInput type="text" formControlName="tenantDocument" placeholder="Opcional" autocomplete="off" />
+      </mat-form-field>
+    </div>
+
+    <div class="sf-grid">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Vigencia desde</mat-label>
+        <input matInput type="date" formControlName="validityStartDate" />
+        @if (form.controls.validityStartDate.hasError('required') && form.controls.validityStartDate.touched) {
+          <mat-error>La fecha es obligatoria</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Vigencia hasta</mat-label>
+        <input matInput type="date" formControlName="validityEndDate" />
+        @if (form.controls.validityEndDate.hasError('required') && form.controls.validityEndDate.touched) {
+          <mat-error>La fecha es obligatoria</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    @if (form.hasError('rangeInvalid') && (form.controls.validityEndDate.touched || form.controls.validityStartDate.touched)) {
+      <p class="sf-error" role="alert">La fecha final debe ser posterior a la inicial</p>
+    }
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button type="button" mat-dialog-close>Cancelar</button>
+  <button mat-flat-button type="button" [disabled]="loading() || form.invalid" (click)="onSubmit()">
+    <span>{{ loading() ? 'Guardando...' : 'Guardar' }}</span>
+  </button>
+</mat-dialog-actions>

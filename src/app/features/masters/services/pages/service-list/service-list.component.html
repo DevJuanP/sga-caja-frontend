@@ -1,0 +1,22 @@
+<app-page-header title="Servicios" subtitle="Gestión de servicios cobrables del mercado">
+  <button mat-flat-button type="button" (click)="openCreate()">
+    <mat-icon aria-hidden="true">add</mat-icon>
+    Nuevo servicio
+  </button>
+</app-page-header>
+
+<app-filter-bar placeholder="Nombre de servicio" (filterChange)="onFilterChange($event)" />
+
+<app-crud-table
+  [columns]="columns"
+  [rows]="rows()"
+  [totalElements]="totalElements()"
+  [pageIndex]="pageIndex()"
+  [pageSize]="pageSize()"
+  [loading]="loading()"
+  [actions]="rowActions"
+  emptyMessage="No hay servicios"
+  (pageChange)="onPageChange($event)"
+  (sortChange)="onSortChange($event)"
+  (actionClick)="onAction($event)"
+/>

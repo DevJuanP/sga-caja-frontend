@@ -1,0 +1,10 @@
+.mf-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+.mf-full {
+  display: block;
+  margin-top: var(--space-3);
+}

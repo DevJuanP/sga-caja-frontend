@@ -55,12 +55,60 @@ export const routes: Routes = [
           ]),
 
       // EPIC 3 · Maestros (Administrator)
-      placeholderRoute('masters/business-types', 'Giros comerciales', 'storefront', ['Administrator']),
-      placeholderRoute('masters/members', 'Socios', 'group', ['Administrator']),
-      placeholderRoute('masters/stalls', 'Puestos', 'store', ['Administrator']),
-      placeholderRoute('masters/services', 'Servicios cobrables', 'receipt', ['Administrator']),
-      placeholderRoute('masters/banks', 'Bancos', 'account_balance', ['Administrator']),
-      placeholderRoute('masters/providers', 'Proveedores', 'local_shipping', ['Administrator']),
+      {
+        path: 'masters/business-types',
+        loadComponent: () =>
+          import('./features/masters/business-types/pages/business-type-list/business-type-list.component').then(
+            (m) => m.BusinessTypeListComponent,
+          ),
+        canActivate: [roleGuard('Administrator')],
+        data: { title: 'Giros comerciales', icon: 'storefront' },
+      },
+      {
+        path: 'masters/members',
+        loadComponent: () =>
+          import('./features/masters/members/pages/member-list/member-list.component').then(
+            (m) => m.MemberListComponent,
+          ),
+        canActivate: [roleGuard('Administrator')],
+        data: { title: 'Socios', icon: 'group' },
+      },
+      {
+        path: 'masters/stalls',
+        loadComponent: () =>
+          import('./features/masters/stalls/pages/stall-list/stall-list.component').then(
+            (m) => m.StallListComponent,
+          ),
+        canActivate: [roleGuard('Administrator')],
+        data: { title: 'Puestos', icon: 'store' },
+      },
+      {
+        path: 'masters/services',
+        loadComponent: () =>
+          import('./features/masters/services/pages/service-list/service-list.component').then(
+            (m) => m.ServiceListComponent,
+          ),
+        canActivate: [roleGuard('Administrator')],
+        data: { title: 'Servicios cobrables', icon: 'receipt' },
+      },
+      {
+        path: 'masters/banks',
+        loadComponent: () =>
+          import('./features/masters/banks/pages/bank-list/bank-list.component').then(
+            (m) => m.BankListComponent,
+          ),
+        canActivate: [roleGuard('Administrator')],
+        data: { title: 'Bancos', icon: 'account_balance' },
+      },
+      {
+        path: 'masters/providers',
+        loadComponent: () =>
+          import('./features/masters/providers/pages/provider-list/provider-list.component').then(
+            (m) => m.ProviderListComponent,
+          ),
+        canActivate: [roleGuard('Administrator')],
+        data: { title: 'Proveedores', icon: 'local_shipping' },
+      },
 
       // EPIC 4 · Cuentas por cobrar (ambos roles)
       placeholderRoute('account-receivables', 'Cuentas por cobrar', 'receipt_long'),

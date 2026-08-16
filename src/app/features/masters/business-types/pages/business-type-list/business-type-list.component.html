@@ -1,0 +1,16 @@
+<app-page-header title="Giros comerciales" subtitle="Gestión de giros de negocio">
+  <button mat-flat-button type="button" (click)="openCreate()">
+    <mat-icon aria-hidden="true">add</mat-icon>
+    Nuevo giro
+  </button>
+</app-page-header>
+
+<app-crud-table
+  [columns]="columns"
+  [rows]="rows()"
+  [loading]="loading()"
+  [actions]="rowActions"
+  [paginated]="false"
+  emptyMessage="No hay giros comerciales"
+  (actionClick)="onAction($event)"
+/>

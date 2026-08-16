@@ -1,0 +1,68 @@
+@if (loading()) {
+  <mat-progress-bar mode="indeterminate" class="ct-progress" />
+}
+
+@if (rows().length === 0) {
+  <app-empty-state [message]="emptyMessage()" />
+} @else {
+  <div class="ct-wrap">
+    <table mat-table [dataSource]="rows()" matSort (matSortChange)="onSort($event)" class="ct-table">
+      @for (col of columns(); track col.key) {
+        <ng-container [matColumnDef]="col.key">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!col.sortable">
+            {{ col.header }}
+          </th>
+          <td mat-cell *matCellDef="let row" [class.ct-end]="col.align === 'end'">
+            @switch (col.type) {
+              @case ('chip') {
+                <app-status-chip [tone]="chipCell(row, col.key).tone" [label]="chipCell(row, col.key).label" />
+              }
+              @case ('number') {
+                <span class="ct-num">{{ cell(row, col.key) }}</span>
+              }
+              @default {
+                {{ cell(row, col.key) }}
+              }
+            }
+          </td>
+        </ng-container>
+      }
+
+      @if (actions().length > 0) {
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="ct-actions-header">
+            <span class="ct-visually-hidden">Acciones</span>
+          </th>
+          <td mat-cell *matCellDef="let row" class="ct-actions">
+            @for (action of actions(); track action.id) {
+              <button
+                mat-icon-button
+                type="button"
+                [class.ct-action-danger]="action.danger"
+                [attr.aria-label]="action.label"
+                [title]="action.label"
+                (click)="onAction(action.id, row)"
+              >
+                <mat-icon aria-hidden="true">{{ action.icon }}</mat-icon>
+              </button>
+            }
+          </td>
+        </ng-container>
+      }
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns()"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns()"></tr>
+    </table>
+  </div>
+
+  @if (paginated()) {
+    <mat-paginator
+      [length]="totalElements()"
+      [pageIndex]="pageIndex()"
+      [pageSize]="pageSize()"
+      [pageSizeOptions]="[20, 50, 100]"
+      showFirstLastButtons
+      (page)="onPage($event)"
+    />
+  }
+}

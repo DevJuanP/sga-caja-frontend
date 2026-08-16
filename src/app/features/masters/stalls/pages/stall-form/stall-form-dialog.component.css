@@ -1,0 +1,16 @@
+.sf-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+.sf-full {
+  display: block;
+  margin-top: var(--space-3);
+}
+
+.sf-error {
+  margin: var(--space-2) 0 0;
+  color: var(--mat-sys-error);
+  font: var(--mat-sys-body-medium);
+}

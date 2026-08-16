@@ -221,13 +221,15 @@ Elemento de `content`:
   "currency": { "uuid": "f47ac10b-...", "code": "PEN", "name": "Sol Peruano" },
   "consumptionBased": false,
   "cost": 150.00,
-  "unitCost": 0.00,
+  "unitCost": null,
   "active": true
 }
 ```
 
 > `consumptionBased: true` → servicio por consumo: el monto se calcula con lecturas (EPIC 5);
-> `cost` suele ser 0 y se usa `unitCost`. `consumptionBased: false` → costo fijo con `cost`.
+> se usa `unitCost` y `cost` viene como `null`. `consumptionBased: false` → costo fijo con `cost`
+> y `unitCost` como `null`. **El campo no usado se envía como `null` (no `0`)**: lo exige el
+> `CHECK ck_service_cost_by_type` de `018_service.sql`; enviar `0` provoca `400`.
 
 ### GET /api/services/{uuid} — **Respuesta 200:** mismo objeto.
 
@@ -241,7 +243,7 @@ Elemento de `content`:
   "currencyUuid": "f47ac10b-...",
   "consumptionBased": false,
   "cost": 150.00,
-  "unitCost": 0.00
+  "unitCost": null
 }
 ```
 **Respuesta 201:** `ServiceResponse`.

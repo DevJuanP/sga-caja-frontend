@@ -1,0 +1,40 @@
+<h2 mat-dialog-title>{{ editing ? 'Editar banco' : 'Nuevo banco' }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="outline" class="bf-full" subscriptSizing="dynamic">
+      <mat-label>Nombre</mat-label>
+      <input matInput type="text" formControlName="name" placeholder="Ej: Banco de Crédito" autocomplete="off" />
+      @if (form.controls.name.hasError('required') && form.controls.name.touched) {
+        <mat-error>El nombre es obligatorio</mat-error>
+      }
+    </mat-form-field>
+
+    <div class="bf-grid">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Nº de cuenta</mat-label>
+        <input matInput type="text" formControlName="accountNumber" placeholder="Ej: 191-1234567-0-12" autocomplete="off" />
+        @if (form.controls.accountNumber.hasError('required') && form.controls.accountNumber.touched) {
+          <mat-error>La cuenta es obligatoria</mat-error>
+        }
+      </mat-form-field>
+
+      <app-catalog-select [catalogKey]="currenciesKey" [control]="form.controls.currencyUuid" [label]="'Moneda'" />
+    </div>
+
+    <mat-form-field appearance="outline" class="bf-full" subscriptSizing="dynamic">
+      <mat-label>CCI</mat-label>
+      <input matInput type="text" formControlName="cci" placeholder="Ej: 00219100123456701234" autocomplete="off" />
+      @if (form.controls.cci.hasError('required') && form.controls.cci.touched) {
+        <mat-error>El CCI es obligatorio</mat-error>
+      }
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button type="button" mat-dialog-close>Cancelar</button>
+  <button mat-flat-button type="button" [disabled]="loading() || form.invalid" (click)="onSubmit()">
+    <span>{{ loading() ? 'Guardando...' : 'Guardar' }}</span>
+  </button>
+</mat-dialog-actions>

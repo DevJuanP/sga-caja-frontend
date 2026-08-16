@@ -1,0 +1,60 @@
+<h2 mat-dialog-title>{{ editing ? 'Editar socio' : 'Nuevo socio' }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="mf-grid">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Código</mat-label>
+        <input matInput type="text" formControlName="code" placeholder="Ej: S-001" autocomplete="off" />
+        @if (form.controls.code.hasError('required') && form.controls.code.touched) {
+          <mat-error>El código es obligatorio</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Part. social</mat-label>
+        <input matInput type="text" formControlName="shareNumber" placeholder="Ej: A-12" autocomplete="off" />
+        @if (form.controls.shareNumber.hasError('required') && form.controls.shareNumber.touched) {
+          <mat-error>La participación social es obligatoria</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <mat-form-field appearance="outline" class="mf-full" subscriptSizing="dynamic">
+      <mat-label>Nombres</mat-label>
+      <input matInput type="text" formControlName="firstName" placeholder="Ej: María" autocomplete="off" />
+      @if (form.controls.firstName.hasError('required') && form.controls.firstName.touched) {
+        <mat-error>El nombre es obligatorio</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="mf-full" subscriptSizing="dynamic">
+      <mat-label>Apellidos</mat-label>
+      <input matInput type="text" formControlName="lastName" placeholder="Ej: Gómez" autocomplete="off" />
+      @if (form.controls.lastName.hasError('required') && form.controls.lastName.touched) {
+        <mat-error>El apellido es obligatorio</mat-error>
+      }
+    </mat-form-field>
+
+    <div class="mf-grid">
+      <app-catalog-select [catalogKey]="stagesKey" [control]="form.controls.stageUuid" [label]="'Etapa de socio'" />
+
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Fecha de nacimiento</mat-label>
+        <input matInput type="date" formControlName="birthDate" />
+        @if (form.controls.birthDate.hasError('required') && form.controls.birthDate.touched) {
+          <mat-error>La fecha es obligatoria</mat-error>
+        } @else if (form.controls.birthDate.hasError('pastDate') && form.controls.birthDate.touched) {
+          <mat-error>Debe ser una fecha pasada</mat-error>
+        }
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button type="button" mat-dialog-close>Cancelar</button>
+  <button mat-flat-button type="button" [disabled]="loading() || form.invalid" (click)="onSubmit()">
+    <span>{{ loading() ? 'Guardando...' : 'Guardar' }}</span>
+  </button>
+</mat-dialog-actions>

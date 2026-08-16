@@ -1,0 +1,32 @@
+:host {
+  display: inline-flex;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-sm);
+  font: var(--mat-sys-label-medium);
+  white-space: nowrap;
+}
+
+.chip--success {
+  background: var(--mat-sys-primary-container);
+  color: var(--mat-sys-on-primary-container);
+}
+
+.chip--warning {
+  background: var(--mat-sys-tertiary-container);
+  color: var(--mat-sys-on-tertiary-container);
+}
+
+.chip--neutral {
+  background: var(--mat-sys-surface-variant);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.chip--danger {
+  background: var(--mat-sys-error-container);
+  color: var(--mat-sys-on-error-container);
+}
