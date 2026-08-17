@@ -1,0 +1,57 @@
+<h2 mat-dialog-title>Registrar canje bancario</h2>
+
+<mat-dialog-content>
+  @if (!created()) {
+    <form [formGroup]="form" class="bank-exchange-form">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>CxC pendiente (socio)</mat-label>
+        <mat-select formControlName="accountReceivableUuid" required>
+          @for (cxc of pendingCxc(); track cxc.uuid) {
+            <mat-option [value]="cxc.uuid">
+              {{ cxc.service.name }} - {{ cxc.member?.fullName }} ({{ cxc.amount | currency:'S/' }})
+            </mat-option>
+          }
+        </mat-select>
+        <mat-error>Seleccione una CxC pendiente</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Banco</mat-label>
+        <mat-select formControlName="bankUuid" required>
+          @for (bank of banks(); track bank.uuid) {
+            <mat-option [value]="bank.uuid">{{ bank.name }}</mat-option>
+          }
+        </mat-select>
+        <mat-error>Seleccione un banco</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Fecha de depósito</mat-label>
+        <input matInput formControlName="depositDate" type="date" required>
+        <mat-error>Ingrese la fecha de depósito</mat-error>
+      </mat-form-field>
+    </form>
+  } @else {
+    <app-receipt-viewer [receipt]="receiptData!"></app-receipt-viewer>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  @if (!created()) {
+    <button mat-button mat-dialog-close>Cancelar</button>
+    <button
+      mat-flat-button
+      color="primary"
+      [disabled]="form.invalid || loading()"
+      (click)="submit()"
+    >
+      @if (loading()) {
+        Registrando...
+      } @else {
+        Registrar canje
+      }
+    </button>
+  } @else {
+    <button mat-flat-button color="primary" mat-dialog-close (click)="close()">Cerrar</button>
+  }
+</mat-dialog-actions>

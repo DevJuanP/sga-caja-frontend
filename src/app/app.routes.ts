@@ -143,10 +143,26 @@ export const routes: Routes = [
       },
 
       // EPIC 7 · Canjes bancarios (CashierOperator)
-      placeholderRoute('bank-exchanges', 'Canjes bancarios', 'account_balance', ['CashierOperator']),
+      {
+        path: 'bank-exchanges',
+        loadComponent: () =>
+          import('./features/bank-exchanges/pages/bank-exchange-list/bank-exchange-list.component').then(
+            (m) => m.BankExchangeListComponent,
+          ),
+        canActivate: [roleGuard('CashierOperator')],
+        data: { title: 'Canjes bancarios', icon: 'account_balance' },
+      },
 
       // EPIC 8 · Ingresos externos (CashierOperator)
-      placeholderRoute('incomes', 'Ingresos', 'south_west', ['CashierOperator']),
+      {
+        path: 'incomes',
+        loadComponent: () =>
+          import('./features/incomes/pages/income-list/income-list.component').then(
+            (m) => m.IncomeListComponent,
+          ),
+        canActivate: [roleGuard('CashierOperator')],
+        data: { title: 'Ingresos', icon: 'south_west' },
+      },
 
       // EPIC 9 · Egresos (CashierOperator)
       placeholderRoute('expenses', 'Egresos', 'north_east', ['CashierOperator']),

@@ -181,10 +181,10 @@
 ### US-21 · Canjear CxC de socio por operación bancaria
 **Rol:** CashierOperator | **Prioridad:** Media
 
-- [ ] Formulario de canje: `accountReceivableUuid`, `bankUuid`, `depositDate`.
-- [ ] Listado de canjes con filtro por `bankUuid` y fecha de depósito.
-- [ ] **Visualizar el voucher** del canje desde el listado (RF-31, `receipt` embebido).
-- [ ] Detalle por uuid.
+- [x] Formulario de canje: `accountReceivableUuid`, `bankUuid`, `depositDate`.
+- [x] Listado de canjes con filtro por `bankUuid` y fecha de depósito.
+- [x] **Visualizar el voucher** del canje desde el listado (RF-31, `receipt` embebido).
+- [x] Detalle por uuid.
 
 **Endpoints:** `GET /api/bank-exchanges?bankUuid&date` · `GET /{uuid}` · `POST /api/bank-exchanges` — [contrato detallado](epics/epic-07-canjes-bancarios.md)
 
@@ -195,9 +195,9 @@
 ### US-22 · Registrar y consultar ingresos externos a caja
 **Rol:** CashierOperator | **Prioridad:** Media
 
-- [ ] Formulario: `depositorName`, `incomeCategoryUuid`, `concept`, `amount`.
-- [ ] Listado paginado con filtro por `incomeCategoryUuid` y `date`.
-- [ ] **Visualizar el voucher** de un ingreso desde el listado (RF-29, `receipt` embebido).
+- [x] Formulario: `depositorName`, `incomeCategoryUuid`, `concept`, `amount`.
+- [x] Listado paginado con filtro por `incomeCategoryUuid` y `date`.
+- [x] **Visualizar el voucher** de un ingreso desde el listado (RF-29, `receipt` embebido).
 
 **Endpoints:** `GET /api/incomes?incomeCategoryUuid&date` · `GET /{uuid}` · `POST /api/incomes` — [contrato detallado](epics/epic-08-ingresos-externos.md)
 
@@ -260,8 +260,8 @@
 | 4. CxC | US-16, US-17, US-18 | [x] |
 | 5. Lecturas | US-19 | [x] |
 | 6. Pagos | US-20 | [x] |
-| 7. Canjes | US-21 | [ ] |
-| 8. Ingresos | US-22 | [ ] |
+| 7. Canjes | US-21 | [x] |
+| 8. Ingresos | US-22 | [x] |
 | 9. Egresos | US-23, US-24, US-25 | [ ] |
 | 10. Reportes | US-26 | [ ] |
 

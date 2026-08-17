@@ -1,0 +1,43 @@
+<app-page-header title="Canjes bancarios" subtitle="Gestión de canjes de CxC por operaciones bancarias">
+  <button mat-flat-button color="primary" (click)="openCreateDialog()">
+    <mat-icon aria-hidden="true">add</mat-icon>
+    Nuevo canje
+  </button>
+</app-page-header>
+
+<div class="bank-exchange-content">
+  <div class="bank-exchange-filters">
+    <span class="bank-exchange-filters-title">Filtros</span>
+    <mat-form-field appearance="outline">
+      <mat-label>Banco</mat-label>
+      <mat-select #bankSelect (selectionChange)="onBankFilter($event.value || null)">
+        <mat-option [value]="null">Todos</mat-option>
+        @for (b of banks(); track b.uuid) {
+          <mat-option [value]="b.uuid">{{ b.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Fecha de depósito</mat-label>
+      <input matInput [type]="'date'" (change)="onDateFilter($any($event.target).value || null)">
+    </mat-form-field>
+
+    <button mat-stroked-button type="button" (click)="clearFilters()">
+      <mat-icon aria-hidden="true">filter_alt_off</mat-icon>
+      Limpiar
+    </button>
+  </div>
+
+  <app-crud-table
+    [columns]="columns"
+    [rows]="rows()"
+    [loading]="loading()"
+    [pageIndex]="pageIndex()"
+    [pageSize]="pageSize()"
+    [totalElements]="totalElements()"
+    [actions]="actions"
+    (pageChange)="onPageChange($event)"
+    (actionClick)="onAction($event)"
+  ></app-crud-table>
+</div>

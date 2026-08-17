@@ -473,3 +473,188 @@ export interface PaymentPageResponse {
 ### 10.8 Cambios en routes
 
 Reemplazar placeholder de `payments` en `app.routes.ts` con lazy-loaded component + `roleGuard('CashierOperator')`.
+
+---
+
+## 11. Fase 7 — Canjes bancarios e ingresos externos (EPIC 7, 8, US-21, US-22)
+
+### 11.1 Archivos a crear
+
+| # | Archivo | Tipo |
+|---|---|---|
+| 1 | `src/app/interfaces/bank-exchange.interface.ts` | Interface |
+| 2 | `src/app/interfaces/income.interface.ts` | Interface |
+| 3 | `src/app/features/bank-exchanges/bank-exchanges.service.ts` | Service |
+| 4 | `src/app/features/bank-exchanges/bank-exchanges.service.spec.ts` | Spec |
+| 5 | `src/app/features/bank-exchanges/pages/bank-exchange-list/bank-exchange-list.component.ts` | Component |
+| 6 | `src/app/features/bank-exchanges/pages/bank-exchange-list/bank-exchange-list.component.html` | Template |
+| 7 | `src/app/features/bank-exchanges/pages/bank-exchange-list/bank-exchange-list.component.css` | Styles |
+| 8 | `src/app/features/bank-exchanges/pages/bank-exchange-list/bank-exchange-list.component.spec.ts` | Spec |
+| 9 | `src/app/features/bank-exchanges/pages/bank-exchange-form/bank-exchange-form-dialog.component.ts` | Dialog |
+| 10 | `src/app/features/bank-exchanges/pages/bank-exchange-form/bank-exchange-form-dialog.component.html` | Template |
+| 11 | `src/app/features/bank-exchanges/pages/bank-exchange-form/bank-exchange-form-dialog.component.css` | Styles |
+| 12 | `src/app/features/bank-exchanges/pages/bank-exchange-form/bank-exchange-form-dialog.component.spec.ts` | Spec |
+| 13 | `src/app/features/incomes/incomes.service.ts` | Service |
+| 14 | `src/app/features/incomes/incomes.service.spec.ts` | Spec |
+| 15 | `src/app/features/incomes/pages/income-list/income-list.component.ts` | Component |
+| 16 | `src/app/features/incomes/pages/income-list/income-list.component.html` | Template |
+| 17 | `src/app/features/incomes/pages/income-list/income-list.component.css` | Styles |
+| 18 | `src/app/features/incomes/pages/income-list/income-list.component.spec.ts` | Spec |
+| 19 | `src/app/features/incomes/pages/income-form/income-form-dialog.component.ts` | Dialog |
+| 20 | `src/app/features/incomes/pages/income-form/income-form-dialog.component.html` | Template |
+| 21 | `src/app/features/incomes/pages/income-form/income-form-dialog.component.css` | Styles |
+| 22 | `src/app/features/incomes/pages/income-form/income-form-dialog.component.spec.ts` | Spec |
+| 23 | Actualizar `app.routes.ts` | Route |
+
+### 11.2 Interfaces
+
+#### `bank-exchange.interface.ts`
+```ts
+export interface BankExchangeResponse {
+  uuid: string;
+  accountReceivable: {
+    uuid: string;
+    service: { uuid: string; name: string; consumptionBased: boolean };
+    member: { uuid: string; fullName: string } | null;
+    stall: { uuid: string; number: string } | null;
+    periodStartDate: string;
+    periodEndDate: string;
+    amount: number;
+    status: { uuid: string; name: 'Paid' };
+  };
+  bank: { uuid: string; name: string };
+  receipt: {
+    uuid: string;
+    receiptTypeName: string;
+    correlativeNumber: number;
+    issueDate: string;
+  };
+  depositDate: string;
+  amount: number;
+}
+
+export interface CreateBankExchangeRequest {
+  accountReceivableUuid: string;
+  bankUuid: string;
+  depositDate: string;
+}
+```
+
+#### `income.interface.ts`
+```ts
+export interface IncomeResponse {
+  uuid: string;
+  receipt: {
+    uuid: string;
+    receiptTypeName: string;
+    correlativeNumber: number;
+    issueDate: string;
+  };
+  depositorName: string;
+  incomeCategory: { uuid: string; name: string };
+  concept: string;
+  amount: number;
+}
+
+export interface CreateIncomeRequest {
+  depositorName: string;
+  incomeCategoryUuid: string;
+  concept: string;
+  amount: number;
+}
+```
+
+### 11.3 Servicios
+
+#### `bank-exchanges.service.ts`
+| Método | HTTP | Path |
+|---|---|---|
+| `list(params)` | GET | `/api/bank-exchanges?bankUuid=&date=&page=&size=` |
+| `getByUuid(uuid)` | GET | `/api/bank-exchanges/{uuid}` |
+| `create(body)` | POST | `/api/bank-exchanges` |
+
+#### `incomes.service.ts`
+| Método | HTTP | Path |
+|---|---|---|
+| `list(params)` | GET | `/api/incomes?incomeCategoryUuid=&date=&page=&size=` |
+| `getByUuid(uuid)` | GET | `/api/incomes/{uuid}` |
+| `create(body)` | POST | `/api/incomes` |
+
+### 11.4 US-21 — Bank Exchange List (`bank-exchange-list`)
+
+- **Ruta:** `/bank-exchanges` (rol: `CashierOperator`)
+- **Layout:**
+  - PageHeader con título "Canjes bancarios" y acción "Nuevo canje" (abre dialog)
+  - Barra de filtros: banco (`mat-select`), fecha de depósito (`mat-datepicker`), botón "Limpiar"
+  - Tabla densa con columnas: Fecha de depósito, CxC (servicio + socio/puesto), Banco, Monto (tabular-nums, end), Estado (siempre "Paid" chip verde), Acciones (ver detalle)
+  - Paginación en base de tabla
+- **Funcionalidad:**
+  - Filtros aplican búsqueda en tiempo real (debounce 300ms)
+  - Acción "Ver detalle" en cada fila abre el registro en modo solo lectura (o podría navegar a detalle, pero según RF-31 se visualiza voucher desde listado)
+  - Al hacer clic en fila o usar acción "Ver detalle", mostrar voucher usando `receipt-viewer` compartido
+  - Botón "Nuevo canje" abre `bank-exchange-form-dialog`
+  - Al crear canje exitosamente → recarga lista
+
+### 11.5 US-21 — Bank Exchange Form (`bank-exchange-form-dialog`)
+
+- **MatDialog** que recibe `{ accountReceivableUuids?: string[] }` por `MAT_DIALOG_DATA` (para pre-seleccionar CxC desde lista de CxC pendientes)
+- **Formulario:**
+  - Select CxC pendiente de socio (filtrado por `status.name === 'Pending' AND memberUuid !== null`) - requiere carga previa de CxC pendientes
+  - Select banco (activos)
+  - Input fecha de depósito (`matInput [type]="date"`)
+  - Validación: todos los campos requeridos
+- **Funcionalidad:**
+  - Al abrir, carga CxC pendientes de socio y bancos activos (usando services existentes)
+  - Submit: `POST /api/bank-exchanges` → respuesta con `BankExchangeResponse`
+  - Al cerrar dialog con éxito → muestra voucher en mismo dialog (cambia a vista de recibo) y notifica al componente padre para recargar lista
+  - Usa `receipt-viewer` compartido para mostrar comprobante
+
+### 11.6 US-22 — Income List (`income-list`)
+
+- **Ruta:** `/incomes` (rol: `CashierOperator`)
+- **Layout:**
+  - PageHeader con título "Ingresos externos" y acción "Nuevo ingreso" (abre dialog)
+  - Barra de filtros: categoría de ingreso (`mat-select`), fecha (`mat-datepicker`), botón "Limpiar"
+  - Tabla densa con columnas: Fecha, Depositante, Categoría, Concepto, Monto (tabular-nums, end), Acciones (ver detalle)
+  - Paginación en base de tabla
+- **Funcionalidad:**
+  - Filtros aplican búsqueda en tiempo real (debounce 300ms)
+  - Acción "Ver detalle" en cada fila muestra voucher usando `receipt-viewer` compartido
+  - Botón "Nuevo ingreso" abre `income-form-dialog`
+  - Al crear ingreso exitosamente → recarga lista
+
+### 11.7 US-22 — Income Form (`income-form-dialog`)
+
+- **MatDialog** (sin datos de entrada específicos)
+- **Formulario:**
+  - Input nombre del depositante
+  - Select categoría de ingreso (activos)
+  - Input concepto
+  - Input monto (number, min=0.01)
+  - Validación: todos los campos requeridos, monto > 0
+- **Funcionalidad:**
+  - Submit: `POST /api/incomes` → respuesta con `IncomeResponse`
+  - Al cerrar dialog con éxito → muestra voucher en mismo dialog (cambia a vista de recibo) y notifica al componente padre para recargar lista
+  - Usa `receipt-viewer` compartido para mostrar comprobante
+
+### 11.8 Componentes compartidos existentes (no requieren cambios)
+
+- `receipt-viewer`: Ya creado en EPIC 6, reutilizable para mostrar vouchers de canjes e ingresos
+- `confirm-dialog`: No necesario para estas operaciones (creación no es destructiva)
+- Otros componentes de `shared/` (page-header, filter-bar, etc.) se usan tal cual
+
+### 11.9 Cambios en routes
+
+Reemplazar placeholders en `app.routes.ts` con:
+- Lazy-loaded module para `bank-exchanges` con `roleGuard('CashierOperator')`
+- Lazy-loaded module para `incomes` con `roleGuard('CashierOperator')`
+
+### 11.10 Notas de implementación
+
+- Ambos listados siguen el patrón de `filter-bar` + `crud-table` genérico (como en otras listas)
+- Los formularios usan `MatDialog` con validación reactiva y estado de carga
+- Los montos usan `currency.pipe` custom (PEN→`S/`, USD→`US$`) y `tabular-nums` para alineación
+- Las fechas usan `matInput [type]="date"` (HTML5 native) como estándar del proyecto
+- El rol requerido es `CashierOperator` para ambas features (conforme a documentos epic)
+- Se aprovechan servicios existentes de catálogos para cargar selectores (bancos, categorías de ingreso, etc.)
+- No se requiere componente de selección especializado (a diferencia de `cxc-selection` para pagos) ya que estas son listas de transacciones completadas, no selección para procesamiento

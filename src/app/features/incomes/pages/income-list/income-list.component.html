@@ -1,0 +1,43 @@
+<app-page-header title="Ingresos externos" subtitle="Gestión de ingresos externos a caja">
+  <button mat-flat-button color="primary" (click)="openCreateDialog()">
+    <mat-icon aria-hidden="true">add</mat-icon>
+    Nuevo ingreso
+  </button>
+</app-page-header>
+
+<div class="income-content">
+  <div class="income-filters">
+    <span class="income-filters-title">Filtros</span>
+    <mat-form-field appearance="outline">
+      <mat-label>Categoría</mat-label>
+      <mat-select #categorySelect (selectionChange)="onCategoryFilter($event.value || null)">
+        <mat-option [value]="null">Todas</mat-option>
+        @for (cat of categories(); track cat.uuid) {
+          <mat-option [value]="cat.uuid">{{ cat.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Fecha</mat-label>
+      <input matInput [type]="'date'" (change)="onDateFilter($any($event.target).value || null)">
+    </mat-form-field>
+
+    <button mat-stroked-button type="button" (click)="clearFilters()">
+      <mat-icon aria-hidden="true">filter_alt_off</mat-icon>
+      Limpiar
+    </button>
+  </div>
+
+  <app-crud-table
+    [columns]="columns"
+    [rows]="rows()"
+    [loading]="loading()"
+    [pageIndex]="pageIndex()"
+    [pageSize]="pageSize()"
+    [totalElements]="totalElements()"
+    [actions]="actions"
+    (pageChange)="onPageChange($event)"
+    (actionClick)="onAction($event)"
+  ></app-crud-table>
+</div>

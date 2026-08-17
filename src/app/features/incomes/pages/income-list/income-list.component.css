@@ -1,0 +1,25 @@
+:host {
+  display: block;
+}
+
+.income-content {
+  padding: var(--space-4);
+}
+
+.income-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-4);
+}
+
+.income-filters-title {
+  font: var(--mat-sys-title-small);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.income-filters mat-form-field {
+  width: 200px;
+}
