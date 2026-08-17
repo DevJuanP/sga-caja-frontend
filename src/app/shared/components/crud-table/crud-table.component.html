@@ -34,7 +34,7 @@
             <span class="ct-visually-hidden">Acciones</span>
           </th>
           <td mat-cell *matCellDef="let row" class="ct-actions">
-            @for (action of actions(); track action.id) {
+            @for (action of getRowActions(row); track action.id) {
               <button
                 mat-icon-button
                 type="button"

@@ -1,0 +1,62 @@
+<app-page-header title="Cuentas por cobrar" subtitle="Gestión de cuentas por cobrar del mercado">
+  <button mat-flat-button type="button" (click)="openSummary()">
+    <mat-icon aria-hidden="true">summarize</mat-icon>
+    Ver resumen
+  </button>
+  <button mat-flat-button type="button" (click)="openGenerate()">
+    <mat-icon aria-hidden="true">add</mat-icon>
+    Generar CxC
+  </button>
+</app-page-header>
+
+<div class="cxc-filters">
+  <span class="cxc-filters-title">Filtros</span>
+  <mat-form-field appearance="outline">
+    <mat-label>Servicio</mat-label>
+    <mat-select #serviceSelect (selectionChange)="onServiceFilter($event.value || null)">
+      <mat-option [value]="null">Todos</mat-option>
+      @for (s of services(); track s.uuid) {
+        <mat-option [value]="s.uuid">{{ s.name }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Socio</mat-label>
+    <mat-select #memberSelect (selectionChange)="onMemberFilter($event.value || null)">
+      <mat-option [value]="null">Todos</mat-option>
+      @for (m of members(); track m.uuid) {
+        <mat-option [value]="m.uuid">{{ m.firstName }} {{ m.lastName }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Puesto</mat-label>
+    <mat-select #stallSelect (selectionChange)="onStallFilter($event.value || null)">
+      <mat-option [value]="null">Todos</mat-option>
+      @for (st of stalls(); track st.uuid) {
+        <mat-option [value]="st.uuid">{{ st.number }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <button mat-stroked-button type="button" (click)="clearFilters()">
+    <mat-icon aria-hidden="true">filter_alt_off</mat-icon>
+    Limpiar
+  </button>
+</div>
+
+<app-crud-table
+  [columns]="columns"
+  [rows]="rows()"
+  [totalElements]="totalElements()"
+  [pageIndex]="pageIndex()"
+  [pageSize]="pageSize()"
+  [loading]="loading()"
+  [actions]="rowActions"
+  emptyMessage="No hay cuentas por cobrar para los filtros seleccionados"
+  (pageChange)="onPageChange($event)"
+  (sortChange)="onSortChange($event)"
+  (actionClick)="onAction($event)"
+/>

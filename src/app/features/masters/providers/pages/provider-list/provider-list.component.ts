@@ -47,7 +47,7 @@ export class ProviderListComponent {
   readonly rows = computed(() => this.items().map((item) => this.toRow(item)));
 
   readonly columns: TableColumn[] = [
-    { key: 'name', header: 'Nombre', sortable: true },
+    { key: 'name', header: 'Nombre' },
     { key: 'document', header: 'Documento' },
     { key: 'activeChip', header: 'Estado', type: 'chip' },
   ];
@@ -114,8 +114,7 @@ export class ProviderListComponent {
   }
 
   private sortValue(): string | undefined {
-    const sort = this.sort();
-    return sort ? `${sort.active},${sort.direction}` : 'name,asc';
+    return undefined;
   }
 
   private toRow(provider: ProviderResponse): Record<string, unknown> {

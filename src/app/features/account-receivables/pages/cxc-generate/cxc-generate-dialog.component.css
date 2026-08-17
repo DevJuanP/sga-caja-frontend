@@ -1,0 +1,43 @@
+.tab-content {
+  padding: 16px 0;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.date-row {
+  display: flex;
+  gap: 16px;
+}
+
+.date-row mat-form-field {
+  flex: 1;
+}
+
+.stages-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.stages-label {
+  font-weight: 500;
+  color: var(--mat-app-text-color);
+}
+
+.result-section {
+  margin-top: 24px;
+}
+
+.result-section h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.result-table-wrap {
+  max-height: 300px;
+  overflow-y: auto;
+}

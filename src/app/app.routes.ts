@@ -111,13 +111,36 @@ export const routes: Routes = [
       },
 
       // EPIC 4 · Cuentas por cobrar (ambos roles)
-      placeholderRoute('account-receivables', 'Cuentas por cobrar', 'receipt_long'),
+      {
+        path: 'account-receivables',
+        loadComponent: () =>
+          import('./features/account-receivables/pages/cxc-list/cxc-list.component').then(
+            (m) => m.CxcListComponent,
+          ),
+        data: { title: 'Cuentas por cobrar', icon: 'receipt_long' },
+      },
+      {
+        path: 'account-receivables/summary',
+        loadComponent: () =>
+          import('./features/account-receivables/pages/cxc-summary/cxc-summary.component').then(
+            (m) => m.CxcSummaryComponent,
+          ),
+        data: { title: 'Resumen de movimientos', icon: 'receipt_long' },
+      },
 
       // EPIC 5 · Lecturas de consumo (ambos roles)
       placeholderRoute('consumption-readings', 'Lecturas de consumo', 'speed'),
 
       // EPIC 6 · Cobranza / Pagos (CashierOperator)
-      placeholderRoute('payments', 'Cobranza', 'point_of_sale', ['CashierOperator']),
+      {
+        path: 'payments',
+        loadComponent: () =>
+          import('./features/payments/pages/payments-list/payments-list.component').then(
+            (m) => m.PaymentsListComponent,
+          ),
+        canActivate: [roleGuard('CashierOperator')],
+        data: { title: 'Cobranza', icon: 'point_of_sale' },
+      },
 
       // EPIC 7 · Canjes bancarios (CashierOperator)
       placeholderRoute('bank-exchanges', 'Canjes bancarios', 'account_balance', ['CashierOperator']),

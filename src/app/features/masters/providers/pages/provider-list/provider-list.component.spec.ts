@@ -35,7 +35,7 @@ describe('ProviderListComponent', () => {
 
   it('carga y muestra los proveedores', () => {
     const req = httpMock.expectOne((r) => r.url.endsWith('/api/providers'));
-    expect(req.request.params.get('sort')).toBe('name,asc');
+    expect(req.request.params.get('sort')).toBeNull();
     req.flush({
       content: [
         { uuid: 'p1', name: 'San Fernando', document: '20123456789', active: true },

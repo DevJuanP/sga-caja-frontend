@@ -28,6 +28,7 @@ export interface RowAction {
   label: string;
   icon: string;
   danger?: boolean;
+  visible?: (row: Record<string, unknown>) => boolean;
 }
 
 export interface RowActionEvent {
@@ -94,5 +95,9 @@ export class CrudTableComponent {
 
   onAction(actionId: string, row: Record<string, unknown>): void {
     this.actionClick.emit({ actionId, row });
+  }
+
+  getRowActions(row: Record<string, unknown>): RowAction[] {
+    return this.actions().filter((a) => !a.visible || a.visible(row));
   }
 }

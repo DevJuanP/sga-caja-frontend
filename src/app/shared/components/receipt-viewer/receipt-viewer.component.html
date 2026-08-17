@@ -1,0 +1,45 @@
+<div class="receipt-container">
+  <div class="receipt-header">
+    <h2 class="receipt-title">{{ receipt().receiptTypeName }}</h2>
+    <div class="receipt-number">
+      <span class="label">N° Correlativo:</span>
+      <span class="value">{{ receipt().correlativeNumber }}</span>
+    </div>
+  </div>
+
+  <div class="receipt-divider"></div>
+
+  <div class="receipt-details">
+    <div class="detail-row">
+      <span class="label">Fecha de emisión:</span>
+      <span class="value">{{ receipt().issueDate }}</span>
+    </div>
+    @if (receipt().paymentDate) {
+      <div class="detail-row">
+        <span class="label">Fecha de pago:</span>
+        <span class="value">{{ receipt().paymentDate }}</span>
+      </div>
+    }
+    @if (receipt().createdBy) {
+      <div class="detail-row">
+        <span class="label">Cajero:</span>
+        <span class="value">{{ receipt().createdBy?.username }}</span>
+      </div>
+    }
+  </div>
+
+  <div class="receipt-divider"></div>
+
+  <div class="receipt-amount-section">
+    <span class="label">Monto total:</span>
+    <span class="amount">{{ receipt().amount | currency:'PEN' }}</span>
+  </div>
+
+  <div class="receipt-footer">
+    <p class="legal-note">Este comprobante tiene valor de declaración jurada.</p>
+    <button mat-stroked-button (click)="print()" class="print-button">
+      <mat-icon>print</mat-icon>
+      Imprimir
+    </button>
+  </div>
+</div>

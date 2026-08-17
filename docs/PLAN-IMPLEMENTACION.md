@@ -155,7 +155,7 @@ interface (DTO) → service (HTTP) → page (list/form/detail) → spec → veri
 | 1 | EPIC 1 | US-01 | Login, sesión, refresh, logout, perfil (UI: `VistasPropuestas/sga_caja_login_propuesta1.html`) |
 | 2 | EPIC 2 | US-02 … US-09 | Catálogos de solo lectura (selects): `CatalogService` cacheado + `catalog-select` (demo `/dev/catalogs` solo dev) |
 | 3 | EPIC 3 | US-10 … US-15 | Maestros: giros → socios → puestos → bancos → proveedores → servicios. Shared nuevos: `filter-bar`, `crud-table`, `confirm-dialog` (+`confirm-dialog.service`), `page-header`, `empty-state`, `status-chip`, `currency.pipe` |
-| 4 | EPIC 4 | US-16, US-17, US-18 | Cuentas por cobrar: listado, generar, exonerar, summary |
+| 4 | EPIC 4 | US-16, US-17, US-18 | Cuentas por cobrar: listado paginado, generar (por puesto/socio), exonerar, resumen en nueva pestaña |
 | 5 | EPIC 5 | US-19 | Lecturas de consumo |
 | 6 | EPIC 6 | US-20 | Cobranza (pestañas por puesto/socio): consulta RF-19, selección de CxC, exonerar, compute-total, recibo/voucher |
 | 7 | EPIC 7, 8 | US-21, US-22 | Canjes bancarios e ingresos externos |
@@ -165,16 +165,311 @@ interface (DTO) → service (HTTP) → page (list/form/detail) → spec → veri
 > El orden respeta las dependencias funcionales: catálogos → maestros → CxC → pagos →
 > canjes/ingresos → egresos → reportes.
 
-## 6. Pruebas y criterio de terminado
+## 6. Fase 4 — Cuentas por cobrar (EPIC 4, US-16/17/18)
+
+### 6.1 Archivos a crear
+
+| # | Archivo | Tipo |
+|---|---|---|
+| 1 | `src/app/interfaces/account-receivable.interface.ts` | Interface |
+| 2 | `src/app/features/account-receivables/account-receivables.service.ts` | Service |
+| 3 | `src/app/features/account-receivables/account-receivables.service.spec.ts` | Spec |
+| 4 | `src/app/features/account-receivables/pages/cxc-list/cxc-list.component.ts` | Component |
+| 5 | `src/app/features/account-receivables/pages/cxc-list/cxc-list.component.html` | Template |
+| 6 | `src/app/features/account-receivables/pages/cxc-list/cxc-list.component.css` | Styles |
+| 7 | `src/app/features/account-receivables/pages/cxc-list/cxc-list.component.spec.ts` | Spec |
+| 8 | `src/app/features/account-receivables/pages/cxc-generate/cxc-generate-dialog.component.ts` | Dialog |
+| 9 | `src/app/features/account-receivables/pages/cxc-generate/cxc-generate-dialog.component.html` | Template |
+| 10 | `src/app/features/account-receivables/pages/cxc-generate/cxc-generate-dialog.component.css` | Styles |
+| 11 | `src/app/features/account-receivables/pages/cxc-generate/cxc-generate-dialog.component.spec.ts` | Spec |
+| 12 | `src/app/features/account-receivables/pages/cxc-summary/cxc-summary.component.ts` | Component |
+| 13 | `src/app/features/account-receivables/pages/cxc-summary/cxc-summary.component.html` | Template |
+| 14 | `src/app/features/account-receivables/pages/cxc-summary/cxc-summary.component.css` | Styles |
+| 15 | `src/app/features/account-receivables/pages/cxc-summary/cxc-summary.component.spec.ts` | Spec |
+| 16 | Actualizar `app.routes.ts` | Route |
+| 17 | Actualizar `docs/PLAN-IMPLEMENTACION.md` | Doc |
+
+### 6.2 Interfaces (`account-receivable.interface.ts`)
+
+```ts
+export interface AccountReceivableResponse {
+  uuid: string;
+  service: { uuid: string; name: string; consumptionBased: boolean };
+  member: { uuid: string; fullName: string } | null;
+  stall: { uuid: string; number: string } | null;
+  periodStartDate: string;   // 'YYYY-MM-DD'
+  periodEndDate: string;
+  amount: number;
+  status: { uuid: string; name: 'Pending' | 'Paid' | 'Exempt' };
+}
+
+export interface GenerateByStallRequest {
+  serviceUuid: string;
+  periodStartDate: string;
+  periodEndDate: string;
+  amount?: number;            // requerido si costo fijo, omitido si consumo
+}
+
+export interface GenerateByMemberRequest {
+  serviceUuid: string;
+  periodStartDate: string;
+  periodEndDate: string;
+  amount?: number;
+  stageCodes: number[];       // [1,2,3]
+  uniqueMembers: boolean;
+}
+
+export interface AccountReceivableMovementResponse {
+  accountReceivable: AccountReceivableResponse;
+  settlementMethod: 'PAYMENT' | 'BANK_EXCHANGE' | null;
+  settledDate: string | null;
+  receiptCorrelative: number | null;
+}
+```
+
+### 6.3 Service (`account-receivables.service.ts`)
+
+| Método | HTTP | Path |
+|---|---|---|
+| `list(params)` | GET | `account-receivables?serviceUuid=&memberUuid=&stallUuid=&page=&size=` |
+| `get(uuid)` | GET | `account-receivables/{uuid}` |
+| `generateByStall(body)` | POST | `account-receivables/generate-by-stall` |
+| `generateByMember(body)` | POST | `account-receivables/generate-by-member` |
+| `exempt(uuid)` | PATCH | `account-receivables/{uuid}/exempt` |
+| `summary(params)` | GET | `account-receivables/summary?memberUuid=&stallUuid=` |
+
+### 6.4 US-16 — CxC List (`cxc-list`)
+
+- Filtros custom (3× mat-select): servicio (`GET /api/services?page=0&size=999`), socio (`GET /api/members?page=0&size=999`), puesto (`GET /api/stalls?page=0&size=999`). Cada filtro tiene opción "Todos" (null).
+- Tabla: servicio, socio/puesto, período, monto (tabular-nums, pipe currency), estado (chip).
+- Acción "Exonerar" visible solo si `status.name === 'Pending'` AND `role === 'CashierOperator'`.
+- Botón "Generar CxC" en PageHeader → abre CxcGenerateDialog.
+- Botón "Ver resumen" → `window.open('/account-receivables/summary?memberUuid=...')`.
+
+### 6.5 US-17 — Generate Dialog (`cxc-generate-dialog`)
+
+- MatDialog con 2 tabs: "Por puestos" / "Por socios".
+- Compartido: select servicio, fechas, monto condicional (solo si `consumptionBased === false`).
+- Tab "Por socios": 3 checkboxes etapa (1/2/3, fijos) + toggle "Solo socios únicos".
+- Resultado: tabla embebida scrollable con las CxC generadas.
+
+### 6.6 US-17 — Summary Page (`cxc-summary`)
+
+- Ruta `/account-receivables/summary` (nueva pestaña).
+- Lee `memberUuid` o `stallUuid` de query params.
+- Tabla: servicio, período, monto, estado (chip), liquidado por, fecha liquidación, correlativo.
+
+### 6.7 Cambios en routes
+
+Reemplazar placeholder con rutas reales de CxC list y summary.
+
+---
+
+## 7. Fase 5 — Lecturas de consumo (EPIC 5, US-19)
+
+### 7.1 Archivos a crear
+
+| # | Archivo | Tipo |
+|---|---|---|
+| 1 | `src/app/interfaces/consumption-reading.interface.ts` | Interface |
+| 2 | `src/app/features/account-receivables/consumption-readings.service.ts` | Service |
+| 3 | `src/app/features/account-receivables/consumption-readings.service.spec.ts` | Spec |
+| 4 | `src/app/features/account-receivables/pages/cxc-reading/consumption-reading-dialog.component.ts` | Dialog |
+| 5 | `src/app/features/account-receivables/pages/cxc-reading/consumption-reading-dialog.component.html` | Template |
+| 6 | `src/app/features/account-receivables/pages/cxc-reading/consumption-reading-dialog.component.css` | Styles |
+| 7 | `src/app/features/account-receivables/pages/cxc-reading/consumption-reading-dialog.component.spec.ts` | Spec |
+
+### 7.2 Archivos modificados
+
+| # | Archivo | Cambio |
+|---|---|---|
+| 8 | `src/app/shared/components/crud-table/crud-table.component.ts` | Agregar `visible?: (row) => boolean` a `RowAction` + método `getRowActions(row)` |
+| 9 | `src/app/shared/components/crud-table/crud-table.component.html` | Usar `getRowActions(row)` en vez de `actions()` |
+| 10 | `src/app/features/account-receivables/pages/cxc-list/cxc-list.component.ts` | Acción "Lectura" condicional + `openReading()` + `consumptionBased` en `toRow()` |
+| 11 | `src/app/features/account-receivables/pages/cxc-list/cxc-list.component.spec.ts` | Test de apertura de dialog de lectura |
+
+### 7.3 Interfaces (`consumption-reading.interface.ts`)
+
+```ts
+export interface ConsumptionReadingResponse {
+  uuid: string;
+  accountReceivableUuid: string;
+  initialReading: number;
+  finalReading: number;
+  unitCost: number;
+  calculatedAmount: number;
+}
+
+export interface RegisterConsumptionReadingRequest {
+  accountReceivableUuid: string;
+  initialReading: number;
+  finalReading: number;
+}
+```
+
+### 7.4 Service (`consumption-readings.service.ts`)
+
+| Método | HTTP | Path |
+|---|---|---|
+| `getByAccountReceivable(uuid)` | GET | `consumption-readings/by-account-receivable/{uuid}` |
+| `getByUuid(uuid)` | GET | `consumption-readings/{uuid}` |
+| `register(body)` | POST | `consumption-readings` |
+
+### 7.5 CrudTableComponent — Acción condicional
+
+Se agregó `visible?: (row: Record<string, unknown>) => boolean` a `RowAction`. El template filtra acciones por `getRowActions(row)`. Los componentes que no usan `visible` no se ven afectados (opcional por defecto).
+
+### 7.6 US-19 — ConsumptionReadingDialog
+
+- MatDialog que recibe `accountReceivableUuid` por `MAT_DIALOG_DATA`.
+- Al abrir, llama `GET /by-account-receivable/{uuid}`:
+  - **200**: muestra datos en solo lectura (initialReading, finalReading, unitCost, calculatedAmount).
+  - **404**: muestra formulario con `initialReading` y `finalReading` (number, min=0, step=0.01).
+- Submit: `POST /consumption-readings` → cierra dialog con `true` para refrescar la tabla.
+
+### 7.7 US-19 — Integración en CxC List
+
+- Acción "Lectura" con ícono `speed`, visible solo si `row.consumptionBased === true`.
+- Handler `openReading(item)` abre el dialog con `accountReceivableUuid`.
+- `toRow()` incluye `consumptionBased` para la condición de visibilidad.
+
+---
+
+## 8. Pruebas y criterio de terminado
 
 - `ng build` sin errores.
 - `ng test` (Vitest) verde: **una spec por componente** y specs para servicios clave.
 - Cada US queda **usable** contra la API (vertical slice completo) antes de marcar `[x]`.
 - Vistas alineadas a `DESIGN-GUIDELINES.md` (tokens, chips de estado, montos tabular-nums).
 
-## 7. Referencias
+## 9. Referencias
 
 - [`API.md`](API.md) — especificación definitiva del backend.
 - [`HISTORIAS-USUARIO.md`](HISTORIAS-USUARIO.md) — historias y estado de cobertura.
 - [`DESIGN-GUIDELINES.md`](DESIGN-GUIDELINES.md) — lineamientos de diseño (Material 3 "Mercado").
 - `docs/epics/` — contratos detallados por epic.
+
+---
+
+## 10. Fase 6 — Cobranza / Pagos (EPIC 6, US-20)
+
+### 10.1 Archivos a crear
+
+| # | Archivo | Tipo |
+|---|---|---|
+| 1 | `src/app/interfaces/payment.interface.ts` | Interface |
+| 2 | `src/app/features/payments/payments.service.ts` | Service |
+| 3 | `src/app/features/payments/payments.service.spec.ts` | Spec |
+| 4 | `src/app/features/payments/pages/payments-list/payments-list.component.ts` | Component |
+| 5 | `src/app/features/payments/pages/payments-list/payments-list.component.html` | Template |
+| 6 | `src/app/features/payments/pages/payments-list/payments-list.component.css` | Styles |
+| 7 | `src/app/features/payments/pages/payments-list/payments-list.component.spec.ts` | Spec |
+| 8 | `src/app/features/payments/pages/payment-dialog/payment-dialog.component.ts` | Dialog |
+| 9 | `src/app/features/payments/pages/payment-dialog/payment-dialog.component.html` | Template |
+| 10 | `src/app/features/payments/pages/payment-dialog/payment-dialog.component.css` | Styles |
+| 11 | `src/app/features/payments/pages/payment-dialog/payment-dialog.component.spec.ts` | Spec |
+| 12 | `src/app/shared/components/receipt-viewer/receipt-viewer.component.ts` | Component compartido |
+| 13 | `src/app/shared/components/receipt-viewer/receipt-viewer.component.html` | Template |
+| 14 | `src/app/shared/components/receipt-viewer/receipt-viewer.component.css` | Styles |
+| 15 | `src/app/shared/components/receipt-viewer/receipt-viewer.component.spec.ts` | Spec |
+| 16 | `src/app/shared/components/cxc-selection/cxc-selection.component.ts` | Component compartido |
+| 17 | `src/app/shared/components/cxc-selection/cxc-selection.component.html` | Template |
+| 18 | `src/app/shared/components/cxc-selection/cxc-selection.component.css` | Styles |
+| 19 | `src/app/shared/components/cxc-selection/cxc-selection.component.spec.ts` | Spec |
+| 20 | Actualizar `app.routes.ts` | Route |
+
+### 10.2 Interfaces (`payment.interface.ts`)
+
+```ts
+export interface ProcessPaymentRequest {
+  accountReceivableUuids: string[];
+}
+
+export interface PaymentTotalResponse {
+  items: { accountReceivableUuid: string; amount: number }[];
+  total: number;
+}
+
+export interface PaymentResponse {
+  uuid: string;
+  receipt: {
+    uuid: string;
+    receiptTypeName: string;
+    correlativeNumber: number;
+    issueDate: string;
+    amount: number;
+  };
+  paymentDate: string;
+  totalAmount: number;
+  details: { accountReceivableUuid: string; amount: number }[];
+  createdBy: { uuid: string; username: string };
+}
+
+export interface PaymentListResponse {
+  uuid: string;
+  receipt: {
+    receiptTypeName: string;
+    correlativeNumber: number;
+    issueDate: string;
+    amount: number;
+  };
+  paymentDate: string;
+  totalAmount: number;
+}
+
+export interface PaymentPageResponse {
+  content: PaymentListResponse[];
+  page: { size: number; number: number; totalElements: number; totalPages: number };
+}
+```
+
+### 10.3 Service (`payments.service.ts`)
+
+| Método | HTTP | Path |
+|---|---|---|
+| `computeTotal(body)` | POST | `/api/payments/compute-total` |
+| `processPayment(body)` | POST | `/api/payments` |
+| `getByUuid(uuid)` | GET | `/api/payments/{uuid}` |
+| `list(params)` | GET | `/api/payments?page=&size=&sort=` |
+
+### 10.4 US-20 — PaymentsListComponent (`payments-list`)
+
+- **Ruta:** `/payments` (rol: `CashierOperator`)
+- **Layout:**
+  - PageHeader con título "Cobranza"
+  - `mat-tab-group` con 2 pestañas: "Por puestos" (índice 0) y "Por socios" (índice 1)
+  - En cada pestaña:
+    - Filtros: servicio (`mat-select`) + socio/puesto (`mat-select`) + botón "Limpiar"
+    - `app-cxc-selection` (componente compartido con checkboxes)
+    - Acciones: botón "Calcular total" (disabled si no hay selección) + texto total
+- **Funcionalidad:**
+  - Al cambiar pestaña → limpia filtros y selecciones, recarga
+  - `computeTotal()` llama `POST /api/payments/compute-total` con UUIDs seleccionados
+  - Abre `PaymentDialogComponent` con el total calculado
+  - Al cerrar dialog con éxito → recarga la lista
+
+### 10.5 US-20 — PaymentDialogComponent (`payment-dialog`)
+
+- **MatDialog** que recibe `{ uuids: string[], total: number }` por `MAT_DIALOG_DATA`.
+- **Sin pagar:** muestra resumen (cantidad CxC + total formateado) + botones "Cancelar" / "Confirmar y pagar"
+- **Pagado:** muestra `app-receipt-viewer` con el recibo emitido + botón "Cerrar"
+- Submit: `POST /api/payments` → respuesta con `receipt` → cambia a vista de recibo
+
+### 10.6 Componente compartido `receipt-viewer`
+
+- **Input:** `receipt` (tipo `ReceiptData`: uuid, receiptTypeName, correlativeNumber, issueDate, amount, paymentDate?, createdBy?)
+- **Layout:** Encabezado con tipo de recibo, correlativo, fecha de emisión, monto total (pipe currency custom), nota legal
+- **Impresión:** botón "Imprimir" que llama `window.print()`, con `@media print` que oculta botones
+- **Reutilizable** por ingresos, egresos y canjes bancarios
+
+### 10.7 Componente compartido `cxc-selection`
+
+- **Inputs:** `data` (CxcRow[]), `selectable` (boolean, default true)
+- **Output:** `selectionChange` (string[] de UUIDs seleccionados)
+- **Funcionalidad:** tabla con checkboxes (mat-checkbox), checkbox maestro en header, selección múltiple
+- **Columnas:** Servicio, Socio/Puesto, Período, Monto (tabular-nums, end), Estado (chip)
+- **Reutilizable** por cualquier vista que requiera selección de CxC
+
+### 10.8 Cambios en routes
+
+Reemplazar placeholder de `payments` en `app.routes.ts` con lazy-loaded component + `roleGuard('CashierOperator')`.

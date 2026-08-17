@@ -1,0 +1,111 @@
+<h2 mat-dialog-title>Generar cuentas por cobrar</h2>
+
+<mat-dialog-content [formGroup]="form">
+  <mat-tab-group (selectedIndexChange)="onTabChange($event)">
+    <mat-tab label="Por puestos">
+      <div class="tab-content">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Servicio</mat-label>
+          <mat-select formControlName="serviceUuid" (selectionChange)="onServiceChange($event.value)">
+            @for (s of servicesForStall(); track s.uuid) {
+              <mat-option [value]="s.uuid">{{ s.name }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <div class="date-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Fecha inicio</mat-label>
+            <input matInput formControlName="periodStartDate" type="date" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Fecha fin</mat-label>
+            <input matInput formControlName="periodEndDate" type="date" />
+          </mat-form-field>
+        </div>
+
+        @if (showAmount) {
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Monto</mat-label>
+            <input matInput formControlName="amount" type="number" min="0" step="0.01" />
+          </mat-form-field>
+        }
+      </div>
+    </mat-tab>
+
+    <mat-tab label="Por socios">
+      <div class="tab-content">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Servicio</mat-label>
+          <mat-select formControlName="serviceUuid" (selectionChange)="onServiceChange($event.value)">
+            @for (s of servicesForMember(); track s.uuid) {
+              <mat-option [value]="s.uuid">{{ s.name }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <div class="date-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Fecha inicio</mat-label>
+            <input matInput formControlName="periodStartDate" type="date" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Fecha fin</mat-label>
+            <input matInput formControlName="periodEndDate" type="date" />
+          </mat-form-field>
+        </div>
+
+        @if (showAmount) {
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Monto</mat-label>
+            <input matInput formControlName="amount" type="number" min="0" step="0.01" />
+          </mat-form-field>
+        }
+
+        <div class="stages-row">
+          <label class="stages-label">Etapas:</label>
+          <mat-checkbox formControlName="stage1">Etapa 1</mat-checkbox>
+          <mat-checkbox formControlName="stage2">Etapa 2</mat-checkbox>
+          <mat-checkbox formControlName="stage3">Etapa 3</mat-checkbox>
+        </div>
+
+        <mat-slide-toggle formControlName="uniqueMembers" color="primary">
+          Solo socios únicos
+        </mat-slide-toggle>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+
+  @if (result().length > 0) {
+    <div class="result-section">
+      <h3>Resultado ({{ result().length }} CxC generadas)</h3>
+      <div class="result-table-wrap">
+        <app-crud-table
+          [columns]="resultColumns"
+          [rows]="resultRows()"
+          [loading]="loading()"
+          [paginated]="false"
+          emptyMessage="Sin resultados"
+        />
+      </div>
+    </div>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close type="button">Cerrar</button>
+  <button
+    mat-flat-button
+    type="button"
+    [disabled]="!canSubmit || loading() || generated()"
+    (click)="submit()"
+  >
+    @if (loading()) {
+      Generando...
+    } @else {
+      Generar
+    }
+  </button>
+</mat-dialog-actions>

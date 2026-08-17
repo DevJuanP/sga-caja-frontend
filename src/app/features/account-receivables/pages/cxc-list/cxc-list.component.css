@@ -1,0 +1,23 @@
+:host {
+  display: block;
+}
+
+.cxc-filters {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.cxc-filters-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--mat-app-text-color);
+  margin-right: 8px;
+}
+
+.cxc-filters mat-form-field {
+  flex: 1;
+  min-width: 180px;
+}

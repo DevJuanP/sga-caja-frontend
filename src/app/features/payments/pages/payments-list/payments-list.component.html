@@ -1,0 +1,122 @@
+<app-page-header title="Cobranza" subtitle="Gestión de cobranza de cuentas por cobrar">
+</app-page-header>
+
+<mat-tab-group (selectedIndexChange)="onTabChange($event)" class="payments-tabs">
+  <mat-tab label="Por puestos">
+    <div class="payments-content">
+      <div class="payments-filters">
+        <span class="payments-filters-title">Filtros</span>
+        <mat-form-field appearance="outline">
+          <mat-label>Servicio</mat-label>
+          <mat-select #serviceSelect (selectionChange)="onServiceFilter($event.value || null)">
+            <mat-option [value]="null">Todos</mat-option>
+            @for (s of services(); track s.uuid) {
+              <mat-option [value]="s.uuid">{{ s.name }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Puesto</mat-label>
+          <mat-select #stallSelect (selectionChange)="onStallFilter($event.value || null)">
+            <mat-option [value]="null">Todos</mat-option>
+            @for (st of stalls(); track st.uuid) {
+              <mat-option [value]="st.uuid">{{ st.number }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <button mat-stroked-button type="button" (click)="clearFilters()">
+          <mat-icon aria-hidden="true">filter_alt_off</mat-icon>
+          Limpiar
+        </button>
+
+        <div class="payments-actions">
+          <button
+            mat-flat-button
+            color="primary"
+            [disabled]="!hasPendingSelection()"
+            (click)="computeTotal()"
+          >
+            <mat-icon aria-hidden="true">calculate</mat-icon>
+            Calcular total
+          </button>
+          @if (totalAmount() !== null) {
+            <span class="payments-total">
+              Total a cobrar: S/ {{ totalAmount()?.toFixed(2) }}
+            </span>
+          }
+        </div>
+      </div>
+
+      <app-cxc-selection
+        [data]="stallPageRows()"
+        [totalElements]="stallTotalElements()"
+        [pageIndex]="stallPageIndex()"
+        [pageSize]="stallPageSize()"
+        [preSelected]="stallPreSelected()"
+        (selectionChange)="onSelectionChange($event)"
+        (pageChange)="onStallPageChange($event)"
+      ></app-cxc-selection>
+    </div>
+  </mat-tab>
+
+  <mat-tab label="Por socios">
+    <div class="payments-content">
+      <div class="payments-filters">
+        <span class="payments-filters-title">Filtros</span>
+        <mat-form-field appearance="outline">
+          <mat-label>Servicio</mat-label>
+          <mat-select #serviceSelect (selectionChange)="onServiceFilter($event.value || null)">
+            <mat-option [value]="null">Todos</mat-option>
+            @for (s of services(); track s.uuid) {
+              <mat-option [value]="s.uuid">{{ s.name }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Socio</mat-label>
+          <mat-select #memberSelect (selectionChange)="onMemberFilter($event.value || null)">
+            <mat-option [value]="null">Todos</mat-option>
+            @for (m of members(); track m.uuid) {
+              <mat-option [value]="m.uuid">{{ m.firstName }} {{ m.lastName }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <button mat-stroked-button type="button" (click)="clearFilters()">
+          <mat-icon aria-hidden="true">filter_alt_off</mat-icon>
+          Limpiar
+        </button>
+
+        <div class="payments-actions">
+          <button
+            mat-flat-button
+            color="primary"
+            [disabled]="!hasPendingSelection()"
+            (click)="computeTotal()"
+          >
+            <mat-icon aria-hidden="true">calculate</mat-icon>
+            Calcular total
+          </button>
+          @if (totalAmount() !== null) {
+            <span class="payments-total">
+              Total a cobrar: S/ {{ totalAmount()?.toFixed(2) }}
+            </span>
+          }
+        </div>
+      </div>
+
+      <app-cxc-selection
+        [data]="memberPageRows()"
+        [totalElements]="memberTotalElements()"
+        [pageIndex]="memberPageIndex()"
+        [pageSize]="memberPageSize()"
+        [preSelected]="memberPreSelected()"
+        (selectionChange)="onSelectionChange($event)"
+        (pageChange)="onMemberPageChange($event)"
+      ></app-cxc-selection>
+    </div>
+  </mat-tab>
+</mat-tab-group>

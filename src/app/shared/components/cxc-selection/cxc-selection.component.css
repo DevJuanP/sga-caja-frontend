@@ -1,0 +1,42 @@
+:host {
+  display: block;
+}
+
+.cxc-selection-container {
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+}
+
+.cxc-table {
+  width: 100%;
+  background: var(--mat-sys-surface);
+}
+
+.cxc-table th.mat-mdc-header-cell {
+  background: var(--mat-sys-surface-variant);
+  color: var(--mat-sys-on-surface-variant);
+  font: var(--mat-sys-title-small);
+}
+
+.cxc-table td.mat-mdc-cell {
+  font: var(--mat-sys-body-medium);
+}
+
+.checkbox-cell {
+  width: 48px;
+  text-align: center;
+}
+
+.amount-header {
+  text-align: end;
+}
+
+.amount-cell {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+.cxc-selection-container mat-paginator {
+  border-top: 1px solid var(--mat-sys-outline-variant);
+}

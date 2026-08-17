@@ -153,9 +153,9 @@
 ### US-19 · Registrar y consultar lecturas de consumo
 **Rol:** Ambos | **Prioridad:** Alta
 
-- [ ] Registro de lectura inicial/final de una CxC de servicio por consumo: `accountReceivableUuid`, `initialReading`, `finalReading`.
-- [ ] Consulta de lectura de una CxC: `GET /by-account-receivable/{accountReceivableUuid}`.
-- [ ] Visualizar lectura por uuid.
+- [x] Registro de lectura inicial/final de una CxC de servicio por consumo: `accountReceivableUuid`, `initialReading`, `finalReading`.
+- [x] Consulta de lectura de una CxC: `GET /by-account-receivable/{accountReceivableUuid}`.
+- [x] Visualizar lectura por uuid.
 
 **Endpoints:** `POST /api/consumption-readings` · `GET /{uuid}` · `GET /by-account-receivable/{accountReceivableUuid}` — [contrato detallado](epics/epic-05-lecturas-consumo.md)
 
@@ -166,11 +166,11 @@
 ### US-20 · Cobrar cuentas por cobrar y emitir recibo
 **Rol:** CashierOperator | **Prioridad:** Alta
 
-- [ ] Consulta de CxC **por socio o por puesto** (RF-19), con pestañas "Por puesto" / "Por socio" que **separan las cuentas** (RF-20).
-- [ ] Selección de CxC pendientes (checkboxes) = cuentas **abonadas**; acción **Exonerar** desde la misma pantalla (RF-21, con confirmación).
-- [ ] Botón "Calcular total" → `POST /api/payments/compute-total` con `{ accountReceivableUuids: [...] }` (RF-22).
-- [ ] Confirmar pago → `POST /api/payments` (RF-23) → muestra el **voucher** del recibo emitido.
-- [ ] Consulta de un pago por uuid (para reimprimir/ver voucher).
+- [x] Consulta de CxC **por socio o por puesto** (RF-19), con pestañas "Por puesto" / "Por socio" que **separan las cuentas** (RF-20).
+- [x] Selección de CxC pendientes (checkboxes) = cuentas **abonadas**; acción **Exonerar** desde la misma pantalla (RF-21, con confirmación).
+- [x] Botón "Calcular total" → `POST /api/payments/compute-total` con `{ accountReceivableUuids: [...] }` (RF-22).
+- [x] Confirmar pago → `POST /api/payments` (RF-23) → muestra el **voucher** del recibo emitido.
+- [x] Consulta de un pago por uuid (para reimprimir/ver voucher).
 
 **Endpoints:** `POST /api/payments/compute-total` · `POST /api/payments` · `GET /api/payments/{uuid}` — [contrato detallado](epics/epic-06-cobranza-pagos.md)
 
@@ -257,9 +257,9 @@
 | 1. Sesión | US-01 | [x] |
 | 2. Catálogos | US-02 … US-09 | [x] |
 | 3. Maestros | US-10 … US-15 | [x] |
-| 4. CxC | US-16, US-17, US-18 | [ ] |
-| 5. Lecturas | US-19 | [ ] |
-| 6. Pagos | US-20 | [ ] |
+| 4. CxC | US-16, US-17, US-18 | [x] |
+| 5. Lecturas | US-19 | [x] |
+| 6. Pagos | US-20 | [x] |
 | 7. Canjes | US-21 | [ ] |
 | 8. Ingresos | US-22 | [ ] |
 | 9. Egresos | US-23, US-24, US-25 | [ ] |

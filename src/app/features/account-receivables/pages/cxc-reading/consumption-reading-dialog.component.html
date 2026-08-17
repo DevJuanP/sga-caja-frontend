@@ -1,0 +1,66 @@
+<h2 mat-dialog-title>Lectura de consumo</h2>
+
+<mat-dialog-content>
+  @if (hasReading()) {
+    <div class="reading-view">
+      <div class="reading-field">
+        <span class="reading-label">Lectura inicial</span>
+        <span class="reading-value">{{ reading()!.initialReading }}</span>
+      </div>
+      <div class="reading-field">
+        <span class="reading-label">Lectura final</span>
+        <span class="reading-value">{{ reading()!.finalReading }}</span>
+      </div>
+      <div class="reading-field">
+        <span class="reading-label">Costo unitario</span>
+        <span class="reading-value">{{ reading()!.unitCost }}</span>
+      </div>
+      <div class="reading-field reading-total">
+        <span class="reading-label">Importe calculado</span>
+        <span class="reading-value reading-amount">{{ reading()!.calculatedAmount }}</span>
+      </div>
+    </div>
+  } @else {
+    <form [formGroup]="form" class="reading-form">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Lectura inicial</mat-label>
+        <input matInput formControlName="initialReading" type="number" min="0" step="0.01" />
+        @if (form.get('initialReading')?.hasError('required')) {
+          <mat-error>Requerido</mat-error>
+        }
+        @if (form.get('initialReading')?.hasError('min')) {
+          <mat-error>Debe ser &ge; 0</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Lectura final</mat-label>
+        <input matInput formControlName="finalReading" type="number" min="0" step="0.01" />
+        @if (form.get('finalReading')?.hasError('required')) {
+          <mat-error>Requerido</mat-error>
+        }
+        @if (form.get('finalReading')?.hasError('min')) {
+          <mat-error>Debe ser &ge; 0</mat-error>
+        }
+      </mat-form-field>
+    </form>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close type="button">Cerrar</button>
+  @if (!hasReading()) {
+    <button
+      mat-flat-button
+      type="button"
+      [disabled]="!canSubmit"
+      (click)="submit()"
+    >
+      @if (loading()) {
+        Registrando...
+      } @else {
+        Registrar
+      }
+    </button>
+  }
+</mat-dialog-actions>

@@ -1,0 +1,42 @@
+:host {
+  display: block;
+}
+
+.payments-tabs {
+  margin-top: var(--space-4);
+}
+
+.payments-content {
+  padding: var(--space-4);
+}
+
+.payments-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-4);
+}
+
+.payments-filters-title {
+  font: var(--mat-sys-title-small);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.payments-filters mat-form-field {
+  width: 200px;
+}
+
+.payments-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-left: auto;
+}
+
+.payments-total {
+  font: var(--mat-sys-title-medium);
+  color: var(--mat-sys-tertiary);
+  font-variant-numeric: tabular-nums;
+}

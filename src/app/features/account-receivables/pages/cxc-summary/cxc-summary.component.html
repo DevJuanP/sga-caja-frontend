@@ -1,0 +1,9 @@
+<app-page-header [title]="title()" subtitle="Detalle de movimientos y liquidaciones" />
+
+<app-crud-table
+  [columns]="columns"
+  [rows]="rows()"
+  [loading]="loading()"
+  [paginated]="false"
+  emptyMessage="No hay movimientos para este socio/puesto"
+/>

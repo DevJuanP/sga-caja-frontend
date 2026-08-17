@@ -1,0 +1,42 @@
+.reading-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.reading-view {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.reading-field {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.reading-label {
+  font: var(--mat-sys-body-medium);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.reading-value {
+  font: var(--mat-sys-body-large);
+  color: var(--mat-sys-on-surface);
+}
+
+.reading-total {
+  padding-top: 12px;
+  border-top: 1px solid var(--mat-sys-outline-variant);
+}
+
+.reading-amount {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: var(--mat-sys-primary);
+}
+
+.full-width {
+  width: 100%;
+}
