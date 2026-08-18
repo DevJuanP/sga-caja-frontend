@@ -80,32 +80,20 @@ export class ExpenseBulkUploadDialogComponent {
       });
   }
 
-  downloadTemplate(): void {
-    const headers = [
-      'DocumentNumber',
-      'ProviderName',
-      'ExpenseDate',
-      'Amount',
-      'AssociatedDocument',
-      'ExpenseReason',
-    ];
-    const exampleRow = [
-      'F001-000123',
-      'Proveedor Ejemplo',
-      '2026-08-18',
-      '250.00',
-      'OC-001',
-      'Servicios generales',
-    ];
-
-    const csvContent = [headers.join(','), exampleRow.join(',')].join('\n');
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = 'plantilla_egresos.csv';
-    link.click();
-    URL.revokeObjectURL(link.href);
-  }
+  /**
+   * Columnas esperadas del XLSX, en orden (ver `ExpenseBulkFileParser` en el backend).
+   * Se muestran como referencia en el diálogo: no se ofrece una plantilla descargable
+   * porque el backend sólo acepta libros de Excel reales (formato binario XLSX), no un
+   * archivo generado en el navegador con encabezado ".xlsx" pero contenido CSV.
+   */
+  readonly templateColumns = [
+    { header: 'DocumentNumber', example: 'F001-000123' },
+    { header: 'ProviderName', example: 'Proveedor Ejemplo' },
+    { header: 'ExpenseDate', example: '2026-08-18' },
+    { header: 'Amount', example: '250.00' },
+    { header: 'AssociatedDocument', example: 'OC-001 (opcional)' },
+    { header: 'ExpenseReason', example: 'Servicios generales' },
+  ];
 
   close(): void {
     this.dialogRef.close(this.result() !== null);

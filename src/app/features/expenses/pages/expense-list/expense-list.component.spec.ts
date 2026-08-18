@@ -1,7 +1,6 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { ExpenseListComponent } from './expense-list.component';
 
 describe('ExpenseListComponent', () => {
@@ -16,7 +15,7 @@ describe('ExpenseListComponent', () => {
     TestBed.resetTestingModule();
     await TestBed.configureTestingModule({
       imports: [ExpenseListComponent],
-      providers: [provideHttpClient(), provideHttpClientTesting(), provideAnimationsAsync()],
+      providers: [provideHttpClient(), provideHttpClientTesting()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ExpenseListComponent);
@@ -68,7 +67,7 @@ describe('ExpenseListComponent', () => {
   it('resetea paginación al cambiar filtro de año', () => {
     fixture.componentInstance.pageIndex.set(5);
 
-    fixture.componentInstance.onYearFilter('2026');
+    fixture.componentInstance.onYearFilter(2026);
     flushAll();
 
     expect(fixture.componentInstance.pageIndex()).toBe(0);
@@ -77,7 +76,7 @@ describe('ExpenseListComponent', () => {
   it('resetea paginación al cambiar filtro de mes', () => {
     fixture.componentInstance.pageIndex.set(3);
 
-    fixture.componentInstance.onMonthFilter('8');
+    fixture.componentInstance.onMonthFilter(8);
     flushAll();
 
     expect(fixture.componentInstance.pageIndex()).toBe(0);

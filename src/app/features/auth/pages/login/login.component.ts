@@ -10,6 +10,7 @@ import { finalize } from 'rxjs';
 import { AuthService } from '../../../../core/auth/auth.service';
 import { ApiError } from '../../../../core/auth/error.interceptor';
 import { ThemeService } from '../../../../core/theme/theme.service';
+import { UserRole } from '../../../../interfaces/auth.interface';
 
 @Component({
   selector: 'app-login',
@@ -55,8 +56,17 @@ export class LoginComponent {
       .login(credentials)
       .pipe(finalize(() => this.loading.set(false)))
       .subscribe({
-        next: () => this.router.navigate(['/home']),
+        next: (response) => this.router.navigate([this.landingRouteFor(response.user.roleName)]),
         error: (error: ApiError) => this.errorMessage.set(error.message),
       });
+  }
+
+  /**
+   * Aterrizaje tras autenticar (RF-01: "se abre recibos"). El operador de caja llega
+   * directo a Cobranza, donde se procesan pagos y se emiten recibos; el administrador
+   * no tiene acceso a esa pantalla (roleGuard), así que aterriza en sus catálogos.
+   */
+  private landingRouteFor(role: UserRole): string {
+    return role === 'CashierOperator' ? '/payments' : '/masters/members';
   }
 }

@@ -48,6 +48,21 @@
       </td>
     </ng-container>
 
+    @if (exemptEnabled()) {
+      <ng-container matColumnDef="exempt">
+        <th mat-header-cell *matHeaderCellDef class="checkbox-cell">Exonerar</th>
+        <td mat-cell *matCellDef="let row" class="checkbox-cell">
+          @if (row.pending) {
+            <mat-checkbox
+              (change)="toggleExempt(row)"
+              [checked]="exemptSelection.isSelected(row)"
+              aria-label="Marcar cuenta como exonerada"
+            ></mat-checkbox>
+          }
+        </td>
+      </ng-container>
+    }
+
     <tr mat-header-row *matHeaderRowDef="displayedColumns()"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns()"></tr>
   </table>

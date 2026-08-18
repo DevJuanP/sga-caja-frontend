@@ -1,7 +1,6 @@
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter, Router } from '@angular/router';
 import { AccessTokenResponse } from '../../../../interfaces/auth.interface';
 import { AuthService } from '../../../../core/auth/auth.service';
@@ -37,7 +36,6 @@ describe('LoginComponent', () => {
         provideRouter([]),
         provideHttpClient(withInterceptors([authInterceptor, errorInterceptor])),
         provideHttpClientTesting(),
-        provideAnimationsAsync(),
       ],
     }).compileComponents();
 
@@ -57,7 +55,7 @@ describe('LoginComponent', () => {
     (fixture.nativeElement as HTMLElement).querySelector('form')!.dispatchEvent(new Event('submit'));
   }
 
-  it('inicia sesión y navega al inicio', () => {
+  it('inicia sesión y navega a catálogos para un Administrator (RF-01)', () => {
     const navigateSpy = vi.spyOn(router, 'navigate').mockResolvedValue(true);
 
     submit('admin', '123456');
@@ -67,9 +65,21 @@ describe('LoginComponent', () => {
     expect(req.request.body).toEqual({ username: 'admin', password: '123456' });
     req.flush(tokenResponse);
 
-    expect(navigateSpy).toHaveBeenCalledWith(['/home']);
+    expect(navigateSpy).toHaveBeenCalledWith(['/masters/members']);
     expect(auth.isAuthenticated()).toBe(true);
     expect(auth.user()?.roleName).toBe('Administrator');
+  });
+
+  it('inicia sesión y navega a Cobranza (recibos) para un CashierOperator (RF-01)', () => {
+    const navigateSpy = vi.spyOn(router, 'navigate').mockResolvedValue(true);
+
+    submit('cajero', '123456');
+
+    const req = httpMock.expectOne((r) => r.url.endsWith('/api/auth/login'));
+    req.flush({ ...tokenResponse, user: { ...tokenResponse.user, roleName: 'CashierOperator' } });
+
+    expect(navigateSpy).toHaveBeenCalledWith(['/payments']);
+    expect(auth.user()?.roleName).toBe('CashierOperator');
   });
 
   it('muestra el mensaje de credenciales inválidas ante un error 401', () => {

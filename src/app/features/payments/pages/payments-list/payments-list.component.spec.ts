@@ -1,7 +1,8 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { of } from 'rxjs';
+import { ConfirmDialogService } from '../../../../shared/components/confirm-dialog/confirm-dialog.service';
 import { PaymentsListComponent } from './payments-list.component';
 
 describe('PaymentsListComponent', () => {
@@ -16,7 +17,11 @@ describe('PaymentsListComponent', () => {
     TestBed.resetTestingModule();
     await TestBed.configureTestingModule({
       imports: [PaymentsListComponent],
-      providers: [provideHttpClient(), provideHttpClientTesting(), provideAnimationsAsync()],
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        { provide: ConfirmDialogService, useValue: { confirm: () => of(true) } },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PaymentsListComponent);
@@ -25,7 +30,10 @@ describe('PaymentsListComponent', () => {
     flushAll();
   });
 
-  afterEach(() => httpMock.verify());
+  afterEach(() => {
+    httpMock.verify();
+    vi.restoreAllMocks();
+  });
 
   it('crea el componente', () => {
     expect(fixture.componentInstance).toBeTruthy();
@@ -126,5 +134,66 @@ describe('PaymentsListComponent', () => {
     fixture.componentInstance.onSelectionChange(['ar1']);
 
     expect(fixture.componentInstance.selectedUuids()).toEqual(['ar1']);
+  });
+
+  describe('exoneración de cuentas (RF-21)', () => {
+    it('hasExemptSelection es false sin selección y true con selección', () => {
+      expect(fixture.componentInstance.hasExemptSelection()).toBe(false);
+
+      fixture.componentInstance.onExemptSelectionChange(['ar1']);
+
+      expect(fixture.componentInstance.hasExemptSelection()).toBe(true);
+    });
+
+    it('el botón "Exonerar seleccionadas" está deshabilitado sin selección', () => {
+      const buttons = fixture.nativeElement.querySelectorAll('button');
+      const exemptButton = Array.from(buttons).find((btn: unknown) =>
+        (btn as HTMLElement).textContent?.includes('Exonerar seleccionadas'),
+      ) as HTMLButtonElement | undefined;
+
+      expect(exemptButton).toBeTruthy();
+      expect(exemptButton!.disabled).toBe(true);
+    });
+
+    it('exemptSelected() llama al endpoint de exoneración por cada cuenta y recarga', () => {
+      fixture.componentInstance.onExemptSelectionChange(['ar1', 'ar2']);
+
+      fixture.componentInstance.exemptSelected();
+
+      const req1 = httpMock.expectOne((r) => r.url.endsWith('/api/account-receivables/ar1/exempt'));
+      const req2 = httpMock.expectOne((r) => r.url.endsWith('/api/account-receivables/ar2/exempt'));
+      expect(req1.request.method).toBe('PATCH');
+      expect(req2.request.method).toBe('PATCH');
+      req1.flush({});
+      req2.flush({});
+
+      expect(fixture.componentInstance.selectedExemptUuids()).toEqual([]);
+      flushAll();
+    });
+
+    it('exemptSelected() no hace nada sin cuentas seleccionadas', () => {
+      fixture.componentInstance.exemptSelected();
+      httpMock.expectNone((r) => r.url.includes('/exempt'));
+    });
+  });
+
+  describe('resumen en otra ventana (RF-26)', () => {
+    it('abre una ventana nueva cuando hay un filtro de socio o puesto activo', () => {
+      const openSpy = vi.spyOn(window, 'open').mockReturnValue(null);
+      fixture.componentInstance.onStallFilter('st1');
+      flushAll();
+
+      fixture.componentInstance.openSummary();
+
+      expect(openSpy).toHaveBeenCalledWith('/account-receivables/summary?stallUuid=st1', '_blank');
+    });
+
+    it('no abre ventana y avisa si no hay socio ni puesto seleccionado', () => {
+      const openSpy = vi.spyOn(window, 'open').mockReturnValue(null);
+
+      fixture.componentInstance.openSummary();
+
+      expect(openSpy).not.toHaveBeenCalled();
+    });
   });
 });

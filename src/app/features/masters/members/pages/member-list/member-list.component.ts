@@ -62,7 +62,8 @@ export class MemberListComponent {
   ];
   readonly rowActions: RowAction[] = [
     { id: 'edit', label: 'Editar', icon: 'edit' },
-    { id: 'deactivate', label: 'Desactivar', icon: 'block', danger: true },
+    { id: 'deactivate', label: 'Desactivar', icon: 'block', danger: true, visible: (row) => row['active'] === true },
+    { id: 'activate', label: 'Reactivar', icon: 'restart_alt', visible: (row) => row['active'] === false },
   ];
 
   constructor() {
@@ -119,6 +120,8 @@ export class MemberListComponent {
       this.openForm(member);
     } else if (event.actionId === 'deactivate') {
       this.deactivate(member);
+    } else if (event.actionId === 'activate') {
+      this.activate(member);
     }
   }
 
@@ -135,6 +138,7 @@ export class MemberListComponent {
       shareNumber: member.shareNumber,
       stage: member.stage.name,
       birthDate: member.birthDate,
+      active: member.active,
       activeChip: member.active
         ? { label: 'Activo', tone: 'success' }
         : { label: 'Inactivo', tone: 'neutral' },
@@ -168,6 +172,27 @@ export class MemberListComponent {
         this.service.deactivate(member.uuid).subscribe({
           next: () => {
             this.snackBar.open('Socio desactivado', 'Cerrar');
+            this.load();
+          },
+          error: (error: ApiError) => this.snackBar.open(error.message, 'Cerrar'),
+        });
+      });
+  }
+
+  private activate(member: MemberResponse): void {
+    this.confirm
+      .confirm({
+        title: 'Reactivar socio',
+        message: `¿Reactivar a ${member.firstName} ${member.lastName} (${member.code})?`,
+        confirmLabel: 'Reactivar',
+      })
+      .subscribe((ok) => {
+        if (!ok) {
+          return;
+        }
+        this.service.activate(member.uuid).subscribe({
+          next: () => {
+            this.snackBar.open('Socio reactivado', 'Cerrar');
             this.load();
           },
           error: (error: ApiError) => this.snackBar.open(error.message, 'Cerrar'),

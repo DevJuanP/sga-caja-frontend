@@ -32,7 +32,7 @@
 
   <div class="receipt-amount-section">
     <span class="label">Monto total:</span>
-    <span class="amount">{{ receipt().amount | currency:'PEN' }}</span>
+    <span class="amount">{{ receipt().amount | currency:(receipt().currencyCode ?? 'PEN') }}</span>
   </div>
 
   <div class="receipt-footer">

@@ -20,6 +20,16 @@
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Moneda</mat-label>
+        <mat-select formControlName="currencyUuid" required>
+          @for (currency of currencies(); track currency.uuid) {
+            <mat-option [value]="currency.uuid">{{ currency.code }} — {{ currency.name }}</mat-option>
+          }
+        </mat-select>
+        <mat-error>Seleccione una moneda</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
         <mat-label>Concepto</mat-label>
         <textarea matInput formControlName="concept" required></textarea>
         <mat-error>Ingrese el concepto</mat-error>

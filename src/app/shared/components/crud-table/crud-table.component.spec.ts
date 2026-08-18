@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { CrudTableComponent, RowActionEvent } from './crud-table.component';
 
 describe('CrudTableComponent', () => {
@@ -17,7 +16,7 @@ describe('CrudTableComponent', () => {
     TestBed.resetTestingModule();
     await TestBed.configureTestingModule({
       imports: [CrudTableComponent],
-      providers: [provideAnimationsAsync()],
+      providers: [],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CrudTableComponent);

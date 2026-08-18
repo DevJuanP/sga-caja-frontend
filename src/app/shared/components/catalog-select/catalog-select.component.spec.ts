@@ -2,7 +2,6 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl } from '@angular/forms';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { CatalogSelectComponent } from './catalog-select.component';
 
 describe('CatalogSelectComponent', () => {
@@ -14,7 +13,7 @@ describe('CatalogSelectComponent', () => {
     TestBed.resetTestingModule();
     await TestBed.configureTestingModule({
       imports: [CatalogSelectComponent],
-      providers: [provideHttpClient(), provideHttpClientTesting(), provideAnimationsAsync()],
+      providers: [provideHttpClient(), provideHttpClientTesting()],
     }).compileComponents();
 
     httpMock = TestBed.inject(HttpTestingController);

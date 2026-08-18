@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { ConfirmDialogComponent, ConfirmDialogData } from './confirm-dialog.component';
 import { ConfirmDialogService } from './confirm-dialog.service';
 
@@ -19,7 +18,7 @@ describe('ConfirmDialogService', () => {
     TestBed.resetTestingModule();
     await TestBed.configureTestingModule({
       imports: [DialogHostComponent],
-      providers: [provideAnimationsAsync()],
+      providers: [],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DialogHostComponent);

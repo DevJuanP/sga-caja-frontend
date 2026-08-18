@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { CatalogFilter, FilterBarComponent } from './filter-bar.component';
 
 describe('FilterBarComponent', () => {
@@ -9,7 +8,7 @@ describe('FilterBarComponent', () => {
     TestBed.resetTestingModule();
     await TestBed.configureTestingModule({
       imports: [FilterBarComponent],
-      providers: [provideAnimationsAsync()],
+      providers: [],
     }).compileComponents();
 
     fixture = TestBed.createComponent(FilterBarComponent);

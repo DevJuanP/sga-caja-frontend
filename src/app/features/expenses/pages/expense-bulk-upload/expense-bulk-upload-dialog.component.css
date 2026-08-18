@@ -21,7 +21,30 @@
 
 .actions-row {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
+}
+
+.template-hint-scroll {
+  overflow-x: auto;
+}
+
+.template-hint {
+  width: 100%;
+  border-collapse: collapse;
+  font: var(--mat-sys-body-small);
+}
+
+.template-hint th,
+.template-hint td {
+  border: 1px solid var(--mat-sys-outline-variant);
+  padding: var(--space-2) var(--space-3);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.template-hint th {
+  color: var(--mat-sys-on-surface-variant);
+  font-weight: 600;
 }
 
 .result-section {

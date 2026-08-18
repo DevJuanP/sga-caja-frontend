@@ -8,8 +8,28 @@
   @if (!result()) {
     <div class="upload-section">
       <p class="description">
-        Seleccione un archivo XLSX con los egresos a registrar.
+        Seleccione un archivo XLSX con los egresos a registrar. La primera fila debe tener
+        los encabezados de columna, en este orden:
       </p>
+
+      <div class="template-hint-scroll">
+        <table class="template-hint">
+          <thead>
+            <tr>
+              @for (col of templateColumns; track col.header) {
+                <th>{{ col.header }}</th>
+              }
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              @for (col of templateColumns; track col.header) {
+                <td>{{ col.example }}</td>
+              }
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
       <div class="file-input">
         <input
@@ -24,10 +44,6 @@
       </div>
 
       <div class="actions-row">
-        <button mat-stroked-button type="button" (click)="downloadTemplate()">
-          <mat-icon aria-hidden="true">download</mat-icon>
-          Descargar plantilla
-        </button>
         <button
           mat-flat-button
           color="primary"

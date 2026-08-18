@@ -28,4 +28,8 @@ export class StallsService {
   deactivate(uuid: string): Observable<StallResponse> {
     return this.api.patch<StallResponse>(`stalls/${uuid}/deactivate`);
   }
+
+  activate(uuid: string): Observable<StallResponse> {
+    return this.api.patch<StallResponse>(`stalls/${uuid}/activate`);
+  }
 }

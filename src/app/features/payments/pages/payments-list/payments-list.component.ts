@@ -15,6 +15,7 @@ import { MemberResponse } from '../../../../interfaces/member.interface';
 import { StallResponse } from '../../../../interfaces/stall.interface';
 import { PageHeaderComponent } from '../../../../shared/components/page-header/page-header.component';
 import { CxcSelectionComponent, CxcRow } from '../../../../shared/components/cxc-selection/cxc-selection.component';
+import { ConfirmDialogService } from '../../../../shared/components/confirm-dialog/confirm-dialog.service';
 
 import { ServicesService } from '../../../masters/services/services.service';
 import { MembersService } from '../../../masters/members/members.service';
@@ -51,12 +52,15 @@ export class PaymentsListComponent {
   private readonly stallsService = inject(StallsService);
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
+  private readonly confirm = inject(ConfirmDialogService);
 
   readonly PAGE_SIZE_OPTIONS = PAGE_SIZE_OPTIONS;
   readonly loading = signal(false);
+  readonly exempting = signal(false);
   readonly items = signal<AccountReceivableResponse[]>([]);
   readonly selectedTabIndex = signal(0);
   readonly selectedUuids = signal<string[]>([]);
+  readonly selectedExemptUuids = signal<string[]>([]);
   readonly totalAmount = signal<number | null>(null);
 
   readonly services = signal<ServiceResponse[]>([]);
@@ -107,11 +111,22 @@ export class PaymentsListComponent {
     return this.selectedUuids().filter((uuid) => pageUuids.includes(uuid));
   });
 
+  readonly stallPreSelectedExempt = computed(() => {
+    const pageUuids = this.stallPageRows().map((r) => r.uuid);
+    return this.selectedExemptUuids().filter((uuid) => pageUuids.includes(uuid));
+  });
+
+  readonly memberPreSelectedExempt = computed(() => {
+    const pageUuids = this.memberPageRows().map((r) => r.uuid);
+    return this.selectedExemptUuids().filter((uuid) => pageUuids.includes(uuid));
+  });
+
   readonly hasSelection = computed(() => this.selectedUuids().length > 0);
   readonly hasPendingSelection = computed(() => {
     const uuids = this.selectedUuids();
     return this.items().some((item) => uuids.includes(item.uuid) && item.status.name === 'Pending');
   });
+  readonly hasExemptSelection = computed(() => this.selectedExemptUuids().length > 0);
 
   constructor() {
     this.loadCatalogs();
@@ -141,6 +156,7 @@ export class PaymentsListComponent {
     this.selectedTabIndex.set(index);
     this.clearFiltersInternal();
     this.selectedUuids.set([]);
+    this.selectedExemptUuids.set([]);
     this.totalAmount.set(null);
     this.stallPageIndex.set(0);
     this.memberPageIndex.set(0);
@@ -171,6 +187,17 @@ export class PaymentsListComponent {
     this.load();
   }
 
+  openSummary(): void {
+    const memberUuid = this.memberFilter();
+    const stallUuid = this.stallFilter();
+    if (!memberUuid && !stallUuid) {
+      this.snackBar.open('Seleccione un socio o puesto para ver el resumen', 'Cerrar', { duration: 3000 });
+      return;
+    }
+    const params = memberUuid ? `memberUuid=${memberUuid}` : `stallUuid=${stallUuid}`;
+    window.open(`/account-receivables/summary?${params}`, '_blank');
+  }
+
   clearFilters(): void {
     this.serviceFilter.set(null);
     this.memberFilter.set(null);
@@ -179,6 +206,7 @@ export class PaymentsListComponent {
     if (this.memberSelect) this.memberSelect.value = null;
     if (this.stallSelect) this.stallSelect.value = null;
     this.selectedUuids.set([]);
+    this.selectedExemptUuids.set([]);
     this.totalAmount.set(null);
     this.stallPageIndex.set(0);
     this.memberPageIndex.set(0);
@@ -206,6 +234,41 @@ export class PaymentsListComponent {
     const preservedUuids = this.selectedUuids().filter((uuid) => !pageUuids.includes(uuid));
     this.selectedUuids.set([...preservedUuids, ...uuids]);
     this.totalAmount.set(null);
+  }
+
+  onExemptSelectionChange(uuids: string[]): void {
+    const isStallTab = this.selectedTabIndex() === 0;
+    const pageUuids = (isStallTab ? this.stallPageRows() : this.memberPageRows()).map((r) => r.uuid);
+    const preservedUuids = this.selectedExemptUuids().filter((uuid) => !pageUuids.includes(uuid));
+    this.selectedExemptUuids.set([...preservedUuids, ...uuids]);
+  }
+
+  exemptSelected(): void {
+    const uuids = this.selectedExemptUuids();
+    if (uuids.length === 0) return;
+
+    this.confirm
+      .confirm({
+        title: 'Exonerar cuentas',
+        message: `¿Exonerar ${uuids.length} cuenta(s) por cobrar seleccionada(s)? No se generará recibo por estas cuentas.`,
+        confirmLabel: 'Exonerar',
+        danger: true,
+      })
+      .subscribe((ok) => {
+        if (!ok) return;
+
+        this.exempting.set(true);
+        forkJoin(uuids.map((uuid) => this.cxcService.exempt(uuid)))
+          .pipe(finalize(() => this.exempting.set(false)))
+          .subscribe({
+            next: () => {
+              this.snackBar.open(`${uuids.length} cuenta(s) exonerada(s)`, 'Cerrar', { duration: 3000 });
+              this.selectedExemptUuids.set([]);
+              this.load();
+            },
+            error: (error: ApiError) => this.snackBar.open(error.message, 'Cerrar', { duration: 3000 }),
+          });
+      });
   }
 
   computeTotal(): void {
@@ -240,6 +303,7 @@ export class PaymentsListComponent {
     ref.afterClosed().subscribe((paid: boolean) => {
       if (paid) {
         this.selectedUuids.set([]);
+        this.selectedExemptUuids.set([]);
         this.totalAmount.set(null);
         this.stallPageIndex.set(0);
         this.memberPageIndex.set(0);
@@ -274,6 +338,7 @@ export class PaymentsListComponent {
         tone: item.status.name === 'Pending' ? 'warning' : item.status.name === 'Paid' ? 'success' : 'neutral',
       },
       consumptionBased: item.service.consumptionBased,
+      pending: item.status.name === 'Pending',
     };
   }
 }

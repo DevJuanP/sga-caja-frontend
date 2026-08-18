@@ -61,4 +61,12 @@ describe('MembersService', () => {
     expect(req.request.method).toBe('PATCH');
     req.flush({});
   });
+
+  it('reactiva un socio (RF-11)', () => {
+    service.activate('m1').subscribe();
+
+    const req = httpMock.expectOne((r) => r.url.endsWith('/api/members/m1/activate'));
+    expect(req.request.method).toBe('PATCH');
+    req.flush({});
+  });
 });

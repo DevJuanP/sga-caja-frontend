@@ -1,7 +1,6 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { vi } from 'vitest';
 import { BankExchangeFormDialogComponent } from './bank-exchange-form-dialog.component';
@@ -21,7 +20,6 @@ describe('BankExchangeFormDialogComponent', () => {
       providers: [
         provideHttpClient(),
         provideHttpClientTesting(),
-        provideAnimationsAsync(),
         { provide: MatDialogRef, useValue: { close: vi.fn() } },
       ],
     }).compileComponents();

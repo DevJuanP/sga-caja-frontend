@@ -5,7 +5,6 @@ import {
   provideBrowserGlobalErrorListeners,
 } from '@angular/core';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter, withViewTransitions } from '@angular/router';
 
 import { AuthService } from './core/auth/auth.service';
@@ -17,7 +16,6 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideAppInitializer(() => inject(AuthService).restoreSession()),
     provideBrowserGlobalErrorListeners(),
-    provideAnimationsAsync(),
     provideHttpClient(withInterceptors([authInterceptor, errorInterceptor])),
     provideRouter(routes, withViewTransitions()),
   ],

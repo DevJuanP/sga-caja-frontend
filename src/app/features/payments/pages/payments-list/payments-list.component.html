@@ -31,6 +31,11 @@
           Limpiar
         </button>
 
+        <button mat-stroked-button type="button" (click)="openSummary()">
+          <mat-icon aria-hidden="true">open_in_new</mat-icon>
+          Ver resumen
+        </button>
+
         <div class="payments-actions">
           <button
             mat-flat-button
@@ -40,6 +45,15 @@
           >
             <mat-icon aria-hidden="true">calculate</mat-icon>
             Calcular total
+          </button>
+          <button
+            mat-stroked-button
+            color="warn"
+            [disabled]="!hasExemptSelection() || exempting()"
+            (click)="exemptSelected()"
+          >
+            <mat-icon aria-hidden="true">remove_done</mat-icon>
+            Exonerar seleccionadas
           </button>
           @if (totalAmount() !== null) {
             <span class="payments-total">
@@ -55,7 +69,10 @@
         [pageIndex]="stallPageIndex()"
         [pageSize]="stallPageSize()"
         [preSelected]="stallPreSelected()"
+        [exemptEnabled]="true"
+        [preSelectedExempt]="stallPreSelectedExempt()"
         (selectionChange)="onSelectionChange($event)"
+        (exemptSelectionChange)="onExemptSelectionChange($event)"
         (pageChange)="onStallPageChange($event)"
       ></app-cxc-selection>
     </div>
@@ -90,6 +107,11 @@
           Limpiar
         </button>
 
+        <button mat-stroked-button type="button" (click)="openSummary()">
+          <mat-icon aria-hidden="true">open_in_new</mat-icon>
+          Ver resumen
+        </button>
+
         <div class="payments-actions">
           <button
             mat-flat-button
@@ -99,6 +121,15 @@
           >
             <mat-icon aria-hidden="true">calculate</mat-icon>
             Calcular total
+          </button>
+          <button
+            mat-stroked-button
+            color="warn"
+            [disabled]="!hasExemptSelection() || exempting()"
+            (click)="exemptSelected()"
+          >
+            <mat-icon aria-hidden="true">remove_done</mat-icon>
+            Exonerar seleccionadas
           </button>
           @if (totalAmount() !== null) {
             <span class="payments-total">
@@ -114,7 +145,10 @@
         [pageIndex]="memberPageIndex()"
         [pageSize]="memberPageSize()"
         [preSelected]="memberPreSelected()"
+        [exemptEnabled]="true"
+        [preSelectedExempt]="memberPreSelectedExempt()"
         (selectionChange)="onSelectionChange($event)"
+        (exemptSelectionChange)="onExemptSelectionChange($event)"
         (pageChange)="onMemberPageChange($event)"
       ></app-cxc-selection>
     </div>

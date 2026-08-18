@@ -2,7 +2,6 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { of } from 'rxjs';
 import { ConfirmDialogService } from '../../../../../shared/components/confirm-dialog/confirm-dialog.service';
 import { MemberListComponent } from './member-list.component';
@@ -19,7 +18,6 @@ describe('MemberListComponent', () => {
       providers: [
         provideHttpClient(),
         provideHttpClientTesting(),
-        provideAnimationsAsync(),
         { provide: ConfirmDialogService, useValue: { confirm: () => of(true) } },
       ],
     }).compileComponents();
@@ -113,5 +111,49 @@ describe('MemberListComponent', () => {
       content: [member],
       page: { size: 20, number: 0, totalElements: 1, totalPages: 1 },
     });
+  });
+
+  it('reactiva un socio inactivo tras confirmar (RF-11)', () => {
+    const member = {
+      uuid: 'm2',
+      code: 'S-002',
+      firstName: 'Carlos',
+      lastName: 'Díaz',
+      shareNumber: 'A-13',
+      stage: { uuid: 'st1', code: 1, name: 'Socio activo' },
+      birthDate: '1985-02-10',
+      active: false,
+    };
+    httpMock.expectOne((r) => r.url.endsWith('/api/members')).flush({
+      content: [member],
+      page: { size: 20, number: 0, totalElements: 1, totalPages: 1 },
+    });
+    fixture.detectChanges();
+
+    fixture.componentInstance.onAction({ actionId: 'activate', row: { uuid: 'm2' } });
+
+    const patchReq = httpMock.expectOne((r) => r.url.endsWith('/api/members/m2/activate'));
+    expect(patchReq.request.method).toBe('PATCH');
+    patchReq.flush({ ...member, active: true });
+
+    httpMock.expectOne((r) => r.url.endsWith('/api/members')).flush({
+      content: [member],
+      page: { size: 20, number: 0, totalElements: 1, totalPages: 1 },
+    });
+  });
+
+  it('muestra "Reactivar" sólo para socios inactivos y "Desactivar" sólo para activos', () => {
+    httpMock.expectOne((r) => r.url.endsWith('/api/members')).flush({
+      content: [],
+      page: { size: 20, number: 0, totalElements: 0, totalPages: 0 },
+    });
+
+    const activateAction = fixture.componentInstance.rowActions.find((a) => a.id === 'activate');
+    const deactivateAction = fixture.componentInstance.rowActions.find((a) => a.id === 'deactivate');
+
+    expect(activateAction?.visible?.({ active: true })).toBe(false);
+    expect(activateAction?.visible?.({ active: false })).toBe(true);
+    expect(deactivateAction?.visible?.({ active: true })).toBe(true);
+    expect(deactivateAction?.visible?.({ active: false })).toBe(false);
   });
 });

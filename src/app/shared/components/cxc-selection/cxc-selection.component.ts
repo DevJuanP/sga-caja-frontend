@@ -14,6 +14,8 @@ export interface CxcRow {
   amount: number;
   statusChip: { label: string; tone: ChipTone };
   consumptionBased?: boolean;
+  /** Sólo las cuentas pendientes se pueden marcar como abonadas o exoneradas (RF-21). */
+  pending?: boolean;
 }
 
 @Component({
@@ -25,21 +27,27 @@ export interface CxcRow {
 export class CxcSelectionComponent {
   readonly data = input<CxcRow[]>([]);
   readonly selectable = input(true);
+  /** Habilita la columna "Exonerar" para marcar cuentas pendientes sin pasar por pago (RF-21). */
+  readonly exemptEnabled = input(false);
   readonly totalElements = input(0);
   readonly pageIndex = input(0);
   readonly pageSize = input(20);
   readonly preSelected = input<string[]>([]);
+  readonly preSelectedExempt = input<string[]>([]);
 
   readonly selectionChange = output<string[]>();
+  readonly exemptSelectionChange = output<string[]>();
   readonly pageChange = output<PageEvent>();
 
-  readonly displayedColumns = computed(() =>
-    this.selectable()
-      ? ['select', 'serviceName', 'destination', 'period', 'amountFormatted', 'statusChip']
-      : ['serviceName', 'destination', 'period', 'amountFormatted', 'statusChip'],
-  );
+  readonly displayedColumns = computed(() => {
+    const columns = ['serviceName', 'destination', 'period', 'amountFormatted', 'statusChip'];
+    if (this.selectable()) columns.unshift('select');
+    if (this.exemptEnabled()) columns.push('exempt');
+    return columns;
+  });
 
   readonly selection = new SelectionModel<CxcRow>(true, []);
+  readonly exemptSelection = new SelectionModel<CxcRow>(true, []);
 
   constructor() {
     effect(() => {
@@ -47,6 +55,12 @@ export class CxcSelectionComponent {
       this.selection.clear();
       const toSelect = this.data().filter((row) => pre.includes(row.uuid));
       this.selection.select(...toSelect);
+    });
+    effect(() => {
+      const pre = this.preSelectedExempt();
+      this.exemptSelection.clear();
+      const toSelect = this.data().filter((row) => pre.includes(row.uuid));
+      this.exemptSelection.select(...toSelect);
     });
   }
 
@@ -67,7 +81,20 @@ export class CxcSelectionComponent {
 
   toggleRow(row: CxcRow): void {
     this.selection.toggle(row);
+    if (this.selection.isSelected(row) && this.exemptSelection.isSelected(row)) {
+      this.exemptSelection.deselect(row);
+      this.emitExemptSelection();
+    }
     this.emitSelection();
+  }
+
+  toggleExempt(row: CxcRow): void {
+    this.exemptSelection.toggle(row);
+    if (this.exemptSelection.isSelected(row) && this.selection.isSelected(row)) {
+      this.selection.deselect(row);
+      this.emitSelection();
+    }
+    this.emitExemptSelection();
   }
 
   onPage(event: PageEvent): void {
@@ -77,5 +104,10 @@ export class CxcSelectionComponent {
   private emitSelection(): void {
     const selectedUuids = this.selection.selected.map((item) => item.uuid);
     this.selectionChange.emit(selectedUuids);
+  }
+
+  private emitExemptSelection(): void {
+    const exemptUuids = this.exemptSelection.selected.map((item) => item.uuid);
+    this.exemptSelectionChange.emit(exemptUuids);
   }
 }

@@ -80,7 +80,7 @@ export class IncomeListComponent {
       depositorName: item.depositorName,
       categoryName: item.incomeCategory.name,
       concept: item.concept,
-      currency: 'PEN',
+      currency: item.currency.code,
       amount: this.currencyFmt.format(item.amount),
     }))
   );
@@ -163,6 +163,7 @@ export class IncomeListComponent {
       correlativeNumber: item.receipt.correlativeNumber,
       issueDate: item.receipt.issueDate,
       amount: item.amount,
+      currencyCode: item.currency.code,
     };
 
     const dialogRef = this.dialog.open(ReceiptViewerComponent, {

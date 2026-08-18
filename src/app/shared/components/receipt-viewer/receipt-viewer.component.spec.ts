@@ -41,4 +41,23 @@ describe('ReceiptViewerComponent', () => {
   it('muestra la nota legal', () => {
     expect(fixture.nativeElement.textContent).toContain('declaración jurada');
   });
+
+  it('usa PEN (S/) por defecto cuando no se indica moneda', () => {
+    expect(fixture.nativeElement.textContent).toContain('S/');
+  });
+
+  it('usa el símbolo de la moneda indicada en currencyCode', () => {
+    fixture.componentRef.setInput('receipt', {
+      uuid: 'r2',
+      receiptTypeName: 'Recibo de ingreso',
+      correlativeNumber: 1025,
+      issueDate: '2026-08-13',
+      amount: 45.5,
+      currencyCode: 'USD',
+    });
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.textContent).toContain('US$');
+    expect(fixture.nativeElement.textContent).not.toContain('S/');
+  });
 });

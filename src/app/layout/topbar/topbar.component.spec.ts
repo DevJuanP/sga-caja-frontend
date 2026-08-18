@@ -1,7 +1,6 @@
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter } from '@angular/router';
 import { ThemeService } from '../../core/theme/theme.service';
 import { TopbarComponent } from './topbar.component';
@@ -15,7 +14,7 @@ describe('TopbarComponent', () => {
     TestBed.resetTestingModule();
     await TestBed.configureTestingModule({
       imports: [TopbarComponent],
-      providers: [provideRouter([]), provideHttpClient(), provideHttpClientTesting(), provideAnimationsAsync()],
+      providers: [provideRouter([]), provideHttpClient(), provideHttpClientTesting()],
     }).compileComponents();
 
     theme = TestBed.inject(ThemeService);

@@ -28,4 +28,8 @@ export class MembersService {
   deactivate(uuid: string): Observable<MemberResponse> {
     return this.api.patch<MemberResponse>(`members/${uuid}/deactivate`);
   }
+
+  activate(uuid: string): Observable<MemberResponse> {
+    return this.api.patch<MemberResponse>(`members/${uuid}/activate`);
+  }
 }

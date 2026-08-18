@@ -1,7 +1,8 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { MatDialogRef } from '@angular/material/dialog';
+import { vi } from 'vitest';
 import { ExpenseBulkUploadDialogComponent } from './expense-bulk-upload-dialog.component';
 
 describe('ExpenseBulkUploadDialogComponent', () => {
@@ -16,7 +17,11 @@ describe('ExpenseBulkUploadDialogComponent', () => {
     TestBed.resetTestingModule();
     await TestBed.configureTestingModule({
       imports: [ExpenseBulkUploadDialogComponent],
-      providers: [provideHttpClient(), provideHttpClientTesting(), provideAnimationsAsync()],
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        { provide: MatDialogRef, useValue: { close: vi.fn() } },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ExpenseBulkUploadDialogComponent);
@@ -36,12 +41,17 @@ describe('ExpenseBulkUploadDialogComponent', () => {
     expect(title?.textContent).toContain('Carga masiva de egresos');
   });
 
-  it('muestra el botón de descargar plantilla', () => {
-    const buttons = fixture.nativeElement.querySelectorAll('button');
-    const downloadButton = Array.from(buttons).find((btn: unknown) =>
-      (btn as HTMLElement).textContent?.includes('Descargar plantilla'),
-    ) as HTMLButtonElement | undefined;
-    expect(downloadButton).toBeTruthy();
+  it('muestra el formato esperado de columnas', () => {
+    const headers = fixture.nativeElement.querySelectorAll('.template-hint th');
+    const headerNames = Array.from(headers).map((th: unknown) => (th as HTMLElement).textContent);
+    expect(headerNames).toEqual([
+      'DocumentNumber',
+      'ProviderName',
+      'ExpenseDate',
+      'Amount',
+      'AssociatedDocument',
+      'ExpenseReason',
+    ]);
   });
 
   it('muestra el botón de cargar deshabilitado inicialmente', () => {

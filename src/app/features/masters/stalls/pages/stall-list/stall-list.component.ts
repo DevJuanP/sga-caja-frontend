@@ -62,7 +62,8 @@ export class StallListComponent {
   ];
   readonly rowActions: RowAction[] = [
     { id: 'edit', label: 'Editar', icon: 'edit' },
-    { id: 'deactivate', label: 'Desactivar', icon: 'block', danger: true },
+    { id: 'deactivate', label: 'Desactivar', icon: 'block', danger: true, visible: (row) => row['active'] === true },
+    { id: 'activate', label: 'Reactivar', icon: 'restart_alt', visible: (row) => row['active'] === false },
   ];
 
   constructor() {
@@ -119,6 +120,8 @@ export class StallListComponent {
       this.openForm(stall);
     } else if (event.actionId === 'deactivate') {
       this.deactivate(stall);
+    } else if (event.actionId === 'activate') {
+      this.activate(stall);
     }
   }
 
@@ -135,6 +138,7 @@ export class StallListComponent {
       occupant: stall.member?.fullName ?? stall.tenantName ?? '—',
       validityStartDate: stall.validityStartDate,
       validityEndDate: stall.validityEndDate,
+      active: stall.active,
       activeChip: stall.active
         ? { label: 'Activo', tone: 'success' }
         : { label: 'Inactivo', tone: 'neutral' },
@@ -168,6 +172,27 @@ export class StallListComponent {
         this.service.deactivate(stall.uuid).subscribe({
           next: () => {
             this.snackBar.open('Puesto desactivado', 'Cerrar');
+            this.load();
+          },
+          error: (error: ApiError) => this.snackBar.open(error.message, 'Cerrar'),
+        });
+      });
+  }
+
+  private activate(stall: StallResponse): void {
+    this.confirm
+      .confirm({
+        title: 'Reactivar puesto',
+        message: `¿Reactivar el puesto ${stall.number}?`,
+        confirmLabel: 'Reactivar',
+      })
+      .subscribe((ok) => {
+        if (!ok) {
+          return;
+        }
+        this.service.activate(stall.uuid).subscribe({
+          next: () => {
+            this.snackBar.open('Puesto reactivado', 'Cerrar');
             this.load();
           },
           error: (error: ApiError) => this.snackBar.open(error.message, 'Cerrar'),

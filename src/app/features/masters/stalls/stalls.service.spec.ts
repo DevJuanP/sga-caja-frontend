@@ -62,4 +62,12 @@ describe('StallsService', () => {
     expect(req.request.method).toBe('PATCH');
     req.flush({});
   });
+
+  it('reactiva un puesto (RF-11)', () => {
+    service.activate('st1').subscribe();
+
+    const req = httpMock.expectOne((r) => r.url.endsWith('/api/stalls/st1/activate'));
+    expect(req.request.method).toBe('PATCH');
+    req.flush({});
+  });
 });

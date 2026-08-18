@@ -1,7 +1,6 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { MatDialogRef } from '@angular/material/dialog';
 import { vi } from 'vitest';
 import { IncomeFormDialogComponent } from './income-form-dialog.component';
@@ -21,7 +20,6 @@ describe('IncomeFormDialogComponent', () => {
       providers: [
         provideHttpClient(),
         provideHttpClientTesting(),
-        provideAnimationsAsync(),
         { provide: MatDialogRef, useValue: { close: vi.fn() } },
       ],
     }).compileComponents();
@@ -43,9 +41,9 @@ describe('IncomeFormDialogComponent', () => {
     expect(title?.textContent).toContain('Registrar ingreso externo');
   });
 
-  it('muestra el formulario con 4 campos', () => {
+  it('muestra el formulario con 5 campos', () => {
     const formFields = fixture.nativeElement.querySelectorAll('mat-form-field');
-    expect(formFields.length).toBe(4);
+    expect(formFields.length).toBe(5);
   });
 
   it('tiene el botón de registrar ingreso deshabilitado al inicio', () => {
@@ -60,5 +58,45 @@ describe('IncomeFormDialogComponent', () => {
   it('cierra el diálogo al cancelar', () => {
     fixture.componentInstance.close();
     expect(fixture.componentInstance.dialogRef.close).toHaveBeenCalledWith(false);
+  });
+
+  describe('moneda del ingreso (USD/PEN)', () => {
+    it('el campo de moneda es requerido y el formulario es inválido sin él', () => {
+      fixture.componentInstance.form.patchValue({
+        depositorName: 'Carlos Díaz',
+        incomeCategoryUuid: 'cat1',
+        concept: 'Pago de arbitrios',
+        amount: 50,
+      });
+
+      expect(fixture.componentInstance.form.controls.currencyUuid.invalid).toBe(true);
+      expect(fixture.componentInstance.form.invalid).toBe(true);
+    });
+
+    it('envía currencyUuid al registrar el ingreso', () => {
+      fixture.componentInstance.form.setValue({
+        depositorName: 'Carlos Díaz',
+        incomeCategoryUuid: 'cat1',
+        currencyUuid: 'cur-usd',
+        concept: 'Pago de arbitrios',
+        amount: 50,
+      });
+
+      fixture.componentInstance.submit();
+
+      const req = httpMock.expectOne((r) => r.url.endsWith('/api/incomes'));
+      expect(req.request.body.currencyUuid).toBe('cur-usd');
+      req.flush({
+        uuid: 'inc1',
+        receipt: { uuid: 'r1', receiptTypeName: 'Recibo de ingreso', correlativeNumber: 1, issueDate: '2026-08-18' },
+        depositorName: 'Carlos Díaz',
+        incomeCategory: { uuid: 'cat1', name: 'Donación' },
+        currency: { uuid: 'cur-usd', code: 'USD', name: 'Dólares' },
+        concept: 'Pago de arbitrios',
+        amount: 50,
+      });
+
+      expect(fixture.componentInstance.receiptData?.currencyCode).toBe('USD');
+    });
   });
 });

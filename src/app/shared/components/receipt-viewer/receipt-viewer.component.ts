@@ -9,6 +9,7 @@ export interface ReceiptData {
   correlativeNumber: number;
   issueDate: string;
   amount: number;
+  currencyCode?: string;
   paymentDate?: string;
   createdBy?: { username: string };
 }

@@ -1,7 +1,6 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { BankExchangeListComponent } from './bank-exchange-list.component';
 
 describe('BankExchangeListComponent', () => {
@@ -16,7 +15,7 @@ describe('BankExchangeListComponent', () => {
     TestBed.resetTestingModule();
     await TestBed.configureTestingModule({
       imports: [BankExchangeListComponent],
-      providers: [provideHttpClient(), provideHttpClientTesting(), provideAnimationsAsync()],
+      providers: [provideHttpClient(), provideHttpClientTesting()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(BankExchangeListComponent);

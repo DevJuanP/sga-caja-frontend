@@ -19,6 +19,7 @@ describe('CxcSelectionComponent', () => {
         period: '2026-08-01 – 2026-08-31',
         amount: 50.0,
         statusChip: { label: 'Pendiente', tone: 'warning' },
+        pending: true,
       },
       {
         uuid: 'ar2',
@@ -27,6 +28,7 @@ describe('CxcSelectionComponent', () => {
         period: '2026-08-01 – 2026-08-31',
         amount: 100.0,
         statusChip: { label: 'Pendiente', tone: 'warning' },
+        pending: true,
       },
     ]);
     fixture.componentRef.setInput('totalElements', 2);
@@ -105,5 +107,81 @@ describe('CxcSelectionComponent', () => {
     fixture.detectChanges();
 
     expect(fixture.componentInstance.selection.selected.length).toBe(0);
+  });
+
+  describe('marca de exoneración (RF-21)', () => {
+    it('no muestra la columna "Exonerar" cuando exemptEnabled es false', () => {
+      const headers = Array.from(fixture.nativeElement.querySelectorAll('th')).map(
+        (th: unknown) => (th as HTMLElement).textContent?.trim(),
+      );
+      expect(headers).not.toContain('Exonerar');
+    });
+
+    it('muestra checkbox de exonerar sólo para cuentas pendientes cuando exemptEnabled es true', () => {
+      fixture.componentRef.setInput('exemptEnabled', true);
+      fixture.componentRef.setInput('data', [
+        {
+          uuid: 'ar1',
+          serviceName: 'Agua',
+          destination: 'Puesto A-01',
+          period: '2026-08-01 – 2026-08-31',
+          amount: 50.0,
+          statusChip: { label: 'Pendiente', tone: 'warning' },
+          pending: true,
+        },
+        {
+          uuid: 'ar2',
+          serviceName: 'Luz',
+          destination: 'Socio Juan Pérez',
+          period: '2026-08-01 – 2026-08-31',
+          amount: 100.0,
+          statusChip: { label: 'Pagado', tone: 'success' },
+          pending: false,
+        },
+      ]);
+      fixture.detectChanges();
+
+      const exemptCells = fixture.nativeElement.querySelectorAll('td.checkbox-cell mat-checkbox');
+      // 2 filas × checkbox de pago = 2, + 1 checkbox de exonerar sólo en la fila pendiente
+      expect(exemptCells.length).toBe(3);
+    });
+
+    it('marcar una cuenta como exonerada la quita de la selección de pago y viceversa', () => {
+      fixture.componentRef.setInput('exemptEnabled', true);
+      fixture.detectChanges();
+
+      const row = fixture.componentInstance.data()[0];
+      fixture.componentInstance.toggleRow(row);
+      expect(fixture.componentInstance.selection.isSelected(row)).toBe(true);
+
+      fixture.componentInstance.toggleExempt(row);
+      expect(fixture.componentInstance.exemptSelection.isSelected(row)).toBe(true);
+      expect(fixture.componentInstance.selection.isSelected(row)).toBe(false);
+
+      fixture.componentInstance.toggleRow(row);
+      expect(fixture.componentInstance.selection.isSelected(row)).toBe(true);
+      expect(fixture.componentInstance.exemptSelection.isSelected(row)).toBe(false);
+    });
+
+    it('emite exemptSelectionChange con los uuids marcados', () => {
+      fixture.componentRef.setInput('exemptEnabled', true);
+      fixture.detectChanges();
+
+      const received: string[][] = [];
+      fixture.componentInstance.exemptSelectionChange.subscribe((uuids: string[]) => received.push(uuids));
+
+      fixture.componentInstance.toggleExempt(fixture.componentInstance.data()[0]);
+
+      expect(received.at(-1)).toEqual(['ar1']);
+    });
+
+    it('preselecciona exoneradas según preSelectedExempt', () => {
+      fixture.componentRef.setInput('exemptEnabled', true);
+      fixture.componentRef.setInput('preSelectedExempt', ['ar2']);
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.exemptSelection.isSelected(fixture.componentInstance.data()[1])).toBe(true);
+      expect(fixture.componentInstance.exemptSelection.isSelected(fixture.componentInstance.data()[0])).toBe(false);
+    });
   });
 });

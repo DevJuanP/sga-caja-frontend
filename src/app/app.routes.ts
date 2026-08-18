@@ -128,8 +128,10 @@ export const routes: Routes = [
         data: { title: 'Resumen de movimientos', icon: 'receipt_long' },
       },
 
-      // EPIC 5 · Lecturas de consumo (ambos roles)
-      placeholderRoute('consumption-readings', 'Lecturas de consumo', 'speed'),
+      // EPIC 5 · Lecturas de consumo (ambos roles): la acción "Registrar lectura" vive
+      // como fila de Cuentas por cobrar (RF-17), así que este ítem del menú lleva ahí
+      // en lugar de aterrizar en una página vacía.
+      { path: 'consumption-readings', redirectTo: 'account-receivables', pathMatch: 'full' },
 
       // EPIC 6 · Cobranza / Pagos (CashierOperator)
       {

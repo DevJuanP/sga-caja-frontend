@@ -37,7 +37,13 @@ describe('IncomesService', () => {
   });
 
   it('crea un ingreso externo', () => {
-    const body = { depositorName: 'Carlos Díaz', incomeCategoryUuid: 'cat1', concept: 'Pago de arbitrios', amount: 50.00 };
+    const body = {
+      depositorName: 'Carlos Díaz',
+      incomeCategoryUuid: 'cat1',
+      currencyUuid: 'cur1',
+      concept: 'Pago de arbitrios',
+      amount: 50.00,
+    };
     service.create(body).subscribe();
 
     const req = httpMock.expectOne((r) => r.url.endsWith('/api/incomes'));

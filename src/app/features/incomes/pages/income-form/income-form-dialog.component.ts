@@ -8,7 +8,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { finalize } from 'rxjs';
 import { ApiError } from '../../../../core/auth/error.interceptor';
-import { CatalogItem } from '../../../../interfaces/catalog.interface';
+import { CatalogItem, Currency } from '../../../../interfaces/catalog.interface';
 import { ReceiptViewerComponent, ReceiptData } from '../../../../shared/components/receipt-viewer/receipt-viewer.component';
 import { CatalogService } from '../../../catalogs/catalog.service';
 import { IncomesService } from '../../incomes.service';
@@ -38,10 +38,12 @@ export class IncomeFormDialogComponent {
   readonly receipt = signal<ReceiptData | null>(null);
 
   readonly categories = signal<CatalogItem[]>([]);
+  readonly currencies = signal<Currency[]>([]);
 
   readonly form = new FormGroup({
     depositorName: new FormControl<string>('', Validators.required),
     incomeCategoryUuid: new FormControl<string | null>(null, Validators.required),
+    currencyUuid: new FormControl<string | null>(null, Validators.required),
     concept: new FormControl<string>('', Validators.required),
     amount: new FormControl<number | null>(null, [Validators.required, Validators.min(0.01)]),
   });
@@ -52,6 +54,7 @@ export class IncomeFormDialogComponent {
 
   constructor() {
     this.loadCategories();
+    this.loadCurrencies();
   }
 
   submit(): void {
@@ -64,6 +67,7 @@ export class IncomeFormDialogComponent {
       .create({
         depositorName: formValue.depositorName!,
         incomeCategoryUuid: formValue.incomeCategoryUuid!,
+        currencyUuid: formValue.currencyUuid!,
         concept: formValue.concept!,
         amount: formValue.amount!,
       })
@@ -77,6 +81,7 @@ export class IncomeFormDialogComponent {
             correlativeNumber: response.receipt.correlativeNumber,
             issueDate: response.receipt.issueDate,
             amount: response.amount,
+            currencyCode: response.currency.code,
           });
           this.snackBar.open('Ingreso registrado exitosamente', 'Cerrar', { duration: 3000 });
         },
@@ -93,6 +98,12 @@ export class IncomeFormDialogComponent {
   private loadCategories(): void {
     this.catalogService.list('incomeCategories').subscribe({
       next: (categories: CatalogItem[]) => this.categories.set(categories),
+    });
+  }
+
+  private loadCurrencies(): void {
+    this.catalogService.list<Currency>('currencies').subscribe({
+      next: (currencies) => this.currencies.set(currencies),
     });
   }
 }
