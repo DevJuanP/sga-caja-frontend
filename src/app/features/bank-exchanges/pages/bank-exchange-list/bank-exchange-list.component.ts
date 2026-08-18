@@ -61,7 +61,8 @@ export class BankExchangeListComponent {
     { key: 'depositDate', header: 'Fecha depósito' },
     { key: 'cxcInfo', header: 'CxC' },
     { key: 'bankName', header: 'Banco' },
-    { key: 'amount', header: 'Monto', align: 'end' },
+    { key: 'currency', header: 'Moneda' },
+    { key: 'amount', header: 'Monto', align: 'end', type: 'number' },
     { key: 'status', header: 'Estado' },
   ];
 
@@ -69,13 +70,19 @@ export class BankExchangeListComponent {
     { id: 'view-receipt', label: 'Ver voucher', icon: 'receipt' },
   ];
 
+  private readonly currencyFmt = new Intl.NumberFormat('es-PE', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+
   readonly rows = computed(() =>
     this.items().map((item) => ({
       uuid: item.uuid,
       depositDate: item.depositDate,
       cxcInfo: `${item.accountReceivable.service.name} - ${item.accountReceivable.member?.fullName ?? item.accountReceivable.stall?.number ?? '—'}`,
       bankName: item.bank.name,
-      amount: item.amount,
+      currency: this.getBankCurrencyCode(item.bank.uuid),
+      amount: this.currencyFmt.format(item.amount),
       status: 'Pagado',
     }))
   );
@@ -170,5 +177,10 @@ export class BankExchangeListComponent {
     this.banksService.list({ page: 0, size: 999 }).subscribe({
       next: (page) => this.banks.set(page.content),
     });
+  }
+
+  private getBankCurrencyCode(bankUuid: string): string {
+    const bank = this.banks().find((b) => b.uuid === bankUuid);
+    return bank?.currency?.code ?? 'PEN';
   }
 }

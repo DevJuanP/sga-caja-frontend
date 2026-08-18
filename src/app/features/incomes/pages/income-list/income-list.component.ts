@@ -61,12 +61,18 @@ export class IncomeListComponent {
     { key: 'depositorName', header: 'Depositante' },
     { key: 'categoryName', header: 'Categoría' },
     { key: 'concept', header: 'Concepto' },
-    { key: 'amount', header: 'Monto', align: 'end' },
+    { key: 'currency', header: 'Moneda' },
+    { key: 'amount', header: 'Monto', align: 'end', type: 'number' },
   ];
 
   readonly actions: RowAction[] = [
     { id: 'view-receipt', label: 'Ver voucher', icon: 'receipt' },
   ];
+
+  private readonly currencyFmt = new Intl.NumberFormat('es-PE', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 
   readonly rows = computed(() =>
     this.items().map((item) => ({
@@ -74,7 +80,8 @@ export class IncomeListComponent {
       depositorName: item.depositorName,
       categoryName: item.incomeCategory.name,
       concept: item.concept,
-      amount: item.amount,
+      currency: 'PEN',
+      amount: this.currencyFmt.format(item.amount),
     }))
   );
 
