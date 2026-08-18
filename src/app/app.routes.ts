@@ -165,7 +165,15 @@ export const routes: Routes = [
       },
 
       // EPIC 9 · Egresos (CashierOperator)
-      placeholderRoute('expenses', 'Egresos', 'north_east', ['CashierOperator']),
+      {
+        path: 'expenses',
+        loadComponent: () =>
+          import('./features/expenses/pages/expense-list/expense-list.component').then(
+            (m) => m.ExpenseListComponent,
+          ),
+        canActivate: [roleGuard('CashierOperator')],
+        data: { title: 'Egresos', icon: 'north_east' },
+      },
 
       // EPIC 10 · Reportes (ambos roles)
       placeholderRoute('reports', 'Reportes', 'assessment'),

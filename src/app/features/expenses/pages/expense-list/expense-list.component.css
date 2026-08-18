@@ -1,0 +1,25 @@
+:host {
+  display: block;
+}
+
+.expense-content {
+  padding: var(--space-4);
+}
+
+.expense-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-4);
+}
+
+.expense-filters-title {
+  font: var(--mat-sys-title-small);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.expense-filters mat-form-field {
+  width: 200px;
+}

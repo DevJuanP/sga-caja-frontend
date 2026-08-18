@@ -1,0 +1,60 @@
+<app-page-header title="Egresos" subtitle="Gestión de egresos de caja">
+  <button mat-stroked-button (click)="openBulkUploadDialog()">
+    <mat-icon aria-hidden="true">upload_file</mat-icon>
+    Carga masiva
+  </button>
+  <button mat-flat-button color="primary" (click)="openCreateDialog()">
+    <mat-icon aria-hidden="true">add</mat-icon>
+    Nuevo egreso
+  </button>
+</app-page-header>
+
+<div class="expense-content">
+  <div class="expense-filters">
+    <span class="expense-filters-title">Filtros</span>
+    <mat-form-field appearance="outline">
+      <mat-label>Año</mat-label>
+      <mat-select (selectionChange)="onYearFilter($event.value)">
+        <mat-option [value]="null">Todos</mat-option>
+        <mat-option [value]="2026">2026</mat-option>
+        <mat-option [value]="2025">2025</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Mes</mat-label>
+      <mat-select (selectionChange)="onMonthFilter($event.value)">
+        <mat-option [value]="null">Todos</mat-option>
+        <mat-option [value]="1">Enero</mat-option>
+        <mat-option [value]="2">Febrero</mat-option>
+        <mat-option [value]="3">Marzo</mat-option>
+        <mat-option [value]="4">Abril</mat-option>
+        <mat-option [value]="5">Mayo</mat-option>
+        <mat-option [value]="6">Junio</mat-option>
+        <mat-option [value]="7">Julio</mat-option>
+        <mat-option [value]="8">Agosto</mat-option>
+        <mat-option [value]="9">Setiembre</mat-option>
+        <mat-option [value]="10">Octubre</mat-option>
+        <mat-option [value]="11">Noviembre</mat-option>
+        <mat-option [value]="12">Diciembre</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <button mat-stroked-button type="button" (click)="clearFilters()">
+      <mat-icon aria-hidden="true">filter_alt_off</mat-icon>
+      Limpiar
+    </button>
+  </div>
+
+  <app-crud-table
+    [columns]="columns"
+    [rows]="rows()"
+    [loading]="loading()"
+    [pageIndex]="pageIndex()"
+    [pageSize]="pageSize()"
+    [totalElements]="totalElements()"
+    [actions]="actions"
+    (pageChange)="onPageChange($event)"
+    (actionClick)="onAction($event)"
+  ></app-crud-table>
+</div>

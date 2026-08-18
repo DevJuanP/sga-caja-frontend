@@ -1,0 +1,39 @@
+.upload-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.description {
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.file-input {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.file-name {
+  color: var(--mat-sys-on-surface-variant);
+  font: var(--mat-sys-body-medium);
+}
+
+.actions-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.result-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.result-summary p {
+  margin: 0;
+}
+
+.errors-table {
+  width: 100%;
+}
