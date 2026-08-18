@@ -1,0 +1,91 @@
+<app-page-header title="Reportes" subtitle="Generación de reportes administrativos y financieros" />
+
+<div class="reports-grid">
+  <div class="report-card">
+    <div class="card-header">
+      <mat-icon aria-hidden="true">today</mat-icon>
+      <span>Movimientos Diarios</span>
+    </div>
+    <div class="card-body">
+      <app-daily-report-filter />
+    </div>
+  </div>
+
+  <div class="report-card">
+    <div class="card-header">
+      <mat-icon aria-hidden="true">date_range</mat-icon>
+      <span>Movimientos Mensuales</span>
+    </div>
+    <div class="card-body">
+      <app-monthly-report-filter />
+    </div>
+  </div>
+
+  <div class="report-card">
+    <div class="card-header">
+      <mat-icon aria-hidden="true">summarize</mat-icon>
+      <span>Totales de Movimientos</span>
+    </div>
+    <div class="card-body">
+      <app-total-report-filter />
+    </div>
+  </div>
+</div>
+
+<div class="reports-grid secondary">
+  <div class="report-card compact">
+    <div class="card-header">
+      <mat-icon aria-hidden="true">group</mat-icon>
+      <span>Reporte de Socios</span>
+    </div>
+    <div class="card-body">
+      <app-report-downloader
+        reportType="members"
+        [params]="{ year: currentYear, month: currentMonth }"
+        label="Descargar reporte de socios"
+      />
+    </div>
+  </div>
+
+  <div class="report-card compact">
+    <div class="card-header">
+      <mat-icon aria-hidden="true">storefront</mat-icon>
+      <span>Reporte No Socios</span>
+    </div>
+    <div class="card-body">
+      <app-report-downloader
+        reportType="non-members"
+        [params]="{ year: currentYear, month: currentMonth }"
+        label="Descargar reporte no socios"
+      />
+    </div>
+  </div>
+
+  <div class="report-card compact">
+    <div class="card-header">
+      <mat-icon aria-hidden="true">receipt_long</mat-icon>
+      <span>Reporte de Egresos</span>
+    </div>
+    <div class="card-body">
+      <app-report-downloader
+        reportType="expenses"
+        [params]="{ year: currentYear, month: currentMonth }"
+        label="Descargar reporte de egresos"
+      />
+    </div>
+  </div>
+
+  <div class="report-card compact">
+    <div class="card-header">
+      <mat-icon aria-hidden="true">account_balance</mat-icon>
+      <span>Reporte de Bancos</span>
+    </div>
+    <div class="card-body">
+      <app-report-downloader
+        reportType="banks"
+        [params]="{ year: currentYear, month: currentMonth }"
+        label="Descargar reporte de bancos"
+      />
+    </div>
+  </div>
+</div>

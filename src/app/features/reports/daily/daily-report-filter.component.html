@@ -1,0 +1,13 @@
+<form [formGroup]="form" class="daily-filter">
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Fecha</mat-label>
+    <input matInput formControlName="date" type="date" required>
+    <mat-error>Seleccione una fecha</mat-error>
+  </mat-form-field>
+
+  <app-report-downloader
+    reportType="daily"
+    [params]="{ date: form.value.date ?? undefined }"
+    label="Descargar movimientos diarios"
+  />
+</form>

@@ -1,0 +1,27 @@
+<form [formGroup]="form" class="monthly-filter">
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Año</mat-label>
+    <mat-select formControlName="year" required>
+      @for (year of years; track year) {
+        <mat-option [value]="year">{{ year }}</mat-option>
+      }
+    </mat-select>
+    <mat-error>Seleccione un año</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Mes</mat-label>
+    <mat-select formControlName="month" required>
+      @for (m of months; track m.value) {
+        <mat-option [value]="m.value">{{ m.label }}</mat-option>
+      }
+    </mat-select>
+    <mat-error>Seleccione un mes</mat-error>
+  </mat-form-field>
+
+  <app-report-downloader
+    reportType="monthly"
+    [params]="{ year: form.value.year ?? undefined, month: form.value.month ?? undefined }"
+    label="Descargar movimientos mensuales"
+  />
+</form>

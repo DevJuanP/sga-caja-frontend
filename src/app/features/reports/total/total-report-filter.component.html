@@ -1,0 +1,42 @@
+<form [formGroup]="form" class="total-filter">
+  <mat-radio-group formControlName="option" class="radio-group">
+    <mat-radio-button value="date">Por fecha específica</mat-radio-button>
+    <mat-radio-button value="month">Por mes completo</mat-radio-button>
+  </mat-radio-group>
+
+  @if (isByDate) {
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Fecha</mat-label>
+      <input matInput formControlName="date" type="date" required>
+      <mat-error>Seleccione una fecha</mat-error>
+    </mat-form-field>
+  } @else {
+    <div class="row-fields">
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>Año</mat-label>
+        <mat-select formControlName="year" required>
+          @for (year of years; track year) {
+            <mat-option [value]="year">{{ year }}</mat-option>
+          }
+        </mat-select>
+        <mat-error>Seleccione un año</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>Mes</mat-label>
+        <mat-select formControlName="month" required>
+          @for (m of months; track m.value) {
+            <mat-option [value]="m.value">{{ m.label }}</mat-option>
+          }
+        </mat-select>
+        <mat-error>Seleccione un mes</mat-error>
+      </mat-form-field>
+    </div>
+  }
+
+  <app-report-downloader
+    reportType="total"
+    [params]="downloadParams"
+    label="Descargar totales de movimientos"
+  />
+</form>

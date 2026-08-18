@@ -176,7 +176,14 @@ export const routes: Routes = [
       },
 
       // EPIC 10 · Reportes (ambos roles)
-      placeholderRoute('reports', 'Reportes', 'assessment'),
+      {
+        path: 'reports',
+        loadComponent: () =>
+          import('./features/reports/reports-page/reports-page.component').then(
+            (m) => m.ReportsPageComponent,
+          ),
+        data: { title: 'Reportes', icon: 'assessment' },
+      },
     ],
   },
   { path: '**', redirectTo: '' },

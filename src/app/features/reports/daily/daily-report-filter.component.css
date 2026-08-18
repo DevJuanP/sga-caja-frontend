@@ -1,0 +1,9 @@
+.daily-filter {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.full-width {
+  width: 100%;
+}

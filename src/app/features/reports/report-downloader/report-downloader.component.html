@@ -1,0 +1,22 @@
+<div class="downloader">
+  @if (isDownloading()) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  }
+
+  <button
+    mat-flat-button
+    color="primary"
+    [disabled]="isDownloading()"
+    (click)="download()"
+  >
+    @if (isDownloading()) {
+      <span><mat-icon aria-hidden="true">hourglass_top</mat-icon> Descargando...</span>
+    } @else {
+      <span><mat-icon aria-hidden="true">download</mat-icon> {{ label() }}</span>
+    }
+  </button>
+
+  @if (error(); as msg) {
+    <p class="error-text">{{ msg }}</p>
+  }
+</div>
