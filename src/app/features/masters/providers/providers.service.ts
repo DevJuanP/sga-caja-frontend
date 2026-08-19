@@ -28,4 +28,8 @@ export class ProvidersService {
   deactivate(uuid: string): Observable<ProviderResponse> {
     return this.api.patch<ProviderResponse>(`providers/${uuid}/deactivate`);
   }
+
+  activate(uuid: string): Observable<ProviderResponse> {
+    return this.api.patch<ProviderResponse>(`providers/${uuid}/activate`);
+  }
 }

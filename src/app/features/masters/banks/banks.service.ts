@@ -28,4 +28,8 @@ export class BanksService {
   deactivate(uuid: string): Observable<BankResponse> {
     return this.api.patch<BankResponse>(`banks/${uuid}/deactivate`);
   }
+
+  activate(uuid: string): Observable<BankResponse> {
+    return this.api.patch<BankResponse>(`banks/${uuid}/activate`);
+  }
 }

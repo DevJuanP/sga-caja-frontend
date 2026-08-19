@@ -28,4 +28,8 @@ export class ServicesService {
   deactivate(uuid: string): Observable<ServiceResponse> {
     return this.api.patch<ServiceResponse>(`services/${uuid}/deactivate`);
   }
+
+  activate(uuid: string): Observable<ServiceResponse> {
+    return this.api.patch<ServiceResponse>(`services/${uuid}/activate`);
+  }
 }

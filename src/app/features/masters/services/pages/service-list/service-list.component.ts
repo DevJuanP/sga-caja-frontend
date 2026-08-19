@@ -58,7 +58,8 @@ export class ServiceListComponent {
   ];
   readonly rowActions: RowAction[] = [
     { id: 'edit', label: 'Editar', icon: 'edit' },
-    { id: 'deactivate', label: 'Desactivar', icon: 'block', danger: true },
+    { id: 'deactivate', label: 'Desactivar', icon: 'block', danger: true, visible: (row) => row['active'] === true },
+    { id: 'activate', label: 'Reactivar', icon: 'restart_alt', visible: (row) => row['active'] === false },
   ];
 
   constructor() {
@@ -115,6 +116,8 @@ export class ServiceListComponent {
       this.openForm(item);
     } else if (event.actionId === 'deactivate') {
       this.deactivate(item);
+    } else if (event.actionId === 'activate') {
+      this.activate(item);
     }
   }
 
@@ -134,6 +137,7 @@ export class ServiceListComponent {
         ? { label: 'Medido', tone: 'neutral' }
         : { label: 'Fijo', tone: 'neutral' },
       amount: this.currency.transform(amount, item.currency.code),
+      active: item.active,
       activeChip: item.active
         ? { label: 'Activo', tone: 'success' }
         : { label: 'Inactivo', tone: 'neutral' },
@@ -167,6 +171,27 @@ export class ServiceListComponent {
         this.service.deactivate(item.uuid).subscribe({
           next: () => {
             this.snackBar.open('Servicio desactivado', 'Cerrar');
+            this.load();
+          },
+          error: (error: ApiError) => this.snackBar.open(error.message, 'Cerrar'),
+        });
+      });
+  }
+
+  private activate(item: ServiceResponse): void {
+    this.confirm
+      .confirm({
+        title: 'Reactivar servicio',
+        message: `¿Reactivar el servicio ${item.name}?`,
+        confirmLabel: 'Reactivar',
+      })
+      .subscribe((ok) => {
+        if (!ok) {
+          return;
+        }
+        this.service.activate(item.uuid).subscribe({
+          next: () => {
+            this.snackBar.open('Servicio reactivado', 'Cerrar');
             this.load();
           },
           error: (error: ApiError) => this.snackBar.open(error.message, 'Cerrar'),

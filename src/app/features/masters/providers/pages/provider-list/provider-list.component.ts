@@ -53,7 +53,8 @@ export class ProviderListComponent {
   ];
   readonly rowActions: RowAction[] = [
     { id: 'edit', label: 'Editar', icon: 'edit' },
-    { id: 'deactivate', label: 'Desactivar', icon: 'block', danger: true },
+    { id: 'deactivate', label: 'Desactivar', icon: 'block', danger: true, visible: (row) => row['active'] === true },
+    { id: 'activate', label: 'Reactivar', icon: 'restart_alt', visible: (row) => row['active'] === false },
   ];
 
   constructor() {
@@ -110,6 +111,8 @@ export class ProviderListComponent {
       this.openForm(provider);
     } else if (event.actionId === 'deactivate') {
       this.deactivate(provider);
+    } else if (event.actionId === 'activate') {
+      this.activate(provider);
     }
   }
 
@@ -122,6 +125,7 @@ export class ProviderListComponent {
       uuid: provider.uuid,
       name: provider.name,
       document: provider.document,
+      active: provider.active,
       activeChip: provider.active
         ? { label: 'Activo', tone: 'success' }
         : { label: 'Inactivo', tone: 'neutral' },
@@ -155,6 +159,27 @@ export class ProviderListComponent {
         this.service.deactivate(provider.uuid).subscribe({
           next: () => {
             this.snackBar.open('Proveedor desactivado', 'Cerrar');
+            this.load();
+          },
+          error: (error: ApiError) => this.snackBar.open(error.message, 'Cerrar'),
+        });
+      });
+  }
+
+  private activate(provider: ProviderResponse): void {
+    this.confirm
+      .confirm({
+        title: 'Reactivar proveedor',
+        message: `¿Reactivar al proveedor ${provider.name}?`,
+        confirmLabel: 'Reactivar',
+      })
+      .subscribe((ok) => {
+        if (!ok) {
+          return;
+        }
+        this.service.activate(provider.uuid).subscribe({
+          next: () => {
+            this.snackBar.open('Proveedor reactivado', 'Cerrar');
             this.load();
           },
           error: (error: ApiError) => this.snackBar.open(error.message, 'Cerrar'),

@@ -55,7 +55,8 @@ export class BankListComponent {
   ];
   readonly rowActions: RowAction[] = [
     { id: 'edit', label: 'Editar', icon: 'edit' },
-    { id: 'deactivate', label: 'Desactivar', icon: 'block', danger: true },
+    { id: 'deactivate', label: 'Desactivar', icon: 'block', danger: true, visible: (row) => row['active'] === true },
+    { id: 'activate', label: 'Reactivar', icon: 'restart_alt', visible: (row) => row['active'] === false },
   ];
 
   constructor() {
@@ -112,6 +113,8 @@ export class BankListComponent {
       this.openForm(bank);
     } else if (event.actionId === 'deactivate') {
       this.deactivate(bank);
+    } else if (event.actionId === 'activate') {
+      this.activate(bank);
     }
   }
 
@@ -127,6 +130,7 @@ export class BankListComponent {
       accountNumber: bank.accountNumber,
       cci: bank.cci,
       currency: bank.currency.code,
+      active: bank.active,
       activeChip: bank.active
         ? { label: 'Activo', tone: 'success' }
         : { label: 'Inactivo', tone: 'neutral' },
@@ -160,6 +164,27 @@ export class BankListComponent {
         this.service.deactivate(bank.uuid).subscribe({
           next: () => {
             this.snackBar.open('Banco desactivado', 'Cerrar');
+            this.load();
+          },
+          error: (error: ApiError) => this.snackBar.open(error.message, 'Cerrar'),
+        });
+      });
+  }
+
+  private activate(bank: BankResponse): void {
+    this.confirm
+      .confirm({
+        title: 'Reactivar banco',
+        message: `¿Reactivar el banco ${bank.name}?`,
+        confirmLabel: 'Reactivar',
+      })
+      .subscribe((ok) => {
+        if (!ok) {
+          return;
+        }
+        this.service.activate(bank.uuid).subscribe({
+          next: () => {
+            this.snackBar.open('Banco reactivado', 'Cerrar');
             this.load();
           },
           error: (error: ApiError) => this.snackBar.open(error.message, 'Cerrar'),
