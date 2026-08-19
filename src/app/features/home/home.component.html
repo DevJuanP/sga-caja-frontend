@@ -51,7 +51,7 @@
           <a [routerLink]="cxc.route" class="pending-link">
             <div class="pending-main">
               <span class="pending-service">{{ cxc.serviceName }}</span>
-              <span class="pending-amount amount">{{ cxc.amount | currency:'PEN' }}</span>
+              <span class="pending-amount amount">{{ cxc.currencyCode }} {{ cxc.amount }}</span>
             </div>
             <div class="pending-meta">
               @if (cxc.memberName) {

@@ -53,6 +53,7 @@ describe('CxcSummaryComponent', () => {
           periodEndDate: '2026-08-31',
           amount: 150,
           status: { uuid: 'st1', name: 'Paid' },
+          currency: { uuid: 'cur1', code: 'PEN', name: 'Sol' },
         },
         settlementMethod: 'PAYMENT',
         settledDate: '2026-08-15',

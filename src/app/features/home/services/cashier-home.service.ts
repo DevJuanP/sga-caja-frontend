@@ -72,6 +72,7 @@ export class CashierHomeService {
     memberName: c.member?.fullName,
     stallNumber: c.stall?.number,
     amount: c.amount,
+    currencyCode: c.currency.code,
     period: `${c.periodStartDate} → ${c.periodEndDate}`,
     route: `/account-receivables/summary${c.member?.uuid ? `?memberUuid=${c.member.uuid}` : c.stall?.uuid ? `?stallUuid=${c.stall.uuid}` : ''}`,
   });

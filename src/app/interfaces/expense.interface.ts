@@ -1,3 +1,5 @@
+import { Currency } from './catalog.interface';
+
 export interface ExpenseResponse {
   uuid: string;
   documentNumber: string;
@@ -19,6 +21,7 @@ export interface ExpenseResponse {
     fileName: string;
   } | null;
   createdBy: { uuid: string; username: string };
+  currency: Currency;
 }
 
 export interface RegisterExpenseRequest {
@@ -28,6 +31,7 @@ export interface RegisterExpenseRequest {
   amount: number;
   associatedDocument: string;
   expenseReasonUuid: string;
+  currencyUuid: string;
 }
 
 export type ExpenseBulkUploadResult = ExpenseResponse[];

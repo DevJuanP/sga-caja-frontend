@@ -27,6 +27,7 @@ export class PaymentDialogComponent {
 
   readonly uuids: string[] = inject(MAT_DIALOG_DATA).uuids;
   readonly total: number = inject(MAT_DIALOG_DATA).total;
+  readonly currencyCode: string = inject(MAT_DIALOG_DATA).currencyCode;
 
   readonly loading = signal(false);
   readonly paid = signal(false);
@@ -50,6 +51,7 @@ export class PaymentDialogComponent {
             correlativeNumber: response.receipt.correlativeNumber,
             issueDate: response.receipt.issueDate,
             amount: response.receipt.amount,
+            currencyCode: response.currency.code,
             paymentDate: response.paymentDate,
             createdBy: response.createdBy,
           });

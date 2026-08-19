@@ -1,3 +1,5 @@
+import { Currency } from './catalog.interface';
+
 export interface BankExchangeResponse {
   uuid: string;
   accountReceivable: {
@@ -19,6 +21,7 @@ export interface BankExchangeResponse {
   };
   depositDate: string;
   amount: number;
+  currency: Currency;
 }
 
 export interface CreateBankExchangeRequest {

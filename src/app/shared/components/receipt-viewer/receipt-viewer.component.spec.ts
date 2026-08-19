@@ -30,7 +30,6 @@ describe('ReceiptViewerComponent', () => {
   });
 
   it('muestra el monto formateado', () => {
-    expect(fixture.nativeElement.textContent).toContain('S/');
     expect(fixture.nativeElement.textContent).toContain('230');
   });
 
@@ -42,11 +41,11 @@ describe('ReceiptViewerComponent', () => {
     expect(fixture.nativeElement.textContent).toContain('declaración jurada');
   });
 
-  it('usa PEN (S/) por defecto cuando no se indica moneda', () => {
-    expect(fixture.nativeElement.textContent).toContain('S/');
+  it('usa PEN por defecto cuando no se indica moneda', () => {
+    expect(fixture.nativeElement.textContent).toContain('PEN');
   });
 
-  it('usa el símbolo de la moneda indicada en currencyCode', () => {
+  it('muestra el código de la moneda indicada en currencyCode', () => {
     fixture.componentRef.setInput('receipt', {
       uuid: 'r2',
       receiptTypeName: 'Recibo de ingreso',
@@ -57,7 +56,7 @@ describe('ReceiptViewerComponent', () => {
     });
     fixture.detectChanges();
 
-    expect(fixture.nativeElement.textContent).toContain('US$');
-    expect(fixture.nativeElement.textContent).not.toContain('S/');
+    expect(fixture.nativeElement.textContent).toContain('USD');
+    expect(fixture.nativeElement.textContent).not.toContain('PEN');
   });
 });

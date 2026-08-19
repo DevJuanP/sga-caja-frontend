@@ -16,7 +16,7 @@ describe('ConsumptionReadingDialogComponent', () => {
         provideHttpClient(),
         provideHttpClientTesting(),
         { provide: MatDialogRef, useValue: { close: vi.fn() } },
-        { provide: MAT_DIALOG_DATA, useValue: { accountReceivableUuid: 'ar1' } },
+        { provide: MAT_DIALOG_DATA, useValue: { accountReceivableUuid: 'ar1', currencyCode: 'PEN' } },
       ],
     }).compileComponents();
 

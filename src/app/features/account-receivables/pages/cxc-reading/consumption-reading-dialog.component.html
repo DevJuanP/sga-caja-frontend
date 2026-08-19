@@ -15,6 +15,10 @@
         <span class="reading-label">Costo unitario</span>
         <span class="reading-value">{{ reading()!.unitCost }}</span>
       </div>
+      <div class="reading-field">
+        <span class="reading-label">Moneda</span>
+        <span class="reading-value">{{ currencyCode }}</span>
+      </div>
       <div class="reading-field reading-total">
         <span class="reading-label">Importe calculado</span>
         <span class="reading-value reading-amount">{{ reading()!.calculatedAmount }}</span>

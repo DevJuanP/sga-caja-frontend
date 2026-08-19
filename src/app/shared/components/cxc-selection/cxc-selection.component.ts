@@ -11,6 +11,7 @@ export interface CxcRow {
   serviceName: string;
   destination: string;
   period: string;
+  currencyCode: string;
   amount: number;
   statusChip: { label: string; tone: ChipTone };
   consumptionBased?: boolean;
@@ -40,7 +41,7 @@ export class CxcSelectionComponent {
   readonly pageChange = output<PageEvent>();
 
   readonly displayedColumns = computed(() => {
-    const columns = ['serviceName', 'destination', 'period', 'amountFormatted', 'statusChip'];
+    const columns = ['serviceName', 'destination', 'period', 'currencyCode', 'amountFormatted', 'statusChip'];
     if (this.selectable()) columns.unshift('select');
     if (this.exemptEnabled()) columns.push('exempt');
     return columns;

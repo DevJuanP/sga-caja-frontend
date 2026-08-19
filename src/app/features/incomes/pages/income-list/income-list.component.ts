@@ -16,6 +16,7 @@ import { CatalogItem } from '../../../../interfaces/catalog.interface';
 import { PageHeaderComponent } from '../../../../shared/components/page-header/page-header.component';
 import { CrudTableComponent, TableColumn, RowAction, RowActionEvent } from '../../../../shared/components/crud-table/crud-table.component';
 import { ReceiptViewerComponent, ReceiptData } from '../../../../shared/components/receipt-viewer/receipt-viewer.component';
+import { formatAmount } from '../../../../shared/pipes/amount-format.util';
 import { CatalogService } from '../../../catalogs/catalog.service';
 import { IncomesService } from '../../incomes.service';
 import { IncomeFormDialogComponent } from '../income-form/income-form-dialog.component';
@@ -69,11 +70,6 @@ export class IncomeListComponent {
     { id: 'view-receipt', label: 'Ver voucher', icon: 'receipt' },
   ];
 
-  private readonly currencyFmt = new Intl.NumberFormat('es-PE', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
-
   readonly rows = computed(() =>
     this.items().map((item) => ({
       uuid: item.uuid,
@@ -81,7 +77,7 @@ export class IncomeListComponent {
       categoryName: item.incomeCategory.name,
       concept: item.concept,
       currency: item.currency.code,
-      amount: this.currencyFmt.format(item.amount),
+      amount: formatAmount(item.amount),
     }))
   );
 

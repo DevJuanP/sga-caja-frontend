@@ -1,4 +1,3 @@
-import { CurrencyPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -15,7 +14,6 @@ import { KpiCard, PendingCxc, Shortcut } from './services/home.service';
   selector: 'app-home',
   standalone: true,
   imports: [
-    CurrencyPipe,
     MatCardModule,
     MatIconModule,
     MatButtonModule,

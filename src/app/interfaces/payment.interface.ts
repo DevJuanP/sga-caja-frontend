@@ -1,4 +1,5 @@
 import { AccountReceivableResponse } from './account-receivable.interface';
+import { Currency } from './catalog.interface';
 
 /** Request para calcular total de pagos */
 export interface ProcessPaymentRequest {
@@ -9,6 +10,7 @@ export interface ProcessPaymentRequest {
 export interface PaymentTotalResponse {
   items: { accountReceivableUuid: string; amount: number }[];
   total: number;
+  currency: Currency;
 }
 
 /** Respuesta de procesamiento de pago */
@@ -25,6 +27,7 @@ export interface PaymentResponse {
   totalAmount: number;
   details: { accountReceivableUuid: string; amount: number }[];
   createdBy: { uuid: string; username: string };
+  currency: Currency;
 }
 
 /** Respuesta de listado de pagos */

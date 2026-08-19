@@ -92,6 +92,7 @@ export class CxcListComponent {
     { key: 'serviceName', header: 'Servicio' },
     { key: 'destination', header: 'Socio / Puesto' },
     { key: 'period', header: 'Período' },
+    { key: 'currency', header: 'Moneda' },
     { key: 'amountFormatted', header: 'Monto', type: 'number', align: 'end' },
     { key: 'statusChip', header: 'Estado', type: 'chip' },
   ];
@@ -190,7 +191,7 @@ export class CxcListComponent {
   openReading(item: AccountReceivableResponse): void {
     const ref = this.dialog.open(ConsumptionReadingDialogComponent, {
       width: '480px',
-      data: { accountReceivableUuid: item.uuid },
+      data: { accountReceivableUuid: item.uuid, currencyCode: item.currency.code },
     });
     ref.afterClosed().subscribe((saved: boolean) => {
       if (saved) this.load();
@@ -228,7 +229,7 @@ export class CxcListComponent {
     this.confirm
       .confirm({
         title: 'Exonerar cuenta por cobrar',
-        message: `¿Exonerar la CxC de ${item.service.name} por ${item.amount}?`,
+        message: `¿Exonerar la CxC de ${item.service.name} por ${item.currency.code} ${item.amount}?`,
         confirmLabel: 'Exonerar',
         danger: true,
       })
@@ -255,6 +256,7 @@ export class CxcListComponent {
       consumptionBased: item.service.consumptionBased,
       destination,
       period: `${start} – ${end}`,
+      currency: item.currency.code,
       amountFormatted: item.amount,
       statusChip: status,
     };

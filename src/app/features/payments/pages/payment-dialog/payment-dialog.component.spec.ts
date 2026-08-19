@@ -11,6 +11,7 @@ describe('PaymentDialogComponent', () => {
   const mockDialogData = {
     uuids: ['ar1', 'ar2'],
     total: 230.0,
+    currencyCode: 'PEN',
   };
 
   const mockDialogRef = {

@@ -1,4 +1,4 @@
-import { CatalogItem } from './catalog.interface';
+import { CatalogItem, Currency } from './catalog.interface';
 
 /** Cuenta por cobrar (US-16, US-17, US-18). */
 export interface AccountReceivableResponse {
@@ -10,6 +10,7 @@ export interface AccountReceivableResponse {
   periodEndDate: string;
   amount: number;
   status: StatusRef;
+  currency: Currency;
 }
 
 export interface ServiceRef {

@@ -21,6 +21,7 @@ import {
   ReceiptData,
 } from '../../../../shared/components/receipt-viewer/receipt-viewer.component';
 import { ConfirmDialogService } from '../../../../shared/components/confirm-dialog/confirm-dialog.service';
+import { formatAmount } from '../../../../shared/pipes/amount-format.util';
 import { ExpensesService } from '../../expenses.service';
 import { ExpenseFormDialogComponent } from '../expense-form/expense-form-dialog.component';
 import { ExpenseBulkUploadDialogComponent } from '../expense-bulk-upload/expense-bulk-upload-dialog.component';
@@ -61,6 +62,7 @@ export class ExpenseListComponent {
     { key: 'documentNumber', header: 'N° Documento' },
     { key: 'providerName', header: 'Proveedor' },
     { key: 'expenseReasonName', header: 'Motivo' },
+    { key: 'currency', header: 'Moneda' },
     { key: 'amount', header: 'Monto', align: 'end', type: 'number' },
     { key: 'status', header: 'Estado' },
   ];
@@ -81,11 +83,6 @@ export class ExpenseListComponent {
     },
   ];
 
-  private readonly currencyFmt = new Intl.NumberFormat('es-PE', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
-
   readonly rows = computed(() =>
     this.items().map((item) => ({
       uuid: item.uuid,
@@ -93,7 +90,8 @@ export class ExpenseListComponent {
       documentNumber: item.documentNumber,
       providerName: item.provider.name,
       expenseReasonName: item.expenseReason.name,
-      amount: this.currencyFmt.format(item.amount),
+      currency: item.currency.code,
+      amount: formatAmount(item.amount),
       status: this.getStatusLabel(item.status.name),
       statusName: item.status.name,
     })),
@@ -248,6 +246,7 @@ export class ExpenseListComponent {
                   correlativeNumber: response.receipt.correlativeNumber,
                   issueDate: response.receipt.issueDate,
                   amount: response.receipt.amount,
+                  currencyCode: response.currency.code,
                 });
               }
 
@@ -269,6 +268,7 @@ export class ExpenseListComponent {
       correlativeNumber: item.receipt.correlativeNumber,
       issueDate: item.receipt.issueDate,
       amount: item.receipt.amount,
+      currencyCode: item.currency.code,
     };
 
     const dialogRef = this.dialog.open(ReceiptViewerComponent, {

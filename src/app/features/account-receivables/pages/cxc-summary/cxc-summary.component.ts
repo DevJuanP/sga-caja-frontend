@@ -48,6 +48,7 @@ export class CxcSummaryComponent implements OnInit {
   readonly columns: TableColumn[] = [
     { key: 'serviceName', header: 'Servicio' },
     { key: 'period', header: 'Período' },
+    { key: 'currency', header: 'Moneda' },
     { key: 'amountFormatted', header: 'Monto', type: 'number', align: 'end' },
     { key: 'statusChip', header: 'Estado', type: 'chip' },
     { key: 'settlement', header: 'Liquidado por' },
@@ -100,6 +101,7 @@ export class CxcSummaryComponent implements OnInit {
       uuid: ar.uuid,
       serviceName: ar.service.name,
       period: `${ar.periodStartDate} – ${ar.periodEndDate}`,
+      currency: ar.currency.code,
       amountFormatted: ar.amount,
       statusChip: status,
       settlement,

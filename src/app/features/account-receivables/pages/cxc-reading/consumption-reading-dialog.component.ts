@@ -30,6 +30,7 @@ export class ConsumptionReadingDialogComponent implements OnInit {
   private readonly snackBar = inject(MatSnackBar);
 
   readonly accountReceivableUuid: string = inject(MAT_DIALOG_DATA).accountReceivableUuid;
+  readonly currencyCode: string = inject(MAT_DIALOG_DATA).currencyCode;
 
   readonly loading = signal(false);
   readonly hasReading = signal(false);

@@ -14,7 +14,6 @@ import { ApiError } from '../../../../core/auth/error.interceptor';
 import { AccountReceivableResponse } from '../../../../interfaces/account-receivable.interface';
 import { BankResponse } from '../../../../interfaces/bank.interface';
 import { ReceiptViewerComponent, ReceiptData } from '../../../../shared/components/receipt-viewer/receipt-viewer.component';
-import { CurrencyPipe } from '../../../../shared/pipes/currency.pipe';
 import { AccountReceivablesService } from '../../../account-receivables/account-receivables.service';
 import { BanksService } from '../../../masters/banks/banks.service';
 import { BankExchangesService } from '../../bank-exchanges.service';
@@ -32,7 +31,6 @@ import { BankExchangesService } from '../../bank-exchanges.service';
     MatDatepickerModule,
     MatNativeDateModule,
     ReceiptViewerComponent,
-    CurrencyPipe,
   ],
   templateUrl: './bank-exchange-form-dialog.component.html',
   styleUrl: './bank-exchange-form-dialog.component.css',
@@ -89,6 +87,7 @@ export class BankExchangeFormDialogComponent {
             correlativeNumber: response.receipt.correlativeNumber,
             issueDate: response.receipt.issueDate,
             amount: response.amount,
+            currencyCode: response.currency.code,
           });
           this.snackBar.open('Canje registrado exitosamente', 'Cerrar', { duration: 3000 });
         },

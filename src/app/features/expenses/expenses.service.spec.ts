@@ -44,6 +44,7 @@ describe('ExpensesService', () => {
       amount: 250.0,
       associatedDocument: 'OC-001',
       expenseReasonUuid: 'reason1',
+      currencyUuid: 'cur1',
     };
     service.create(body).subscribe();
 

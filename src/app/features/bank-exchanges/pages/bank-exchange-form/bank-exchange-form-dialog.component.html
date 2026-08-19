@@ -8,7 +8,7 @@
         <mat-select formControlName="accountReceivableUuid" required>
           @for (cxc of pendingCxc(); track cxc.uuid) {
             <mat-option [value]="cxc.uuid">
-              {{ cxc.service.name }} - {{ cxc.member?.fullName }} ({{ cxc.amount | currency:'S/' }})
+              {{ cxc.service.name }} - {{ cxc.member?.fullName }} ({{ cxc.currency.code }} {{ cxc.amount }})
             </mat-option>
           }
         </mat-select>

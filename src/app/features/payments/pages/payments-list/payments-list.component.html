@@ -57,7 +57,7 @@
           </button>
           @if (totalAmount() !== null) {
             <span class="payments-total">
-              Total a cobrar: S/ {{ totalAmount()?.toFixed(2) }}
+              Total a cobrar: {{ totalCurrencyCode() }} {{ totalAmount()?.toFixed(2) }}
             </span>
           }
         </div>
@@ -133,7 +133,7 @@
           </button>
           @if (totalAmount() !== null) {
             <span class="payments-total">
-              Total a cobrar: S/ {{ totalAmount()?.toFixed(2) }}
+              Total a cobrar: {{ totalCurrencyCode() }} {{ totalAmount()?.toFixed(2) }}
             </span>
           }
         </div>

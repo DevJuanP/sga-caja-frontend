@@ -26,13 +26,17 @@
         <span class="value">{{ receipt().createdBy?.username }}</span>
       </div>
     }
+    <div class="detail-row">
+      <span class="label">Moneda:</span>
+      <span class="value">{{ receipt().currencyCode ?? 'PEN' }}</span>
+    </div>
   </div>
 
   <div class="receipt-divider"></div>
 
   <div class="receipt-amount-section">
     <span class="label">Monto total:</span>
-    <span class="amount">{{ receipt().amount | currency:(receipt().currencyCode ?? 'PEN') }}</span>
+    <span class="amount">{{ formattedAmount() }}</span>
   </div>
 
   <div class="receipt-footer">

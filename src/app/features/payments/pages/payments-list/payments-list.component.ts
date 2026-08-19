@@ -62,6 +62,7 @@ export class PaymentsListComponent {
   readonly selectedUuids = signal<string[]>([]);
   readonly selectedExemptUuids = signal<string[]>([]);
   readonly totalAmount = signal<number | null>(null);
+  readonly totalCurrencyCode = signal<string | null>(null);
 
   readonly services = signal<ServiceResponse[]>([]);
   readonly members = signal<MemberResponse[]>([]);
@@ -158,6 +159,7 @@ export class PaymentsListComponent {
     this.selectedUuids.set([]);
     this.selectedExemptUuids.set([]);
     this.totalAmount.set(null);
+    this.totalCurrencyCode.set(null);
     this.stallPageIndex.set(0);
     this.memberPageIndex.set(0);
     if (index === 0) {
@@ -208,6 +210,7 @@ export class PaymentsListComponent {
     this.selectedUuids.set([]);
     this.selectedExemptUuids.set([]);
     this.totalAmount.set(null);
+    this.totalCurrencyCode.set(null);
     this.stallPageIndex.set(0);
     this.memberPageIndex.set(0);
     this.load();
@@ -234,6 +237,7 @@ export class PaymentsListComponent {
     const preservedUuids = this.selectedUuids().filter((uuid) => !pageUuids.includes(uuid));
     this.selectedUuids.set([...preservedUuids, ...uuids]);
     this.totalAmount.set(null);
+    this.totalCurrencyCode.set(null);
   }
 
   onExemptSelectionChange(uuids: string[]): void {
@@ -289,22 +293,24 @@ export class PaymentsListComponent {
       .subscribe({
         next: (response) => {
           this.totalAmount.set(response.total);
-          this.openPaymentDialog(pendingUuids, response.total);
+          this.totalCurrencyCode.set(response.currency.code);
+          this.openPaymentDialog(pendingUuids, response.total, response.currency.code);
         },
         error: (error: ApiError) => this.snackBar.open(error.message, 'Cerrar', { duration: 3000 }),
       });
   }
 
-  private openPaymentDialog(uuids: string[], total: number): void {
+  private openPaymentDialog(uuids: string[], total: number, currencyCode: string): void {
     const ref = this.dialog.open(PaymentDialogComponent, {
       width: '480px',
-      data: { uuids, total },
+      data: { uuids, total, currencyCode },
     });
     ref.afterClosed().subscribe((paid: boolean) => {
       if (paid) {
         this.selectedUuids.set([]);
         this.selectedExemptUuids.set([]);
         this.totalAmount.set(null);
+        this.totalCurrencyCode.set(null);
         this.stallPageIndex.set(0);
         this.memberPageIndex.set(0);
         this.load();
@@ -332,6 +338,7 @@ export class PaymentsListComponent {
       serviceName: item.service.name,
       destination: item.member?.fullName ?? item.stall?.number ?? '—',
       period: `${item.periodStartDate} – ${item.periodEndDate}`,
+      currencyCode: item.currency.code,
       amount: item.amount,
       statusChip: {
         label: item.status.name === 'Pending' ? 'Pendiente' : item.status.name === 'Paid' ? 'Pagado' : 'Exonerado',

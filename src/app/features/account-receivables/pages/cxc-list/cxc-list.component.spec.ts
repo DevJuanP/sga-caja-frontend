@@ -65,6 +65,7 @@ describe('CxcListComponent', () => {
           periodEndDate: '2026-08-31',
           amount: 150,
           status: { uuid: 'st1', name: 'Pending' },
+          currency: { uuid: 'cur1', code: 'PEN', name: 'Sol' },
         },
       ],
       page: { size: 20, number: 0, totalElements: 1, totalPages: 1 },
@@ -101,6 +102,7 @@ describe('CxcListComponent', () => {
       periodEndDate: '2026-08-31',
       amount: 0,
       status: { uuid: 'st1', name: 'Pending' as AccountReceivableStatus },
+      currency: { uuid: 'cur1', code: 'PEN', name: 'Sol' },
     };
     const reqs = httpMock.match(() => true);
     const cxcReq = reqs.find((r) => r.request.url.endsWith('/api/account-receivables'));
@@ -130,6 +132,7 @@ describe('CxcListComponent', () => {
       periodEndDate: '2026-08-31',
       amount: 150,
       status: { uuid: 'st1', name: 'Pending' },
+      currency: { uuid: 'cur1', code: 'PEN', name: 'Sol' },
     };
     const reqs = httpMock.match(() => true);
     const cxcReq = reqs.find((r) => r.request.url.endsWith('/api/account-receivables'));

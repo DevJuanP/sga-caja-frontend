@@ -8,7 +8,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { finalize, forkJoin } from 'rxjs';
 import { ApiError } from '../../../../core/auth/error.interceptor';
-import { CatalogItem } from '../../../../interfaces/catalog.interface';
+import { CatalogItem, Currency } from '../../../../interfaces/catalog.interface';
 import { ProviderResponse } from '../../../../interfaces/provider.interface';
 import { ReceiptViewerComponent, ReceiptData } from '../../../../shared/components/receipt-viewer/receipt-viewer.component';
 import { CatalogService } from '../../../catalogs/catalog.service';
@@ -42,6 +42,7 @@ export class ExpenseFormDialogComponent {
 
   readonly providers = signal<ProviderResponse[]>([]);
   readonly expenseReasons = signal<CatalogItem[]>([]);
+  readonly currencies = signal<Currency[]>([]);
 
   readonly form = new FormGroup({
     documentNumber: new FormControl<string>('', Validators.required),
@@ -50,6 +51,7 @@ export class ExpenseFormDialogComponent {
     amount: new FormControl<number | null>(null, [Validators.required, Validators.min(0.01)]),
     associatedDocument: new FormControl<string>(''),
     expenseReasonUuid: new FormControl<string | null>(null, Validators.required),
+    currencyUuid: new FormControl<string | null>(null, Validators.required),
   });
 
   get receiptData(): ReceiptData | null {
@@ -58,6 +60,7 @@ export class ExpenseFormDialogComponent {
 
   constructor() {
     this.loadCatalogs();
+    this.loadCurrencies();
   }
 
   submit(): void {
@@ -74,6 +77,7 @@ export class ExpenseFormDialogComponent {
         amount: formValue.amount!,
         associatedDocument: formValue.associatedDocument ?? '',
         expenseReasonUuid: formValue.expenseReasonUuid!,
+        currencyUuid: formValue.currencyUuid!,
       })
       .pipe(finalize(() => this.loading.set(false)))
       .subscribe({
@@ -86,6 +90,7 @@ export class ExpenseFormDialogComponent {
               correlativeNumber: response.receipt.correlativeNumber,
               issueDate: response.receipt.issueDate,
               amount: response.receipt.amount,
+              currencyCode: response.currency.code,
             });
           }
           this.snackBar.open('Egreso registrado exitosamente', 'Cerrar', { duration: 3000 });
@@ -109,6 +114,12 @@ export class ExpenseFormDialogComponent {
         this.providers.set(providers.content);
         this.expenseReasons.set(expenseReasons);
       },
+    });
+  }
+
+  private loadCurrencies(): void {
+    this.catalogService.list<Currency>('currencies').subscribe({
+      next: (currencies) => this.currencies.set(currencies),
     });
   }
 }

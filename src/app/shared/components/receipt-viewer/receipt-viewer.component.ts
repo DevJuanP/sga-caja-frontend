@@ -1,7 +1,7 @@
-import { Component, input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { CurrencyPipe } from '../../pipes/currency.pipe';
+import { formatAmount } from '../../pipes/amount-format.util';
 
 export interface ReceiptData {
   uuid: string;
@@ -16,12 +16,14 @@ export interface ReceiptData {
 
 @Component({
   selector: 'app-receipt-viewer',
-  imports: [MatButtonModule, MatIconModule, CurrencyPipe],
+  imports: [MatButtonModule, MatIconModule],
   templateUrl: './receipt-viewer.component.html',
   styleUrl: './receipt-viewer.component.css',
 })
 export class ReceiptViewerComponent {
   readonly receipt = input.required<ReceiptData>();
+
+  readonly formattedAmount = computed(() => formatAmount(this.receipt().amount));
 
   print(): void {
     window.print();

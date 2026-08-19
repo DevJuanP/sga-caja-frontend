@@ -117,6 +117,7 @@ describe('PaymentsListComponent', () => {
         periodEndDate: '2026-08-31',
         amount: 50,
         status: { uuid: 'st1', name: 'Pending' },
+        currency: { uuid: 'cur1', code: 'PEN', name: 'Sol' },
       },
       {
         uuid: 'ar2',
@@ -127,6 +128,7 @@ describe('PaymentsListComponent', () => {
         periodEndDate: '2026-08-31',
         amount: 100,
         status: { uuid: 'st2', name: 'Pending' },
+        currency: { uuid: 'cur1', code: 'PEN', name: 'Sol' },
       },
     ] as any);
 

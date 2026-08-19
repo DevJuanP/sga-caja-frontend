@@ -45,6 +45,16 @@
         </mat-select>
         <mat-error>Seleccione un motivo</mat-error>
       </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Moneda</mat-label>
+        <mat-select formControlName="currencyUuid" required>
+          @for (currency of currencies(); track currency.uuid) {
+            <mat-option [value]="currency.uuid">{{ currency.code }} — {{ currency.name }}</mat-option>
+          }
+        </mat-select>
+        <mat-error>Seleccione una moneda</mat-error>
+      </mat-form-field>
     </form>
   } @else {
     <app-receipt-viewer [receipt]="receiptData!"></app-receipt-viewer>

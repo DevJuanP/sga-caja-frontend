@@ -89,6 +89,7 @@ export class CxcGenerateDialogComponent {
   readonly resultColumns: TableColumn[] = [
     { key: 'serviceName', header: 'Servicio' },
     { key: 'destination', header: 'Puesto / Socio' },
+    { key: 'currency', header: 'Moneda' },
     { key: 'amountFormatted', header: 'Monto', type: 'number', align: 'end' },
     { key: 'statusChip', header: 'Estado', type: 'chip' },
   ];
@@ -96,6 +97,7 @@ export class CxcGenerateDialogComponent {
   readonly resultRows = signal<Record<string, unknown>[]>([]);
 
   private selectedService = signal<ServiceResponse | null>(null);
+  readonly selectedServiceCurrencyCode = computed(() => this.selectedService()?.currency.code ?? null);
 
   constructor() {
     this.loadServices();
@@ -194,6 +196,7 @@ export class CxcGenerateDialogComponent {
         uuid: item.uuid,
         serviceName: item.service.name,
         destination: item.member?.fullName ?? item.stall?.number ?? '—',
+        currency: item.currency.code,
         amountFormatted: item.amount,
         statusChip: STATUS_CHIP[item.status.name],
       })),

@@ -21,6 +21,7 @@ export interface PendingCxc {
   memberName?: string;
   stallNumber?: string;
   amount: number;
+  currencyCode: string;
   period: string;
   route: string;
 }

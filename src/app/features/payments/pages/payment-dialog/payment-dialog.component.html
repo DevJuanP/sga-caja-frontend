@@ -7,9 +7,13 @@
           <span class="label">CxC seleccionadas:</span>
           <span class="value">{{ uuids.length }}</span>
         </div>
+        <div class="summary-row">
+          <span class="label">Moneda:</span>
+          <span class="value">{{ currencyCode }}</span>
+        </div>
         <div class="summary-row total-row">
           <span class="label">Total a cobrar:</span>
-          <span class="amount">S/ {{ total.toFixed(2) }}</span>
+          <span class="amount">{{ total.toFixed(2) }}</span>
         </div>
       </div>
     </mat-dialog-content>

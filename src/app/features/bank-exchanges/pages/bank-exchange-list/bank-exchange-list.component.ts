@@ -16,6 +16,7 @@ import { BankResponse } from '../../../../interfaces/bank.interface';
 import { PageHeaderComponent } from '../../../../shared/components/page-header/page-header.component';
 import { CrudTableComponent, TableColumn, RowAction, RowActionEvent } from '../../../../shared/components/crud-table/crud-table.component';
 import { ReceiptViewerComponent, ReceiptData } from '../../../../shared/components/receipt-viewer/receipt-viewer.component';
+import { formatAmount } from '../../../../shared/pipes/amount-format.util';
 import { BanksService } from '../../../masters/banks/banks.service';
 import { BankExchangesService } from '../../bank-exchanges.service';
 import { BankExchangeFormDialogComponent } from '../bank-exchange-form/bank-exchange-form-dialog.component';
@@ -70,19 +71,14 @@ export class BankExchangeListComponent {
     { id: 'view-receipt', label: 'Ver voucher', icon: 'receipt' },
   ];
 
-  private readonly currencyFmt = new Intl.NumberFormat('es-PE', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
-
   readonly rows = computed(() =>
     this.items().map((item) => ({
       uuid: item.uuid,
       depositDate: item.depositDate,
       cxcInfo: `${item.accountReceivable.service.name} - ${item.accountReceivable.member?.fullName ?? item.accountReceivable.stall?.number ?? '—'}`,
       bankName: item.bank.name,
-      currency: this.getBankCurrencyCode(item.bank.uuid),
-      amount: this.currencyFmt.format(item.amount),
+      currency: item.currency.code,
+      amount: formatAmount(item.amount),
       status: 'Pagado',
     }))
   );
@@ -165,6 +161,7 @@ export class BankExchangeListComponent {
       correlativeNumber: item.receipt.correlativeNumber,
       issueDate: item.receipt.issueDate,
       amount: item.amount,
+      currencyCode: item.currency.code,
     };
 
     const dialogRef = this.dialog.open(ReceiptViewerComponent, {
@@ -177,10 +174,5 @@ export class BankExchangeListComponent {
     this.banksService.list({ page: 0, size: 999 }).subscribe({
       next: (page) => this.banks.set(page.content),
     });
-  }
-
-  private getBankCurrencyCode(bankUuid: string): string {
-    const bank = this.banks().find((b) => b.uuid === bankUuid);
-    return bank?.currency?.code ?? 'PEN';
   }
 }
