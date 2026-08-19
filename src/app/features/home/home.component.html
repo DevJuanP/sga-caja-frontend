@@ -1,0 +1,70 @@
+<app-page-header
+  [title]="greeting()"
+  [subtitle]="roleLabel()"
+/>
+
+@if (loading()) {
+  <div class="home-grid" aria-busy="true" role="status" aria-label="Cargando indicadores">
+    @for (_ of [1,2,3,4,5]; track $index) {
+      <mat-card class="kpi-card skeleton">
+        <div class="skeleton-icon"></div>
+        <div class="skeleton-value"></div>
+        <div class="skeleton-label"></div>
+      </mat-card>
+    }
+  </div>
+} @else {
+  <div class="home-grid">
+    @for (kpi of kpis(); track kpi.label) {
+      <mat-card
+        class="kpi-card"
+        [class.clickable]="!!kpi.route"
+        [routerLink]="kpi.route"
+        [queryParams]="kpi.routeQueryParams"
+      >
+        <mat-icon aria-hidden="true" class="kpi-icon">{{ kpi.icon }}</mat-icon>
+        <div class="kpi-value" [class.amount]="typeof kpi.value === 'number'">{{ kpi.value }}</div>
+        <div class="kpi-label">{{ kpi.label }}</div>
+      </mat-card>
+    }
+  </div>
+}
+
+<div class="home-grid shortcuts">
+  @for (shortcut of shortcuts(); track shortcut.route) {
+    <a mat-card class="shortcut-card" [routerLink]="shortcut.route" routerLinkActive="active">
+      <mat-icon aria-hidden="true">{{ shortcut.icon }}</mat-icon>
+      <span>{{ shortcut.label }}</span>
+    </a>
+  }
+</div>
+
+@if (pendingCxcs().length > 0) {
+  <section class="recent-panel">
+    <h2 class="panel-title">
+      <mat-icon aria-hidden="true">schedule</mat-icon>
+      Cuentas por cobrar urgentes
+    </h2>
+    <ul class="pending-list">
+      @for (cxc of pendingCxcs(); track cxc.uuid) {
+        <li class="pending-item">
+          <a [routerLink]="cxc.route" class="pending-link">
+            <div class="pending-main">
+              <span class="pending-service">{{ cxc.serviceName }}</span>
+              <span class="pending-amount amount">{{ cxc.amount | currency:'PEN' }}</span>
+            </div>
+            <div class="pending-meta">
+              @if (cxc.memberName) {
+                <span class="pending-member">{{ cxc.memberName }}</span>
+              }
+              @if (cxc.stallNumber) {
+                <span class="pending-stall">Puesto {{ cxc.stallNumber }}</span>
+              }
+              <span class="pending-period">{{ cxc.period }}</span>
+            </div>
+          </a>
+        </li>
+      }
+    </ul>
+  </section>
+}

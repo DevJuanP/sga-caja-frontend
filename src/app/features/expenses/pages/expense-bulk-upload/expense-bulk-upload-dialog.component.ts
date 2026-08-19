@@ -6,7 +6,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTableModule } from '@angular/material/table';
 import { finalize } from 'rxjs';
 import { ApiError } from '../../../../core/auth/error.interceptor';
-import { ExpenseBulkUploadResponse } from '../../../../interfaces/expense.interface';
+import { ExpenseResponse } from '../../../../interfaces/expense.interface';
 import { ExpensesService } from '../../expenses.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -29,8 +29,8 @@ export class ExpenseBulkUploadDialogComponent {
 
   readonly loading = signal(false);
   readonly selectedFile = signal<File | null>(null);
-  readonly result = signal<ExpenseBulkUploadResponse | null>(null);
-  readonly errorColumns = ['row', 'message'];
+  readonly result = signal<ExpenseResponse[] | null>(null);
+  readonly resultColumns = ['documentNumber', 'providerName', 'expenseDate', 'amount', 'expenseReasonName', 'currencyCode'];
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -54,28 +54,16 @@ export class ExpenseBulkUploadDialogComponent {
       .bulkUpload(file)
       .pipe(finalize(() => this.loading.set(false)))
       .subscribe({
-        next: (response) => {
-          this.result.set(response);
-          const createdCount = response.created.length;
-          const errorCount = response.errors.length;
+        next: (created) => {
+          this.result.set(created);
           this.snackBar.open(
-            `Carga completada: ${createdCount} creado(s), ${errorCount} error(es)`,
+            `Carga masiva completada: ${created.length} egreso(s) creado(s)`,
             'Cerrar',
             { duration: 5000 },
           );
         },
         error: (error: ApiError) => {
-          const validationErrors = this.parseBulkValidationError(error.message);
-          if (validationErrors.length > 0) {
-            this.result.set({ created: [], errors: validationErrors });
-            this.snackBar.open(
-              `Carga completada: 0 creado(s), ${validationErrors.length} error(es de validación)`,
-              'Cerrar',
-              { duration: 5000 },
-            );
-          } else {
-            this.snackBar.open(error.message, 'Cerrar', { duration: 3000 });
-          }
+          this.snackBar.open(error.message, 'Cerrar', { duration: 3000 });
         },
       });
   }
@@ -96,26 +84,6 @@ export class ExpenseBulkUploadDialogComponent {
   ];
 
   close(): void {
-    this.dialogRef.close(this.result() !== null);
-  }
-
-  private parseBulkValidationError(
-    message: string,
-  ): Array<{ row: number; message: string; fields: Record<string, unknown> }> {
-    const errors: Array<{ row: number; message: string; fields: Record<string, unknown> }> = [];
-    const segments = message.split('; ');
-
-    for (const segment of segments) {
-      const match = segment.match(/^Fila (\d+):\s*(.+)$/);
-      if (match) {
-        errors.push({
-          row: parseInt(match[1], 10),
-          message: match[2],
-          fields: {},
-        });
-      }
-    }
-
-    return errors;
+    this.dialogRef.close(this.result()?.length ?? 0);
   }
 }

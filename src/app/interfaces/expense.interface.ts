@@ -30,11 +30,4 @@ export interface RegisterExpenseRequest {
   expenseReasonUuid: string;
 }
 
-export interface ExpenseBulkUploadResponse {
-  created: ExpenseResponse[];
-  errors: Array<{
-    row: number;
-    message: string;
-    fields: Record<string, unknown>;
-  }>;
-}
+export type ExpenseBulkUploadResult = ExpenseResponse[];

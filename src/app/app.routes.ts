@@ -39,7 +39,11 @@ export const routes: Routes = [
     canActivate: [authGuard],
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'home' },
-      placeholderRoute('home', 'Inicio', 'home'),
+      {
+        path: 'home',
+        loadComponent: () => import('./features/home/home.component').then(m => m.HomeComponent),
+        data: { title: 'Inicio', icon: 'home' },
+      },
 
       // EPIC 2 · Catálogos (solo dev): demostración de catalog-select por catálogo.
       ...(environment.production

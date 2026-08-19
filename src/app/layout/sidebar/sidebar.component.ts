@@ -28,6 +28,11 @@ export class SidebarComponent {
 
   readonly sections: NavSection[] = [
     {
+      title: 'Principal',
+      roles: ['Administrator', 'CashierOperator'],
+      items: [{ label: 'Inicio', route: '/home', icon: 'home' }],
+    },
+    {
       title: 'Caja',
       roles: ['CashierOperator'],
       items: [

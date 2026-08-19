@@ -178,8 +178,9 @@ export class ExpenseListComponent {
     const ref = this.dialog.open(ExpenseBulkUploadDialogComponent, {
       width: '600px',
     });
-    ref.afterClosed().subscribe((created: boolean) => {
-      if (created) {
+    ref.afterClosed().subscribe((createdCount: number) => {
+      if (createdCount > 0) {
+        this.snackBar.open(`Se cargaron ${createdCount} egreso(s) correctamente`, 'Cerrar', { duration: 3000 });
         this.pageIndex.set(0);
         this.load();
       }

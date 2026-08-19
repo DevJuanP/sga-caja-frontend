@@ -4,7 +4,6 @@ import { ApiService } from '../../core/http/api.service';
 import {
   ExpenseResponse,
   RegisterExpenseRequest,
-  ExpenseBulkUploadResponse,
 } from '../../interfaces/expense.interface';
 import { PagedModel } from '../../interfaces/common.interface';
 
@@ -29,8 +28,8 @@ export class ExpensesService {
     return this.api.post<ExpenseResponse>('expenses', body);
   }
 
-  bulkUpload(file: File): Observable<ExpenseBulkUploadResponse> {
-    return this.api.upload<ExpenseBulkUploadResponse>('expenses/bulk-upload', file);
+  bulkUpload(file: File): Observable<ExpenseResponse[]> {
+    return this.api.upload<ExpenseResponse[]>('expenses/bulk-upload', file);
   }
 
   voidExpense(uuid: string): Observable<void> {
