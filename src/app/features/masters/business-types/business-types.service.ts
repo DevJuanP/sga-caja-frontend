@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { ApiService } from '../../../core/http/api.service';
 import { BusinessType, BusinessTypeRequest } from '../../../interfaces/business-type.interface';
 
-/** Giro comercial (US-10). Único maestro con listado simple y DELETE. */
+/** Giro comercial (US-10). Único maestro con listado simple; "eliminar" desactiva (soft delete). */
 @Injectable({ providedIn: 'root' })
 export class BusinessTypesService {
   private readonly api = inject(ApiService);
@@ -24,7 +24,7 @@ export class BusinessTypesService {
     return this.api.put<BusinessType>(`business-types/${uuid}`, body);
   }
 
-  delete(uuid: string): Observable<void> {
-    return this.api.delete(`business-types/${uuid}`);
+  deactivate(uuid: string): Observable<BusinessType> {
+    return this.api.patch<BusinessType>(`business-types/${uuid}/deactivate`);
   }
 }

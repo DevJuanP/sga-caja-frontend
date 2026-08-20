@@ -43,11 +43,11 @@ describe('BusinessTypesService', () => {
     req.flush({ uuid: 'b1', name: 'Abarrotes' });
   });
 
-  it('elimina un giro (DELETE)', () => {
-    service.delete('b1').subscribe();
+  it('desactiva un giro (soft delete)', () => {
+    service.deactivate('b1').subscribe();
 
-    const req = httpMock.expectOne((r) => r.url.endsWith('/api/business-types/b1'));
-    expect(req.request.method).toBe('DELETE');
-    req.flush(null, { status: 204, statusText: 'No Content' });
+    const req = httpMock.expectOne((r) => r.url.endsWith('/api/business-types/b1/deactivate'));
+    expect(req.request.method).toBe('PATCH');
+    req.flush({ uuid: 'b1', name: 'Alimentos', active: false });
   });
 });

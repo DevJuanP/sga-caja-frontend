@@ -26,8 +26,8 @@ const STATUS_CHIP: Record<
 };
 
 const SETTLEMENT_LABEL: Record<string, string> = {
-  PAYMENT: 'Pago en caja',
-  BANK_EXCHANGE: 'Canje bancario',
+  Payment: 'Pago en caja',
+  BankExchange: 'Canje bancario',
 };
 
 @Component({

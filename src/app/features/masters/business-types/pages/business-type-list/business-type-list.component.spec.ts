@@ -51,7 +51,7 @@ describe('BusinessTypeListComponent', () => {
     expect(openSpy).toHaveBeenCalled();
   });
 
-  it('elimina un giro tras confirmar', () => {
+  it('elimina un giro tras confirmar (desactiva y deja de listarse)', () => {
     httpMock.expectOne((r) => r.url.endsWith('/api/business-types')).flush([
       { uuid: 'b1', name: 'Alimentos' },
     ]);
@@ -59,9 +59,9 @@ describe('BusinessTypeListComponent', () => {
 
     fixture.componentInstance.onAction({ actionId: 'delete', row: { uuid: 'b1' } });
 
-    const delReq = httpMock.expectOne((r) => r.url.endsWith('/api/business-types/b1'));
-    expect(delReq.request.method).toBe('DELETE');
-    delReq.flush(null, { status: 204, statusText: 'No Content' });
+    const deactivateReq = httpMock.expectOne((r) => r.url.endsWith('/api/business-types/b1/deactivate'));
+    expect(deactivateReq.request.method).toBe('PATCH');
+    deactivateReq.flush({ uuid: 'b1', name: 'Alimentos', active: false });
 
     httpMock.expectOne((r) => r.url.endsWith('/api/business-types')).flush([]);
   });

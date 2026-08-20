@@ -57,7 +57,7 @@ export interface GenerateByMemberRequest {
 /** Movimiento en resumen de CxC (US-17, RF-26). */
 export interface AccountReceivableMovementResponse {
   accountReceivable: AccountReceivableResponse;
-  settlementMethod: 'PAYMENT' | 'BANK_EXCHANGE' | null;
+  settlementMethod: 'Payment' | 'BankExchange' | null;
   settledDate: string | null;
   receiptCorrelative: number | null;
 }

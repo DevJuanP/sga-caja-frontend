@@ -18,7 +18,8 @@ import { BusinessTypesService } from '../../business-types.service';
 import { BusinessTypeFormDialogComponent } from '../business-type-form/business-type-form-dialog.component';
 
 /**
- * Giros comerciales (US-10). Único maestro sin paginación y con eliminación dura.
+ * Giros comerciales (US-10). Único maestro sin paginación; "Eliminar" desactiva (soft delete)
+ * y el giro deja de listarse.
  */
 @Component({
   selector: 'app-business-type-list',
@@ -99,7 +100,7 @@ export class BusinessTypeListComponent {
         if (!ok) {
           return;
         }
-        this.service.delete(businessType.uuid).subscribe({
+        this.service.deactivate(businessType.uuid).subscribe({
           next: () => {
             this.snackBar.open('Giro eliminado', 'Cerrar');
             this.load();
